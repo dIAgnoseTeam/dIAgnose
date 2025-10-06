@@ -1,10 +1,8 @@
-# 🏥 dIAgnose
+# 🏥 PrimarIA
 
 
 [![Status](https://img.shields.io/badge/Status-In%20Development-yellow)](https://github.com/dIAgnoseTeam/dIAgnose)
 [![Version](https://img.shields.io/badge/Version-1.0-green)](https://github.com/dIAgnoseTeam/dIAgnose)
-
-**dIAgnose** el chat avanzado para el diagnostico de los pacientes.
 
 ---
 
@@ -97,23 +95,6 @@ LOGIN → HOME PAGE (si médico) → Módulos disponibles según permisos
 - 📊 Define la estructura de los datos (modelos)
 - ✅ Valida que la información sea correcta antes de guardarla
 - 🔄 Realiza operaciones CRUD (Crear, Leer, Actualizar, Eliminar)
-
----
-
-### 🧠 **MODELO DE IA** - La Inteligencia Artificial
-
-#### ¿Cómo funciona?
-
-```
-Síntomas del paciente → Modelo de IA → Diagnósticos sugeridos
-                                     → Nivel de confianza
-                                     → Recomendaciones
-```
-
-**Pipeline de IA:**
-1. 📥 **Entrada:** Síntomas, signos vitales, historial
-2. 🧮 **Procesamiento:** Análisis mediante algoritmos de Machine Learning
-3. 📤 **Salida:** Diagnósticos posibles ordenados por probabilidad
 
 ---
 
