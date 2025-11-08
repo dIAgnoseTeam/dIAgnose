@@ -210,28 +210,6 @@ Por si no estás familiarizado con algún término:
 
 ---
 
-## 📊 Estado del Proyecto
-
-Actualmente estamos en desarrollo activo. Ya tenemos la autenticación funcionando y estamos trabajando en la gestión de pacientes y el sistema de chat.
-
-```mermaid
-gantt
-    title Roadmap de Desarrollo
-    dateFormat  YYYY-MM-DD
-    section Fase 1
-    Autenticación y Usuarios    :active, 2025-09-01, 2025-10-30
-    section Fase 2
-    Gestión de Pacientes        :active, 2025-11-01, 2025-12-15
-    Sistema de Chat             :active, 2025-11-15, 2025-12-30
-    section Fase 3
-    Historial Médico            :2025-12-15, 2026-01-30
-    Panel de Administración     :2026-01-01, 2026-01-15
-    section Fase 4
-    Testing y Deployment        :2026-02-01, 2026-03-30
-```
-
----
-
 ## 👥 Equipo
 
 Este proyecto lo estamos desarrollando entre dos equipos de estudiantes de 2º DAM en el IES Ribera del Tajo.
