@@ -13,7 +13,7 @@
 
 | Fecha | Versión | Descripción | Autor |
 |-------|---------|-------------|-------|
-| 08/11/2025 | 1.0 | Creación inicial del documento | Equipos desarrollo |
+| 08/11/2025 | 1.0 | Creación inicial del documento | dIAgnose |
 
 ---
 
@@ -110,7 +110,7 @@ graph TB
 |--------|-------------|--------|
 | Dashboard | Panel principal personalizado | Autenticados |
 | Gestión Pacientes | CRUD completo de información de pacientes | Personal autorizado |
-| Historial Médico | Registro y consulta de historiales | Médicos y enfermeros |
+| Historial Médico | Registro y consulta de historiales | Médicos |
 | Chat | Mensajería instantánea | Todos los autenticados |
 
 ### 2.3 Características de los Usuarios
