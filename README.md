@@ -1,233 +1,243 @@
-# 🏥 PrimarIA
+<div align="center">
 
+# 🏥 dIAgnose
 
-[![Status](https://img.shields.io/badge/Status-In%20Development-yellow)](https://github.com/dIAgnoseTeam/dIAgnose)
-[![Version](https://img.shields.io/badge/Version-1.0-green)](https://github.com/dIAgnoseTeam/dIAgnose)
+### Sistema de Gestión Hospitalaria
 
----
+[![Status](https://img.shields.io/badge/Status-In%20Development-yellow?style=for-the-badge)](https://github.com/dIAgnoseTeam/dIAgnose)
+[![Version](https://img.shields.io/badge/Version-1.0-blue?style=for-the-badge)](https://github.com/dIAgnoseTeam/dIAgnose)
 
-## 📋 Índice
-
-1. [Visión General](#-visión-general)
-2. [Arquitectura del Sistema](#-arquitectura-del-sistema)
-3. [Componentes Principales](#-componentes-principales)
-4. [Base de Datos](#-base-de-datos)
-5. [Flujo de Usuario](#-flujo-de-usuario)
-6. [Tecnologías Utilizadas](#️-tecnologías-utilizadas)
-7. [Glosario Técnico](#-glosario-técnico-simplificado)
-8. [Agradecimientos](#-diagnose---el-futuro-del-diagnóstico-médico)
+![React](https://img.shields.io/badge/React-18.2+-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-3.0+-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-2.0+-000000?style=for-the-badge&logo=flask&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-13+-336791?style=for-the-badge&logo=postgresql&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-5.0+-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
 
 ---
 
-## 🎯 Visión General
+</div>
 
-**dIAgnose** es una aplicación hospitalaria de última generación que integra inteligencia artificial para asistir en el proceso de diagnóstico médico. El sistema combina la experiencia médica tradicional con el poder del análisis predictivo basado en IA.
+## 🎯 ¿Qué es dIAgnose?
 
-### Características Principales
+**dIAgnose** es nuestra solución para modernizar la gestión hospitalaria. Básicamente, es una aplicación web que permite a médicos y personal sanitario gestionar pacientes, consultar historiales y comunicarse en tiempo real, todo desde un mismo lugar.
 
-✨ **Diagnóstico Asistido por IA** - Modelo de IA entrenado para sugerir diagnósticos basados en síntomas  
-👥 **Gestión de Pacientes** - Administración completa de historiales médicos  
-💬 **Sistema de Chat** - Comunicación en tiempo real entre profesionales  
-🔐 **Seguridad Avanzada** - Autenticación robusta y protección de datos sensibles  
-📊 **Historial Completo** - Seguimiento detallado de consultas y tratamientos
+### ✨ Lo que puedes hacer con dIAgnose
+
+- 👥 **Gestionar pacientes**: crear perfiles, actualizar datos, buscar historiales rápidamente
+- 💬 **Chat en tiempo real**: comunicación instantánea entre el equipo médico usando WebSockets
+- 🔐 **Acceso seguro**: autenticación con JWT y control de permisos según tu rol
+- 📊 **Historial médico**: registro completo de consultas, tratamientos y signos vitales
+- 📱 **Responsive**: funciona en ordenadores, tablets y móviles
 
 ---
 
 ## 🏗️ Arquitectura del Sistema
 
-El sistema dIAgnose está construido sobre una arquitectura de **tres capas** que garantiza escalabilidad, mantenibilidad y alto rendimiento:
+Hemos diseñado dIAgnose con una arquitectura de **tres capas** clásica pero efectiva: frontend en React, backend en Flask y dos bases de datos especializadas (PostgreSQL para datos estructurados y MongoDB para el chat).
 
+```mermaid
+graph TB
+    subgraph Client["🖥️ CAPA DE PRESENTACIÓN"]
+        UI[React + Tailwind CSS<br/>Puerto 3000]
+    end
+    
+    subgraph API["⚙️ CAPA DE APLICACIÓN"]
+        Flask[Flask API<br/>Puerto 5000]
+        WS[WebSocket Server<br/>Socket.IO]
+        
+        Services[Servicios:<br/>Users, Patients<br/>Records, Chat]
+    end
+    
+    subgraph Database["💾 CAPA DE DATOS"]
+        PG[(PostgreSQL<br/>Usuarios, Pacientes<br/>Historiales)]
+        
+        MDB[(MongoDB<br/>Mensajes<br/>Conversaciones)]
+    end
+    
+    UI -->|HTTPS/REST| Flask
+    UI -->|WebSocket| WS
+    
+    Flask --> Services
+    WS --> Services
+    
+    Services --> PG
+    Services --> MDB
+    
+    style Client fill:#61dafb,stroke:#333,stroke-width:3px,color:#000
+    style API fill:#3c873a,stroke:#333,stroke-width:3px,color:#fff
+    style Database fill:#336791,stroke:#333,stroke-width:3px,color:#fff
 ```
-    FRONT-END      ────▶      BACKEND       ────▶      BASE DE DATOS  
-    (Cliente)      ◀────     (Servidor)     ◀────       (Almacén)     
-
-
-```
 
 ---
 
-## 🎨 Componentes Principales
+## 🎨 Componentes del Sistema
 
-### 🖥️ **FRONT-END** - La Interfaz del Usuario
+### Frontend con React
 
-#### 📱 Módulos de Interfaz
-
-| Módulo | Descripción | Acceso |
-|--------|-------------|---------|
-| 🔑 **LOGIN FORM** | Portal de acceso seguro al sistema | Todos los usuarios |
-| 🏠 **HOME PAGE** | Panel principal con vista general | Usuario autenticado |
-| ⚙️ **CONFIGURACIÓN** | Ajustes personalizados del sistema | Solo administradores |
-| 📖 **HISTORIAL** | Registro completo de consultas | Médicos autorizados |
-| 💬 **CHATS** | Mensajería entre profesionales | Todos los usuarios |
-| 👤 **ADMIN PACIENTES** | Gestión de información de pacientes | Personal autorizado |
-
-#### 🔄 Flujo de Navegación
-
-```
-LOGIN → HOME PAGE (si médico) → Módulos disponibles según permisos
-```
-
----
-
-### ⚙️ **BACKEND** - El Motor del Sistema
-
-#### 🔌 Servicios Core
-
-##### 1️⃣ **Servicio de Endpoints REST API**
-
-**¿Qué es?** Es como un "menú de opciones" que permite al front-end solicitar información o realizar acciones.
-
-**Funciones principales:**
-- 🔐 Validación de credenciales (LOGIN)
-- 🔑 Gestión de sesiones con JWT (tokens seguros)
-- 🔌 Uso de WebSocket para chat en tiempo real
-
-**Tecnología:** REST API permite que diferentes partes del sistema "hablen entre sí" usando solicitudes HTTP estándar (GET, POST, PUT, DELETE).
-
----
-
-##### 2️⃣ **Conexiones y Modelos de BD**
-
-**¿Qué es?** El intermediario que traduce las peticiones del sistema al "idioma" que entiende la base de datos.
-
-**Funciones principales:**
-- 🔗 Establece conexiones seguras con las bases de datos
-- 📊 Define la estructura de los datos (modelos)
-- ✅ Valida que la información sea correcta antes de guardarla
-- 🔄 Realiza operaciones CRUD (Crear, Leer, Actualizar, Eliminar)
-
----
-
-## 💾 Base de Datos
-
-### 🗄️ **Estructura de Almacenamiento Multi-Base**
-
-El sistema utiliza una estrategia de **bases de datos especializadas** para optimizar rendimiento y organización:
-
-#### 1️⃣ **Base de Datos SQL Principal**
-
-**Propósito:** Almacenamiento estructurado de datos críticos
-
-**Contenido:**
-- 👤 Información de usuarios (médicos, enfermeros, administradores)
-- 📋 Perfiles de pacientes
-- 🔐 Roles y permisos de acceso
-
-**¿Por qué SQL?** Garantiza integridad de datos mediante relaciones y transacciones ACID.
-
----
-
-#### 2️⃣ **Base de Datos NoSQL para Chats**
-
-**Propósito:** Almacenamiento flexible de conversaciones
-
-**Contenido:**
-- 💬 Mensajes de chat en tiempo real
-- 👥 Historial de conversaciones
-- 📎 Archivos adjuntos
-- ✅ Estado de lectura
-
-**¿Por qué NoSQL?** Permite escalabilidad horizontal y manejo eficiente de grandes volúmenes de mensajes no estructurados.
-
----
-
-#### 3️⃣ **Base de Datos Vectorial para IA**
-
-**Propósito:** Almacenamiento semántico para el modelo de inteligencia artificial
-
-**Contenido:**
-- 🔢 Embeddings de síntomas y diagnósticos
-- 📊 Vectores de características clínicas
-- 🧬 Patrones de enfermedades codificados
-- 🔗 Relaciones semánticas entre conceptos médicos
-
-**¿Qué son vectores?** Representaciones numéricas que capturan el "significado" de conceptos médicos, permitiendo búsquedas por similitud.
-
-**¿Por qué Vectorial?** El modelo de IA puede encontrar rápidamente casos similares y patrones ocultos mediante búsquedas de similitud vectorial.
-
----
-
-## 🔄 Flujo de Usuario
-
-### 📊 Diagrama de Interacción
+Hemos construido la interfaz con React y Tailwind CSS. El flujo es sencillo: te logueas, llegas al dashboard y desde ahí puedes acceder a gestión de pacientes, chat, historial médico o configuración (si eres admin).
 
 ```mermaid
 graph LR
-    A[👤 Usuario] --> B[🔐 Autenticación]
-    B --> C[🔑 Token JWT]
-    C --> D[🏠 Dashboard]
-    D --> E[📋 Selecciona Paciente]
-    E --> F[📝 Ingresa Síntomas]
-    F --> G[🧠 Modelo IA]
-    G --> H[💡 Diagnóstico Sugerido]
-    H --> I[👨‍⚕️ Revisión Médica]
-    I --> J[✅ Confirma/Ajusta]
-    J --> K[💾 Guarda en BD]
+    A[🔑 Login] --> B{Auth}
+    B -->|✅| C[🏠 Dashboard]
+    B -->|❌| A
+    C --> D[📋 Pacientes]
+    C --> E[💬 Chat]
+    C --> F[📊 Historial]
+    C --> G[⚙️ Config]
+    
+    style A fill:#4A90E2,stroke:#333,stroke-width:2px,color:#fff
+    style C fill:#7ED321,stroke:#333,stroke-width:2px,color:#fff
 ```
 
-### 🎬 Casos de Uso Principales
+### Backend con Flask
 
-#### 🩺 Caso 1: Diagnóstico Asistido
+El backend es una API REST en Flask que maneja toda la lógica de negocio. Usa SQLAlchemy como ORM para PostgreSQL y PyMongo para MongoDB. La autenticación va con JWT y las contraseñas están encriptadas con bcrypt. Para el chat en tiempo real usamos Flask-SocketIO.
 
-1. **Médico** accede al perfil del paciente
-2. Ingresa síntomas y signos vitales
-3. **IA** procesa información y sugiere diagnósticos
-4. Médico revisa sugerencias y toma decisión final
-5. Sistema registra diagnóstico y tratamiento
-
-#### 💬 Caso 2: Consulta entre Colegas
-
-1. **Médico A** abre chat con **Médico B**
-2. Envía pregunta sobre caso complejo
-3. Sistema notifica en tiempo real a **Médico B**
-4. Intercambian información de forma segura
-5. Conversación queda registrada (si es necesario)
+```mermaid
+graph LR
+    API[🔌 REST API] --> Auth[🔐 Auth Service]
+    API --> Patient[🏥 Patient Service]
+    API --> Chat[💬 Chat Service]
+    
+    Auth --> PG[(PostgreSQL)]
+    Patient --> PG
+    Chat --> MG[(MongoDB)]
+    
+    style API fill:#3c873a,stroke:#333,stroke-width:2px,color:#fff
+    style PG fill:#336791,stroke:#333,stroke-width:2px,color:#fff
+    style MG fill:#47a248,stroke:#333,stroke-width:2px,color:#fff
+```
 
 ---
 
-## 🛠️ Tecnologías Utilizadas
+## 💾 Bases de Datos
+
+Usamos dos bases de datos para aprovechar lo mejor de cada una:
+
+- **PostgreSQL** 🐘: Para los datos importantes y estructurados (usuarios, pacientes, historiales médicos). Necesitamos las relaciones y la integridad que ofrece SQL.
+  
+- **MongoDB** 🍃: Para el sistema de chat. Es más flexible y rápido para manejar mensajes en tiempo real que no necesitan una estructura rígida.
+
+```mermaid
+graph TB
+    subgraph PostgreSQL["🐘 PostgreSQL"]
+        Users[👤 users]
+        Patients[🏥 patients]
+        Records[📋 medical_records]
+    end
+    
+    subgraph MongoDB["🍃 MongoDB"]
+        Msgs[💬 messages]
+        Convs[📨 conversations]
+    end
+    
+    Users -->|1:N| Records
+    Patients -->|1:N| Records
+    Convs -->|1:N| Msgs
+    
+    style PostgreSQL fill:#336791,stroke:#333,stroke-width:3px,color:#fff
+    style MongoDB fill:#47a248,stroke:#333,stroke-width:3px,color:#fff
+```
+
+---
+
+## 🔄 Cómo Funciona
+
+El flujo típico es bastante directo: te autenticas con tu email y contraseña, el backend genera un JWT que guardas en el navegador, y con ese token haces todas las peticiones a la API. Para el chat, en lugar de HTTP usamos WebSockets para que los mensajes lleguen instantáneamente.
+
+```mermaid
+sequenceDiagram
+    participant U as 👤 Usuario
+    participant F as 🖥️ Frontend
+    participant B as ⚙️ Backend
+    participant D as 💾 DB
+    
+    U->>F: Login (email, password)
+    F->>B: POST /api/auth/login
+    B->>D: Validar credenciales
+    D-->>B: Usuario válido
+    B-->>F: JWT Token
+    F-->>U: Redirigir a Dashboard
+    
+    U->>F: Buscar paciente
+    F->>B: GET /api/patients (con JWT)
+    B->>D: Query
+    D-->>B: Resultados
+    B-->>F: JSON
+    F-->>U: Mostrar lista
+```
+
+---
+
+## 🛠️ Stack Tecnológico
 
 ### Frontend
-- ⚛️ **React** - Framework moderno de UI
-- 🎨 **Tailwind CSS** - Estilos responsive y modernos
+- **React 18.2+** con Vite como bundler (mucho más rápido que Create React App)
+- **Tailwind CSS** para los estilos
+- **Axios** para las llamadas a la API
+- **Socket.io Client** para el WebSocket del chat
 
 ### Backend
-- 🟢 **Python + Flask**
-- 🔐 **JWT** - Autenticación segura
-- 🔌 **WebSocket** - Comunicación en tiempo real
+- **Python 3.9+** con **Flask 2.0+**
+- **SQLAlchemy** como ORM para PostgreSQL
+- **PyMongo** para conectar con MongoDB
+- **Flask-SocketIO** para el servidor de WebSocket
+- **PyJWT** para generar y validar tokens
+- **Bcrypt** para hashear contraseñas
 
 ### Bases de Datos
-- 🐘 **PostgreSQL** - Base de datos SQL principal
-- 🍃 **MongoDB** - Base de datos NoSQL para chats
-- 🔍 **Qdrant/ElasticSearch** - Base de datos vectorial
+- **PostgreSQL 13+** para datos estructurados
+- **MongoDB 5.0+** para mensajería
+
+### Herramientas
+- Git para control de versiones
+- ESLint para mantener el código limpio
+- Postman para testear la API
 
 ---
 
-## 🎓 Glosario Técnico Simplificado
+## 📚 Glosario Rápido
 
-| Término | Explicación Simple |
-|---------|-------------------|
-| **API REST** | Sistema que permite comunicación entre programas usando solicitudes web estándar |
-| **JWT** | "Pasaporte digital" que demuestra que el usuario está autenticado |
-| **WebSocket** | Canal de comunicación bidireccional para mensajes instantáneos |
-| **CRUD** | Operaciones básicas: Crear, Leer, Actualizar, Borrar |
-| **Embeddings** | Traducción de palabras/conceptos a números que la IA puede procesar |
-| **Vectorial** | Base de datos que guarda información como coordenadas numéricas |
-| **NoSQL** | Base de datos flexible sin estructura rígida de tablas |
-| **Cluster** | Grupo de servidores que trabajan juntos para mayor potencia |
+Por si no estás familiarizado con algún término:
+
+- **API REST**: La forma en que el frontend y backend se comunican usando HTTP (GET, POST, PUT, DELETE)
+- **JWT**: Un token que se genera al hacer login y se envía en cada petición para autenticarte
+- **WebSocket**: Conexión que se mantiene abierta para enviar/recibir datos en tiempo real (necesario para el chat)
+- **ORM**: Una librería que te permite trabajar con la base de datos usando objetos en lugar de SQL puro
+- **CRUD**: Create, Read, Update, Delete - las operaciones básicas de cualquier sistema
 
 ---
 
-## 🌟 ¡dIAgnose - El Futuro del Diagnóstico Médico!
+## 👥 Equipo
 
-**Desarrollado con ❤️ por LosMasones y MediScout**
+Este proyecto lo estamos desarrollando entre dos equipos de estudiantes de 2º DAM en el IES Ribera del Tajo.
 
-- LosMasones
-    - Héctor de la Llave Ballesteros (Leader)
-    - Abel González Palencia
-    - Carlos López Tronco
-    - Pablo Moreno Márquez
-- MediScout
-    - Josue Mejías Morante (Leader)
-    - Rubén Cadalso Fernandez
-    - Rubén Serrejón Porras
+<div align="center">
+
+### Equipos de Desarrollo
+
+| **LosMasones** 🔷 | **MediScout** 🔶 |
+|:-------------------|:-----------------|
+| **Héctor de la Llave Ballesteros** *(Leader)* | **Josue Mejías Morante** *(Leader)* |
+| Pablo Moreno Márquez | Rubén Cadalso Fernández |
+| Carlos López Tronco | Rubén Serrejón Porras |
+| Abel González Palencia | |
+
+</div>
+
+---
+
+<div align="center">
+
+## 📄 Licencia y Documentación
+
+[![Documentation](https://img.shields.io/badge/Docs-SRS-blue?style=for-the-badge)](./SRS.md)
+[![GitHub](https://img.shields.io/badge/GitHub-dIAgnose-181717?style=for-the-badge&logo=github)](https://github.com/gzzlz/dIAgnose)
+
+**dIAgnose** - Sistema de Gestión Hospitalaria  
+*Proyecto Intermodular 2º DAM 2025-2026*  
+*IES Ribera del Tajo*
+
+</div>
