@@ -28,17 +28,19 @@ Este documento especifica los requisitos del sistema dIAgnose, aplicación hospi
 dIAgnose es una aplicación web hospitalaria que combina análisis médico tradicional con asistencia de inteligencia artificial.
 
 **Funcionalidades principales:**
-- Diagnóstico asistido por IA basado en síntomas del paciente
-- Gestión completa de historiales médicos
+- Demo de interfaz gráfica del sistema
+- Autenticación y control de acceso
+- Gestión completa de pacientes (CRUD)
+- Registro y consulta de historiales médicos
 - Sistema de mensajería en tiempo real entre profesionales
-- Control de acceso basado en roles
-- Seguimiento de consultas y tratamientos
 
 **Exclusiones de la versión 1.0:**
+- Diagnóstico asistido por IA
 - Integración con sistemas de facturación
 - Gestión de citas médicas
 - Recetas electrónicas
 - Videoconsulta
+- Panel de administración completo
 
 ### 1.3 Definiciones y Acrónimos
 
@@ -106,32 +108,27 @@ graph TB
 
 | Módulo | Descripción | Acceso |
 |--------|-------------|--------|
-| Login | Autenticación segura con JWT | Todos |
-| Dashboard | Panel principal personalizado por rol | Autenticados |
-| Configuración | Gestión de parámetros y usuarios | Administradores |
-| Historial | Consulta de historiales médicos | Médicos y enfermeros |
+| Dashboard | Panel principal personalizado | Autenticados |
+| Gestión Pacientes | CRUD completo de información de pacientes | Personal autorizado |
+| Historial Médico | Registro y consulta de historiales | Médicos y enfermeros |
 | Chat | Mensajería instantánea | Todos los autenticados |
-| Gestión Pacientes | CRUD de información de pacientes | Personal autorizado |
-| Diagnóstico IA | Asistente de diagnóstico | Médicos |
 
 ### 2.3 Características de los Usuarios
 
 | Rol | Funciones | Permisos |
 |-----|-----------|----------|
-| Administrador | Gestión de usuarios, configuración del sistema, acceso a logs | Total |
-| Médico | Gestión de pacientes, uso de diagnóstico IA, consulta de historiales | Completo sobre pacientes |
-| Enfermero | Consulta de historiales, actualización de signos vitales | Lectura y escritura limitada |
-| Administrativo | Registro de pacientes, gestión de datos básicos | Solo datos no clínicos |
+| Administrador | Gestión de usuarios y acceso a funcionalidades del sistema | Total |
+| Médico | Gestión de pacientes, registro y consulta de historiales médicos | Completo sobre pacientes |
 
 ### 2.4 Restricciones
 
 **Legales y normativas:**
 - Cumplimiento estricto de RGPD
 - Confidencialidad de datos médicos
-- El diagnóstico final es responsabilidad del médico
+- Protección de información sensible de pacientes
 
 **Técnicas:**
-- Backend: Python 3.9+ con Flask
+- Backend: Python 3.11+ con Flask
 - Frontend: React 18+
 - Bases de datos: PostgreSQL 13+, MongoDB 5+
 
@@ -149,7 +146,6 @@ graph TB
 - Infraestructura de red hospitalaria funcional
 
 **Dependencias externas:**
-- Servicio de hosting (AWS, Azure, Google Cloud)
 - Frameworks: React, Tailwind, Flask, SQLAlchemy
 - Bases de datos: PostgreSQL, MongoDB
 
@@ -159,93 +155,99 @@ graph TB
 
 ### 3.1 Requisitos Funcionales
 
-#### RF-001: Autenticación y Control de Acceso
+#### RF-001: Demo de Interfaz Gráfica
 
-**Inicio de sesión:**
-- Autenticación mediante email y contraseña encriptada (bcrypt)
-- Generación de token JWT válido por 8 horas
-- Bloqueo temporal (5 minutos) tras 3 intentos fallidos
-- Registro en logs de todos los intentos de acceso
+**Dashboard Principal:**
+- Panel personalizado según rol del usuario
+- Menú de navegación lateral con acceso a módulos principales
+- Barra superior con información del usuario y opción de logout
 
-**Control de acceso:**
-- Verificación de permisos en cada funcionalidad
+**Módulo de Pacientes:**
+- Lista de pacientes con buscador básico
+- Vista detalle de paciente con pestañas (datos personales, historial)
+- Botones de acción claramente identificados (crear, editar, ver historial)
+
+**Módulo de Historial:**
+- Timeline cronológico de consultas médicas
+- Vista expandida para detalles completos
+- Código de colores para diferentes tipos de consultas
+
+---
+
+#### RF-002: Autenticación y Control de Acceso
+
+**Control de acceso**
+- Roles definidos: Administrador, Médico
+- Verificación de permisos en cada endpoint del backend
+- Rutas protegidas en el frontend
 - Registro de intentos de acceso no autorizado
 
-**Cierre de sesión:**
-- Invalidación de token JWT
-- Eliminación de datos sensibles del cliente
-- Registro en logs de auditoría
+**Gestión de sesiones:**
+- Token JWT almacenado en localStorage
+- Cierre de sesión manual con invalidación de token
+- Cierre automático tras inactividad de 30 minutos
 
-#### RF-002: Gestión de Pacientes
+---
 
-**Registro de pacientes:**
+#### RF-003: Gestión Básica de Pacientes (CRUD Completo)
+
+**Crear paciente:**
 - Campos obligatorios: nombre, apellidos, DNI, fecha de nacimiento, teléfono, dirección
 - Campos opcionales: email, grupo sanguíneo, alergias
-- Validación de DNI único con formato español
+- Validación de DNI único en base de datos
+- Asignación automática de ID único interno
 
-**Consulta de historial:**
-- Visualización de datos demográficos, alergias, consultas previas, signos vitales y medicación
+**Leer/Consultar paciente:**
+- Búsqueda por DNI, nombre o ID
+- Lista de resultados con paginación (20 por página)
+- Vista detallada con todos los datos del paciente
 - Registro de accesos en logs de auditoría
 
-**Actualización de datos:**
-- Modificación con timestamp y usuario responsable
+**Actualizar paciente:**
+- Formulario precargado con datos actuales
 - DNI inmutable tras creación
-- Historial de diagnósticos para datos críticos
+- Timestamp automático de última modificación
+- Usuario responsable registrado automáticamente
 
-#### RF-003: Diagnóstico Asistido por IA
+**Eliminar paciente:**
+- Eliminación lógica (soft delete)
+- Requiere confirmación y rol de Administrador
+- Registro detallado en logs de auditoría
+- Datos históricos permanecen disponibles
 
-**Ingreso de información:**
-- Entrada de síntomas mediante texto libre con autocompletado o checklist predefinido
-- Registro de signos vitales con validación de rangos: temperatura, presión arterial, frecuencia cardíaca, saturación O2
-- Alertas automáticas ante valores anormales
+---
 
-**Generación de sugerencias:**
-- Procesamiento de síntomas y generación de lista de diagnósticos potenciales
-- Cada sugerencia incluye: nombre de condición, nivel de confianza, criterios coincidentes y pruebas recomendadas
-- Tiempo de respuesta máximo: 5 segundos
-- Recomendación de especialista necesaria
+#### RF-004: Registro y Consulta de Historiales Médicos
 
-**Validación de diagnóstico:**
-- Revisión y confirmación médica de sugerencias de IA
-- Registro de aceptación, modificación o rechazo de sugerencias
-- Inclusión de notas médicas y prescripción de tratamiento
-- Almacenamiento con timestamp y médico responsable
+**Crear registro de historial:**
+- Asociación obligatoria a un paciente existente
+- Campos obligatorios: fecha, motivo de consulta, diagnóstico
+- Registro de signos vitales: temperatura, presión arterial, frecuencia cardíaca, saturación O2
+- Médico responsable y timestamp registrados automáticamente
 
-#### RF-004: Sistema de Chat
+**Consultar historial:**
+- Visualización cronológica inversa (más reciente primero)
+- Filtros por rango de fechas y médico responsable
+- Vista detallada expandible de cada consulta
+- Tiempo de carga máximo: 2 segundos
 
-**Mensajería instantánea:**
-- Comunicación en tiempo real mediante WebSocket
-- Latencia de entrega inferior a 1 segundo
-- Almacenamiento en MongoDB
+**Actualizar registro:**
+- Solo el médico que creó el registro puede modificarlo
+- Campo obligatorio: motivo de modificación
+- Histórico de versiones para auditoría
+- Confirmación antes de guardar cambios
 
-**Historial y notificaciones:**
-- Carga inicial de 50 mensajes con scroll infinito para mensajes antiguos
-- Búsqueda por texto o fecha
-
-#### RF-005: Administración del Sistema
-
-**Gestión de usuarios:**
-- Creación con campos: nombre, email único, contraseña temporal y rol
-- Edición de rol, permisos y datos personales
-- Desactivación sin eliminación de datos históricos
-- Obligación de cambio de contraseña en primer login
-
-**Configuración:**
-- Parámetros configurables: tiempo de expiración JWT, intentos máximos de login, umbral de confianza IA
-- Confirmación obligatoria para cambios críticos
-- Registro en logs de auditoría
-
-**Logs y auditoría:**
-- Consulta de accesos al sistema, historiales médicos, modificaciones de datos y errores
-- Filtros por fecha, usuario y tipo de acción
-- Retención mínima de 1 año
-- Exportación en formato CSV/JSON
+**Validación de signos vitales:**
+- Alertas visuales por colores según rangos (verde/amarillo/rojo)
+- Rangos normales: temperatura 35.5-37.5°C, presión 90-140/60-90 mmHg, FC 60-100 ppm, O2 95-100%
+- Mensaje explicativo si valor fuera de rango
+- No bloquea guardado pero muestra advertencia
 
 ### 3.2 Requisitos No Funcionales
 
 #### RNF-001: Rendimiento
 - Carga de páginas: máximo 2 segundos
-- Respuesta del modelo IA: máximo 5 segundos
+- Tiempo de respuesta de API: máximo 1 segundo para operaciones CRUD
 - Latencia de mensajería: máximo 1 segundo
 - Soporte de 100 usuarios simultáneos
 - Capacidad de 10.000 registros de pacientes
@@ -369,17 +371,17 @@ graph TB
 
 ### Apéndice C: Casos de Uso Principales
 
-**Caso de Uso 1: Diagnóstico con Asistencia de IA**
+**Caso de Uso 1: Registro de Consulta Médica**
 
 1. Médico inicia sesión en el sistema
 2. Busca y selecciona paciente
-3. Accede al módulo de diagnóstico
-4. Ingresa síntomas y signos vitales
-5. Solicita análisis a la IA
-6. Revisa sugerencias de diagnóstico
-7. Confirma o modifica diagnóstico
-8. Prescribe tratamiento
-9. Sistema registra todo en historial del paciente
+3. Accede al módulo de historial médico
+4. Crea nueva entrada de consulta
+5. Ingresa signos vitales del paciente
+6. Registra motivo de consulta y diagnóstico
+7. Prescribe tratamiento y observaciones
+8. Guarda el registro en el historial
+9. Sistema confirma registro exitoso con timestamp
 
 **Caso de Uso 2: Consulta entre Profesionales**
 
@@ -396,18 +398,19 @@ graph TB
 **Priorización de funcionalidades:**
 
 Fase 1 (MVP):
-- Demo de Interfaz de Usuario
-- Autenticación y gestión de usuarios
-- Gestión básica de pacientes
-- Historial médico
+- Demo de Interfaz Gráfica
+- Autenticación y Control de Acceso
+- Gestión básica de pacientes (CRUD completo)
+- Registro y consulta de historiales médicos
 
 Fase 2:
-- Integración del modelo de IA
-- Diagnóstico asistido
+- Sistema de chat en tiempo real
+- Mejoras en la interfaz de usuario
 
 Fase 3:
-- Sistema de chat en tiempo real
 - Panel de administración completo
+- Integración de funcionalidades avanzadas
+- Diagnóstico asistido por IA (futuro)
 
 **Stack tecnológico detallado:**
 
