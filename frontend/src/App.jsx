@@ -1,19 +1,121 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+
+const API_BASE = import.meta.env.API_URL || "http://127.0.0.1:5000";
 
 function App() {
-  const [saludo, setSaludo] = useState("");
+  const [greeting, setGreeting] = useState("");
+  const [num, setNum] = useState(0);
+  const [record, setRecord] = useState(null);
+  const [loadingRecord, setLoadingRecord] = useState(false);
+  const [errorRecord, setErrorRecord] = useState(null);
 
+  // Fetch del saludo inicial
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/primeraconexion")
-      .then((res) => res.text())
-      .then((data) => setSaludo(data))
-      .catch((err) => console.error(err));
+    fetch(`${API_BASE}/primeraconexion`)
+      .then((r) => r.text())
+      .then(setGreeting)
+      .catch((err) => console.error("Error saludo:", err));
   }, []);
 
+  const fetchRecord = useCallback(
+    (n) => {
+      setLoadingRecord(true);
+      setErrorRecord(null);
+      const controller = new AbortController();
+      const id = n ?? num;
+
+      fetch(`${API_BASE}/registro_test/${id}`, { signal: controller.signal })
+        .then((r) => {
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          return r.text();
+        })
+        .then((text) => {
+          try {
+            const obj = JSON.parse(text);
+            setRecord(obj);
+          } catch (e) {
+            throw new Error("Formato JSON inválido");
+          }
+        })
+        .catch((err) => {
+          if (err.name !== "AbortError") {
+            setErrorRecord(err.message);
+            setRecord(null);
+          }
+        })
+        .finally(() => setLoadingRecord(false));
+
+      return () => controller.abort();
+    },
+    [num]
+  );
+
+  // Auto-cargar registro inicial
+  useEffect(() => {
+    const cleanup = fetchRecord(num);
+    return cleanup;
+  }, [fetchRecord, num]);
+
+  const safeField = (value, fallback = "No disponible") =>
+    value ? value : fallback;
+
   return (
-    <div>
-      <h1>Conexion al Backend</h1>
-      <p>{saludo}</p>
+    <div className="p-4 bg-red-50 min-h-screen m-0">
+      <div className="">
+        <div className="">
+          <h1 className="">{greeting || "Cargando..."}</h1>
+
+          <div className="flex gap-4 my-4">
+            <div className=" flex flex-col">
+              <label htmlFor="num" className="">
+                Número de Registro
+              </label>
+              <input
+                type="number"
+                id="num"
+                className="border border-gray-300 rounded-md p-2"
+                value={num}
+                min={0}
+                max={99}
+                onChange={(e) => setNum(Number(e.target.value) || 0)}
+              />
+            </div>
+            <div className="align-end flex items-end">
+              <button
+                onClick={() => fetchRecord(num)}
+                disabled={loadingRecord}
+                className="bg-red-400 p-2 rounded-md flex items-end"
+              >
+                {loadingRecord ? "Buscando..." : "Obtener Registro"}
+              </button>
+            </div>
+          </div>
+
+          {errorRecord && (
+            <div className="">
+              <p className="">Error</p>
+              <p className="">{errorRecord}</p>
+            </div>
+          )}
+
+          {record && (
+            <div className="flex flex-col gap-4">
+              {"alergias" in record && (
+                <div className="bg-red-100 p-4 rounded-md">
+                  <p className="font-bold">Alergias</p>
+                  <p className="">{safeField(record.alergias)}</p>
+                </div>
+              )}
+              {"habitos" in record && (
+                <div className="bg-red-100 p-4 rounded-md">
+                  <p className="font-bold">Hábitos</p>
+                  <p className="">{safeField(record.habitos)}</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

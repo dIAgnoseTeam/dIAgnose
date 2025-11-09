@@ -14,7 +14,7 @@ ds = load_dataset("ilopezmon/casos_clinicos_completos")
 df = ds["BVCM017101.txt_6"].to_pandas()
 
 
-print(df.head())
+print(df.iloc[0])
 
 # Cantidad de registros en el dataset
 print("Número de filas en el dataset:", len(df))
