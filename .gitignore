@@ -1,0 +1,109 @@
+# ==== Monorepo Git Ignore for dIAgnose ====
+# Frontend: React + Vite
+# Backend: Python Flask
+# Keep `.env.example` files tracked; ignore real env files.
+
+## ---------------------------------------------------------------------------
+## Node / Frontend artifacts
+## ---------------------------------------------------------------------------
+node_modules/
+dist/
+.vite/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+## ---------------------------------------------------------------------------
+## Python / Backend artifacts
+## ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+build/
+develop-eggs/
+dist/
+eggs/
+parts/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+.Python
+venv/
+.venv/
+env/
+ENV/
+instance/
+.pytest_cache/
+coverage/
+.coverage*
+htmlcov/
+*.sqlite3
+
+## ---------------------------------------------------------------------------
+## Environment & secrets (keep examples)
+## ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+## ---------------------------------------------------------------------------
+## OS / Editor / Misc
+## ---------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo
+
+## ---------------------------------------------------------------------------
+## Test / Reports / Local tooling
+## ---------------------------------------------------------------------------
+pytest*.xml
+*.coverage
+*.cache
+*.pytest_cache/
+report.xml
+
+## ---------------------------------------------------------------------------
+## Data / Temporary datasets (adjust as needed)
+## ---------------------------------------------------------------------------
+backend/data/
+data/
+*.csv
+*.tsv
+*.parquet
+*.xlsx
+*.ipynb_checkpoints
+
+## ---------------------------------------------------------------------------
+## Logs / Temp
+## ---------------------------------------------------------------------------
+logs/
+*.log*
+tmp/
+temp/
+
+## ---------------------------------------------------------------------------
+## Tailwind / Build artifacts (already covered by dist/ but explicit here)
+## ---------------------------------------------------------------------------
+*.cache
+
+## ---------------------------------------------------------------------------
+## Coverage / Profiling
+## ---------------------------------------------------------------------------
+prof/ 
+*.prof
+*.pstats
+
+# End of .gitignore
