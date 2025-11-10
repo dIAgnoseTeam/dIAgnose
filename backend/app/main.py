@@ -1,3 +1,4 @@
+import pandas as pd
 from flask import Flask
 from flask_cors import CORS
 from huggingface_hub import login
@@ -13,7 +14,14 @@ if os.getenv("HF_TOKEN"):
 
 # Splits de los datasets
 ds = load_dataset("ilopezmon/casos_clinicos_completos")
-df = ds.to_pandas()
+
+df_list = []
+for split in ds.keys():
+    temp_df = ds[split].to_pandas()
+    temp_df["split"] = split  # Añadimos una columna para identificar el split
+    df_list.append(temp_df)
+
+df = pd.concat(df_list, ignore_index=True)
 
 # Creamos la aplicación Flask
 app = Flask(__name__)
