@@ -33,7 +33,7 @@
 
 ## 🏗️ Arquitectura del Sistema
 
-Hemos diseñado dIAgnose con una arquitectura de **tres capas** clásica pero efectiva: frontend en React, backend en Flask y dos bases de datos especializadas (PostgreSQL para datos estructurados y MongoDB para el chat).
+Hemos diseñado dIAgnose con una arquitectura de **tres capas** clásica pero efectiva: frontend en React, backend en Flask y dos bases de datos (PostgreSQL para datos estructurados y MongoDB para almacenamiento flexible).
 
 ```mermaid
 graph TB
@@ -45,13 +45,13 @@ graph TB
         Flask[Flask API<br/>Puerto 5000]
         WS[WebSocket Server<br/>Socket.IO]
         
-        Services[Servicios:<br/>Users, Patients<br/>Records, Chat]
+    Services[Servicios:<br/>Users, Patients<br/>Records]
     end
     
     subgraph Database["💾 CAPA DE DATOS"]
         PG[(PostgreSQL<br/>Usuarios, Pacientes<br/>Historiales)]
         
-        MDB[(MongoDB<br/>Mensajes<br/>Conversaciones)]
+    MDB[(MongoDB<br/>Almacenamiento<br/>NoSQL)]
     end
     
     UI -->|HTTPS/REST| Flask
@@ -74,7 +74,7 @@ graph TB
 
 ### Frontend con React
 
-Hemos construido la interfaz con React y Tailwind CSS. El flujo es sencillo: te logueas, llegas al dashboard y desde ahí puedes acceder a gestión de pacientes, chat, historial médico o configuración (si eres admin).
+Hemos construido la interfaz con React y Tailwind CSS. El flujo es sencillo: te logueas, llegas al dashboard y desde ahí puedes acceder a gestión de pacientes, historial médico o configuración (si eres admin).
 
 ```mermaid
 graph LR
@@ -82,31 +82,29 @@ graph LR
     B -->|✅| C[🏠 Dashboard]
     B -->|❌| A
     C --> D[📋 Casos Clínicos]
-    C --> E[💬 Chat]
     C --> F[📊 Historial]
     C --> G[⚙️ Config]
-    
+
     style A fill:#4A90E2,stroke:#333,stroke-width:2px,color:#fff
     style C fill:#7ED321,stroke:#333,stroke-width:2px,color:#fff
 ```
 
 ### Backend con Flask
 
-El backend es una API REST en Flask que maneja toda la lógica de negocio. Usa SQLAlchemy como ORM para PostgreSQL y PyMongo para MongoDB. La autenticación va con JWT y las contraseñas están encriptadas con bcrypt. Para el chat en tiempo real usamos Flask-SocketIO.
+El backend es una API REST en Flask que maneja toda la lógica de negocio. Usa SQLAlchemy como ORM para PostgreSQL y PyMongo para MongoDB. La autenticación va con JWT y las contraseñas están encriptadas con bcrypt. Existe soporte opcional para servicios en tiempo real mediante WebSockets (Flask-SocketIO).
 
 ```mermaid
 graph LR
     API[🔌 REST API] --> Auth[🔐 Auth Service]
     API --> Patient[🏥 Patient Service]
-    API --> Chat[💬 Chat Service]
+    API --> Record[� Record Service]
     
     Auth --> PG[(PostgreSQL)]
     Patient --> PG
-    Chat --> MG[(MongoDB)]
+    Record --> PG
     
     style API fill:#3c873a,stroke:#333,stroke-width:2px,color:#fff
     style PG fill:#336791,stroke:#333,stroke-width:2px,color:#fff
-    style MG fill:#47a248,stroke:#333,stroke-width:2px,color:#fff
 ```
 
 ---
@@ -117,7 +115,7 @@ Usamos dos bases de datos para aprovechar lo mejor de cada una:
 
 - **PostgreSQL** 🐘: Para los datos importantes y estructurados (usuarios, pacientes, historiales médicos). Necesitamos las relaciones y la integridad que ofrece SQL.
   
-- **MongoDB** 🍃: Para el sistema de chat. Es más flexible y rápido para manejar mensajes en tiempo real que no necesitan una estructura rígida.
+- **MongoDB** 🍃: Para almacenamiento flexible de datos semiestructurados (logs, auditoría, documentos auxiliares).
 
 ```mermaid
 graph TB
@@ -128,7 +126,7 @@ graph TB
     end
     
     Users -->|1:N| Records
-    Patients -->|1:N| Records
+    Patients_data -->|1:N| Records
     
     style PostgreSQL fill:#336791,stroke:#333,stroke-width:3px,color:#fff
     style MongoDB fill:#47a248,stroke:#333,stroke-width:3px,color:#fff
@@ -138,7 +136,7 @@ graph TB
 
 ## 🔄 Cómo Funciona
 
-El flujo típico es bastante directo: te autenticas con tu email y contraseña, el backend genera un JWT que guardas en el navegador, y con ese token haces todas las peticiones a la API. Para el chat, en lugar de HTTP usamos WebSockets para que los mensajes lleguen instantáneamente.
+El flujo típico es bastante directo: te autenticas con tu email y contraseña, el backend genera un JWT que guardas en el navegador, y con ese token haces todas las peticiones a la API.
 
 ```mermaid
 sequenceDiagram
@@ -170,19 +168,19 @@ sequenceDiagram
 - **React 18.2+** con Vite como bundler (mucho más rápido que Create React App)
 - **Tailwind CSS** para los estilos
 - **Axios** para las llamadas a la API
-- **Socket.io Client** para el WebSocket del chat
+- **Socket.io Client** (opcional) para servicios en tiempo real
 
 ### Backend
 - **Python 3.9+** con **Flask 2.0+**
 - **SQLAlchemy** como ORM para PostgreSQL
 - **PyMongo** para conectar con MongoDB
-- **Flask-SocketIO** para el servidor de WebSocket
+- **Flask-SocketIO** (opcional) para soporte de WebSockets
 - **PyJWT** para generar y validar tokens
 - **Bcrypt** para hashear contraseñas
 
 ### Bases de Datos
 - **PostgreSQL 13+** para datos estructurados
-- **MongoDB 5.0+** para mensajería
+- **MongoDB 5.0+** para datos semiestructurados
 
 ### Herramientas
 - Git para control de versiones
@@ -197,7 +195,7 @@ Por si no estás familiarizado con algún término:
 
 - **API REST**: La forma en que el frontend y backend se comunican usando HTTP (GET, POST, PUT, DELETE)
 - **JWT**: Un token que se genera al hacer login y se envía en cada petición para autenticarte
-- **WebSocket**: Conexión que se mantiene abierta para enviar/recibir datos en tiempo real (necesario para el chat)
+- **WebSocket**: Conexión que se mantiene abierta para enviar/recibir datos en tiempo real
 - **ORM**: Una librería que te permite trabajar con la base de datos usando objetos en lugar de SQL puro
 
 ---
