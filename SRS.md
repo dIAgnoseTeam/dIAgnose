@@ -30,17 +30,11 @@ dIAgnose es una aplicación web hospitalaria que combina análisis médico tradi
 **Funcionalidades principales:**
 - Demo de interfaz gráfica del sistema
 - Autenticación y control de acceso
-- Gestión completa de pacientes (CRUD)
+- Gestión completa de datos de pacientes
 - Registro y consulta de historiales médicos
-- Sistema de mensajería en tiempo real entre profesionales
 
 **Exclusiones de la versión 1.0:**
 - Diagnóstico asistido por IA
-- Integración con sistemas de facturación
-- Gestión de citas médicas
-- Recetas electrónicas
-- Videoconsulta
-- Panel de administración completo
 
 ### 1.3 Definiciones y Acrónimos
 
@@ -99,7 +93,7 @@ graph TB
 ```
 
 **Componentes de base de datos:**
-- PostgreSQL: datos estructurados de usuarios y pacientes
+- PostgreSQL: datos estructurados de médicos y pacientes
 - MongoDB: mensajes de chat y conversaciones
 
 ### 2.2 Funciones del Producto
@@ -109,21 +103,19 @@ graph TB
 | Módulo | Descripción | Acceso |
 |--------|-------------|--------|
 | Dashboard | Panel principal personalizado | Autenticados |
-| Gestión Pacientes | CRUD completo de información de pacientes | Personal autorizado |
+| Gestión datos de pacientes | Información de pacientes | Personal autorizado |
 | Historial Médico | Registro y consulta de historiales | Médicos |
-| Chat | Mensajería instantánea | Todos los autenticados |
 
 ### 2.3 Características de los Usuarios
 
 | Rol | Funciones | Permisos |
 |-----|-----------|----------|
 | Administrador | Gestión de usuarios y acceso a funcionalidades del sistema | Total |
-| Médico | Gestión de pacientes, registro y consulta de historiales médicos | Completo sobre pacientes |
+| Médico | Gestión de datos de pacientes, registro y consulta de historiales médicos | Completo sobre pacientes |
 
 ### 2.4 Restricciones
 
 **Legales y normativas:**
-- Cumplimiento estricto de RGPD
 - Confidencialidad de datos médicos
 - Protección de información sensible de pacientes
 
@@ -162,11 +154,6 @@ graph TB
 - Menú de navegación lateral con acceso a módulos principales
 - Barra superior con información del usuario y opción de logout
 
-**Módulo de Pacientes:**
-- Lista de pacientes con buscador básico
-- Vista detalle de paciente con pestañas (datos personales, historial)
-- Botones de acción claramente identificados (crear, editar, ver historial)
-
 **Módulo de Historial:**
 - Timeline cronológico de consultas médicas
 - Vista expandida para detalles completos
@@ -189,31 +176,14 @@ graph TB
 
 ---
 
-#### RF-003: Gestión Básica de Pacientes (CRUD Completo)
+#### RF-003: Gestión Básica de datos de Pacientes
 
-**Crear paciente:**
 - Campos obligatorios: nombre, apellidos, DNI, fecha de nacimiento, teléfono, dirección
 - Campos opcionales: email, grupo sanguíneo, alergias
-- Validación de DNI único en base de datos
-- Asignación automática de ID único interno
-
-**Leer/Consultar paciente:**
-- Búsqueda por DNI, nombre o ID
-- Lista de resultados con paginación (20 por página)
 - Vista detallada con todos los datos del paciente
-- Registro de accesos en logs de auditoría
-
-**Actualizar paciente:**
+- Asignación automática de ID único interno
 - Formulario precargado con datos actuales
-- DNI inmutable tras creación
-- Timestamp automático de última modificación
-- Usuario responsable registrado automáticamente
-
-**Eliminar paciente:**
-- Eliminación lógica (soft delete)
-- Requiere confirmación y rol de Administrador
-- Registro detallado en logs de auditoría
-- Datos históricos permanecen disponibles
+- Validación de caso por parte del doctor
 
 ---
 
@@ -222,7 +192,6 @@ graph TB
 **Crear registro de historial:**
 - Asociación obligatoria a un paciente existente
 - Campos obligatorios: fecha, motivo de consulta, diagnóstico
-- Registro de signos vitales: temperatura, presión arterial, frecuencia cardíaca, saturación O2
 - Médico responsable y timestamp registrados automáticamente
 
 **Consultar historial:**
@@ -236,12 +205,6 @@ graph TB
 - Campo obligatorio: motivo de modificación
 - Histórico de versiones para auditoría
 - Confirmación antes de guardar cambios
-
-**Validación de signos vitales:**
-- Alertas visuales por colores según rangos (verde/amarillo/rojo)
-- Rangos normales: temperatura 35.5-37.5°C, presión 90-140/60-90 mmHg, FC 60-100 ppm, O2 95-100%
-- Mensaje explicativo si valor fuera de rango
-- No bloquea guardado pero muestra advertencia
 
 ### 3.2 Requisitos No Funcionales
 
@@ -438,6 +401,6 @@ Bases de datos:
 
 | Rol | Nombre | Fecha |
 |-----|--------|-------|
-| Equipo LosMasones | Héctor de la Llave Ballesteros | ___________ |
+| Equipo LosMasones | Héctor de la Llave Ballesteros | 10/11/2025 |
 | Equipo MediScout | Josue Mejías Morante | ___________ |
 | Tutor/Profesor | ___________ | ___________ |
