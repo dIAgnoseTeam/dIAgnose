@@ -97,7 +97,7 @@ El backend es una API REST en Flask que maneja toda la lógica de negocio. Usa S
 graph LR
     API[🔌 REST API] --> Auth[🔐 Auth Service]
     API --> Patient[🏥 Patient Service]
-    API --> Record[� Record Service]
+    API --> Record[🛠️ Record Service]
     
     Auth --> PG[(PostgreSQL)]
     Patient --> PG
