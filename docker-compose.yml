@@ -1,16 +1,20 @@
 version: "3.8"
 
 services:
-  frontend:
-    build: ./frontend
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
-
   backend:
     build: ./backend
     ports:
       - "5000:5000"
     environment:
-      - FLASK_ENV=production
+      - FLASK_ENV=development
+      - HF_TOKEN=${HF_TOKEN}
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: http://localhost:5000
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
