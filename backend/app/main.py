@@ -25,7 +25,8 @@ df = pd.concat(df_list, ignore_index=True)
 
 # Creamos la aplicación Flask
 app = Flask(__name__)
-CORS(app, origins=["http://diagnose.riberadeltajo.es"])
+# CORS global para dev
+CORS(app)
 
 
 # Ruta principal
@@ -43,4 +44,7 @@ def registro_test(num):
 
 # Ejecutamos la app
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Bind a 0.0.0.0 para que sea accesible desde otros contenedores/host
+    # Usa debug según FLASK_ENV
+    debug = os.getenv("FLASK_ENV", "development").lower() != "production"
+    app.run(host="0.0.0.0", port=5000, debug=debug)

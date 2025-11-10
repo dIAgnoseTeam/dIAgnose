@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 
-const API_BASE = import.meta.env.API_URL || "http://127.0.0.1:5000";
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 function App() {
   const [greeting, setGreeting] = useState("");
@@ -33,7 +33,7 @@ function App() {
           try {
             const obj = JSON.parse(text);
             setRecord(obj);
-          } catch (e) {
+          } catch {
             throw new Error("Formato JSON inválido");
           }
         })
