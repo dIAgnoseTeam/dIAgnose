@@ -20,14 +20,13 @@
 
 ## 🎯 ¿Qué es dIAgnose?
 
-**dIAgnose** es nuestra solución para modernizar la gestión hospitalaria. Básicamente, es una aplicación web que permite a médicos y personal sanitario gestionar pacientes, consultar historiales y comunicarse en tiempo real, todo desde un mismo lugar.
+**dIAgnose** es nuestra solución para modernizar la gestión hospitalaria. Básicamente, es una aplicación web que permite a médicos gestionar datos de pacientes, validar historiales y guardarlos para su posterior visualización.
 
 ### ✨ Lo que puedes hacer con dIAgnose
 
-- 👥 **Gestionar pacientes**: crear perfiles, actualizar datos, buscar historiales rápidamente
-- 💬 **Chat en tiempo real**: comunicación instantánea entre el equipo médico usando WebSockets
+- 👥 **Gestionar datos de pacientes**: visualizar datos de pacientes, actualizar datos, buscar historiales rápidamente
 - 🔐 **Acceso seguro**: autenticación con JWT y control de permisos según tu rol
-- 📊 **Historial médico**: registro completo de consultas, tratamientos y signos vitales
+- 📊 **Historial médico**: registro completo de datos del paciente y tratamientos
 - 📱 **Responsive**: funciona en ordenadores, tablets y móviles
 
 ---
@@ -82,7 +81,7 @@ graph LR
     A[🔑 Login] --> B{Auth}
     B -->|✅| C[🏠 Dashboard]
     B -->|❌| A
-    C --> D[📋 Pacientes]
+    C --> D[📋 Casos Clínicos]
     C --> E[💬 Chat]
     C --> F[📊 Historial]
     C --> G[⚙️ Config]
@@ -124,18 +123,12 @@ Usamos dos bases de datos para aprovechar lo mejor de cada una:
 graph TB
     subgraph PostgreSQL["🐘 PostgreSQL"]
         Users[👤 users]
-        Patients[🏥 patients]
+        Patients_data[🏥 patients_data]
         Records[📋 medical_records]
-    end
-    
-    subgraph MongoDB["🍃 MongoDB"]
-        Msgs[💬 messages]
-        Convs[📨 conversations]
     end
     
     Users -->|1:N| Records
     Patients -->|1:N| Records
-    Convs -->|1:N| Msgs
     
     style PostgreSQL fill:#336791,stroke:#333,stroke-width:3px,color:#fff
     style MongoDB fill:#47a248,stroke:#333,stroke-width:3px,color:#fff
@@ -161,12 +154,12 @@ sequenceDiagram
     B-->>F: JWT Token
     F-->>U: Redirigir a Dashboard
     
-    U->>F: Buscar paciente
+    U->>F: Validar datos del paciente
     F->>B: GET /api/patients (con JWT)
     B->>D: Query
     D-->>B: Resultados
     B-->>F: JSON
-    F-->>U: Mostrar lista
+    F-->>U: Muestra de datos guardados correctamente
 ```
 
 ---
@@ -206,7 +199,6 @@ Por si no estás familiarizado con algún término:
 - **JWT**: Un token que se genera al hacer login y se envía en cada petición para autenticarte
 - **WebSocket**: Conexión que se mantiene abierta para enviar/recibir datos en tiempo real (necesario para el chat)
 - **ORM**: Una librería que te permite trabajar con la base de datos usando objetos en lugar de SQL puro
-- **CRUD**: Create, Read, Update, Delete - las operaciones básicas de cualquier sistema
 
 ---
 
@@ -220,7 +212,7 @@ Este proyecto lo estamos desarrollando entre dos equipos de estudiantes de 2º D
 
 | **LosMasones** 🔷 | **MediScout** 🔶 |
 |:-------------------|:-----------------|
-| **Héctor de la Llave Ballesteros** *(Leader)* | **Josue Mejías Morante** *(Leader)* |
+| **Héctor de la Llave Ballesteros** *(Project Leader)* | **Josue Mejías Morante** *(Project Leader)* |
 | Pablo Moreno Márquez | Rubén Cadalso Fernández |
 | Carlos López Tronco | Rubén Serrejón Porras |
 | Abel González Palencia | |
@@ -231,9 +223,9 @@ Este proyecto lo estamos desarrollando entre dos equipos de estudiantes de 2º D
 
 <div align="center">
 
-## 📄 Licencia y Documentación
+## 📄 Documentación
 
-[![Documentation](https://img.shields.io/badge/Docs-SRS-blue?style=for-the-badge)](./SRS.md)
+[![SRS](https://img.shields.io/badge/Docs-SRS-blue?style=for-the-badge)](./SRS.md)
 [![GitHub](https://img.shields.io/badge/GitHub-dIAgnose-181717?style=for-the-badge&logo=github)](https://github.com/gzzlz/dIAgnose)
 
 **dIAgnose** - Sistema de Gestión Hospitalaria  
