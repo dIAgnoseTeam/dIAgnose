@@ -25,7 +25,7 @@ df = pd.concat(df_list, ignore_index=True)
 
 # Creamos la aplicación Flask
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["http://diagnose.riberadeltajo.es"])
 
 
 # Ruta principal
