@@ -15,8 +15,10 @@ COPY requirements.txt .
 RUN python -m pip install --upgrade pip \
 	&& pip install --no-cache-dir -r requirements.txt
 
-# Copiar código fuente
+# Copiar código fuente (estructura completa del proyecto)
 COPY . .
 
 EXPOSE 5000
-CMD ["python", "app/main.py"]
+
+# Usar run.py como punto de entrada (Flask Application Factory)
+CMD ["python", "run.py"]

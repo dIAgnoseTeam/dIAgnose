@@ -1,0 +1,31 @@
+mi_proyecto/
+├── app/
+│   ├── __init__.py              # Inicialización de la app Flask
+│   ├── config.py                # Configuraciones
+│   ├── routes/                  # Blueprints (rutas)
+│   │   ├── __init__.py
+│   │   ├── dataset_routes.py
+│   │   ├── health_routes.py
+│   │   └── user_routes.py
+│   ├── services/                # Lógica de negocio
+│   │   ├── __init__.py
+│   │   ├── dataset_service.py
+│   │   └── user_service.py
+│   ├── repositories/            # Acceso a datos (DB/HuggingFace)
+│   │   ├── __init__.py
+│   │   ├── dataset_repository.py
+│   │   └── user_repository.py
+│   ├── models/                  # Modelos de BD (SQLAlchemy)
+│   │   ├── __init__.py
+│   │   └── user.py
+│   ├── schemas/                 # Validación y serialización
+│   │   ├── __init__.py
+│   │   └── user_schema.py
+│   └── utils/                   # Utilidades
+│       ├── __init__.py
+│       └── response.py
+├── tests/
+│   └── test_dataset_service.py
+├── requirements.txt
+├── .env
+└── run.py                       # Punto de entrada

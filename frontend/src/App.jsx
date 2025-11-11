@@ -12,9 +12,9 @@ function App() {
 
   // Fetch del saludo inicial
   useEffect(() => {
-    fetch(`${API_BASE}/primeraconexion`)
-      .then((r) => r.text())
-      .then(setGreeting)
+    fetch(`${API_BASE}/health/hello`)
+      .then((r) => r.json())
+      .then((data) => setGreeting(data.message))
       .catch((err) => console.error("Error saludo:", err));
   }, []);
 
@@ -25,17 +25,17 @@ function App() {
       const controller = new AbortController();
       const id = n ?? num;
 
-      fetch(`${API_BASE}/registro_test/${id}`, { signal: controller.signal })
+      fetch(`${API_BASE}/dataset/registro/${id}`, { signal: controller.signal })
         .then((r) => {
           if (!r.ok) throw new Error(`HTTP ${r.status}`);
-          return r.text();
+          return r.json();
         })
-        .then((text) => {
-          try {
-            const obj = JSON.parse(text);
-            setRecord(obj);
-          } catch {
-            throw new Error("Formato JSON inválido");
+        .then((response) => {
+          // El backend ahora retorna {success: true, data: {...}, message: "..."}
+          if (response.success && response.data) {
+            setRecord(response.data);
+          } else {
+            throw new Error(response.message || "Error al obtener registro");
           }
         })
         .catch((err) => {
