@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+// En producción usa el proxy de nginx (/api), en dev local usa variable de entorno
+const API_BASE = import.meta.env.VITE_API_URL || "/api";
 
 function App() {
   const [greeting, setGreeting] = useState("");
