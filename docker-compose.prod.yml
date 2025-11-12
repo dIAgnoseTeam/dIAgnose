@@ -1,0 +1,25 @@
+services:
+  backend:
+    image: ghcr.io/diagnose-team/diagnose/backend:main
+    expose:
+      - "5000"
+    environment:
+      - FLASK_ENV=production
+      - HF_TOKEN=${HF_TOKEN}
+    restart: unless-stopped
+    networks:
+      - diagnose-network
+
+  frontend:
+    image: ghcr.io/diagnose-team/diagnose/frontend:main
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - diagnose-network
+
+networks:
+  diagnose-network:
+    driver: bridge
