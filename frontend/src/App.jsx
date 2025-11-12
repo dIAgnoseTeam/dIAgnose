@@ -85,7 +85,7 @@ function App() {
               <button
                 onClick={() => fetchRecord(num)}
                 disabled={loadingRecord}
-                className="bg-blue-400 p-2 rounded-md flex items-end"
+                className="bg-red-400 p-2 rounded-md flex items-end"
               >
                 {loadingRecord ? "Buscando..." : "Obtener Registro"}
               </button>
@@ -113,6 +113,20 @@ function App() {
                   <p className="">{safeField(record.habitos)}</p>
                 </div>
               )}
+              <div className="flex flex-col gap-4">
+                {"factores_sociales" in record && (
+                  <div className="bg-red-100 p-4 rounded-md">
+                    <p className="font-bold">Factores Sociales</p>
+                    <p className="">{safeField(record.factores_sociales)}</p>
+                  </div>
+                )}
+                {"sintomas" in record && (
+                  <div className="bg-red-100 p-4 rounded-md">
+                    <p className="font-bold">Sintomas</p>
+                    <p className="">{safeField(record.sintomas)}</p>
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
