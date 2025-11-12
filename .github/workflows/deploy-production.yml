@@ -85,18 +85,17 @@ jobs:
             # Login al GitHub Container Registry
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-            # Pull las nuevas imágenes
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BACKEND }}:latest
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_FRONTEND }}:latest
+            # Pull latest changes y docker-compose.prod.yml
+            git pull origin main
 
-            # Actualizar docker-compose.yml para usar las imágenes del registry
-            docker-compose down
+            # Pull las nuevas imágenes
+            docker compose pull
+
+            # Actualizar contenedores con imágenes del registry
+            docker compose -f docker-compose.prod.yml down
+            docker compose -f docker-compose.prod.yml up -d
 
             # Limpiar imágenes antiguas
             docker image prune -af
 
-            docker-compose up -d
-
-
-
-            echo "Deployment completed successfully!"
+            echo "✅ Deployment completed successfully!"
