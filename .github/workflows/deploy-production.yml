@@ -89,13 +89,13 @@ jobs:
             git pull origin main
 
             # Pull las nuevas imágenes
-            docker compose pull
+            docker-compose pull
 
             # Actualizar contenedores con imágenes del registry
-            docker compose -f docker-compose.prod.yml down
-            docker compose -f docker-compose.prod.yml up -d
+            docker-compose -f docker-compose.prod.yml down
+            docker-compose -f docker-compose.prod.yml up -d
 
             # Limpiar imágenes antiguas
             docker image prune -af
 
-            echo "✅ Deployment completed successfully!"
+            echo "Deployment completed successfully!"
