@@ -85,7 +85,7 @@ function App() {
               <button
                 onClick={() => fetchRecord(num)}
                 disabled={loadingRecord}
-                className="bg-red-400 p-2 rounded-md flex items-end"
+                className="bg-blue-400 p-2 rounded-md flex items-end"
               >
                 {loadingRecord ? "Buscando..." : "Obtener Registro"}
               </button>
