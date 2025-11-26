@@ -1,4 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import RegisterCard from "../components/ui/RegisterCard";
 
 // En producción usa el proxy de nginx (/api), en dev local usa variable de entorno
 const API_BASE = import.meta.env.VITE_API_URL || "/api";
@@ -6,6 +8,7 @@ const API_BASE = import.meta.env.VITE_API_URL || "/api";
 function Testing() {
   const [greeting, setGreeting] = useState("");
   const [num, setNum] = useState(0);
+  const [maxRegisters, setMaxRegisters] = useState(0);
   const [record, setRecord] = useState(null);
   const [loadingRecord, setLoadingRecord] = useState(false);
   const [errorRecord, setErrorRecord] = useState(null);
@@ -51,6 +54,21 @@ function Testing() {
     [num]
   );
 
+  useEffect(() => {
+    fetch(`${API_BASE}/dataset/registro/max-registers`)
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then((data) => {
+        setMaxRegisters(data.data || 99);
+      })
+      .catch((err) => {
+        console.error("Error obteniendo max registros:", err);
+        setMaxRegisters(99); // Fallback por defecto
+      });
+  }, []);
+
   // Auto-cargar registro inicial
   useEffect(() => {
     const cleanup = fetchRecord(num);
@@ -61,75 +79,52 @@ function Testing() {
     value ? value : fallback;
 
   return (
-    <div className="p-4 bg-red-50 min-h-screen m-0">
-      <div className="">
-        <div className="">
-          <h1 className="">{greeting || "Cargando..."}</h1>
-
-          <div className="flex gap-4 my-4">
-            <div className=" flex flex-col">
-              <label htmlFor="num" className="">
-                Número de Registro
-              </label>
-              <input
-                type="number"
-                id="num"
-                className="border border-gray-300 rounded-md p-2"
-                value={num}
-                min={0}
-                max={99}
-                onChange={(e) => setNum(Number(e.target.value) || 0)}
-              />
-            </div>
-            <div className="align-end flex items-end">
-              <button
-                onClick={() => fetchRecord(num)}
-                disabled={loadingRecord}
-                className="bg-red-400 p-2 rounded-md flex items-end"
-              >
-                {loadingRecord ? "Buscando..." : "Obtener Registro"}
-              </button>
-            </div>
-          </div>
-
-          {errorRecord && (
-            <div className="">
-              <p className="">Error</p>
-              <p className="">{errorRecord}</p>
-            </div>
-          )}
-
-          {record && (
-            <div className="flex flex-col gap-4">
-              {"alergias" in record && (
-                <div className="bg-red-100 p-4 rounded-md">
-                  <p className="font-bold">Alergias</p>
-                  <p className="">{safeField(record.alergias)}</p>
-                </div>
-              )}
-              {"habitos" in record && (
-                <div className="bg-red-100 p-4 rounded-md">
-                  <p className="font-bold">Hábitos</p>
-                  <p className="">{safeField(record.habitos)}</p>
-                </div>
-              )}
-              <div className="flex flex-col gap-4">
-                {"factores_sociales" in record && (
-                  <div className="bg-red-100 p-4 rounded-md">
-                    <p className="font-bold">Factores Sociales</p>
-                    <p className="">{safeField(record.factores_sociales)}</p>
-                  </div>
-                )}
-                {"sintomas" in record && (
-                  <div className="bg-red-100 p-4 rounded-md">
-                    <p className="font-bold">Sintomas</p>
-                    <p className="">{safeField(record.sintomas)}</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
+    <div className="p-4 min-h-max m-0">
+      <div className="flex flex-col gap-2 items-center">
+        <p className="text-center text-2xl font-bold text-primary-800">
+          Visualizador de registros
+        </p>
+        <div className="flex gap-4 my-4">
+          <button
+            className="p-4 bg-secondary-800 rounded-xl hover:bg-secondary-900"
+            onClick={() => setNum(num - 1)}
+            disabled={loadingRecord || num <= 0}
+          >
+            <ArrowLeft color="white" strokeWidth={3} />
+          </button>
+          <span className="p-4 bg-secondary-50 rounded-xl text-xl font-bold ">
+            {num + 1} / {maxRegisters + 1}
+          </span>
+          <button
+            className="p-4 bg-secondary-800 rounded-xl hover:bg-secondary-900"
+            onClick={() => setNum(num + 1)}
+            disabled={loadingRecord || num >= maxRegisters}
+          >
+            <ArrowRight color="white" strokeWidth={3} />
+          </button>
         </div>
+
+        {errorRecord && (
+          <div className="">
+            <p className="">Error</p>
+            <p className="">{errorRecord}</p>
+          </div>
+        )}
+
+        {record && (
+          <div className="flex flex-wrap gap-4">
+            {Object.entries(record).map(([key, value]) => (
+              <div key={key} className="flex-1 min-w-[280px] max-w-[400px]">
+                <RegisterCard
+                  title={key
+                    .replace(/_/g, " ")
+                    .replace(/\b\w/g, (c) => c.toUpperCase())}
+                  content={safeField(value)}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -10,9 +10,10 @@ def create_app():
 
     # Inicializamos las extensiones
     CORS(app, supports_credentials=True, origins=[Config.FRONTEND_URL])
-    
+
     # Configuramos OAuth
     from app.utils.oauth import configure_oauth
+
     oauth = configure_oauth(app)
 
     # Registrar blueprints para las rutas

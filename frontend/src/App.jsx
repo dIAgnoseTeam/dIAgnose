@@ -5,6 +5,9 @@ import Home from "./pages/Home";
 import Testing from "./pages/Testing";
 import AuthCallback from "./components/auth/AuthCallback";
 import { HashLoader } from "react-spinners";
+import Navbar from "./components/ui/Navbar";
+import Profile from "./pages/Profile";
+import MainLayout from "./components/layout/MainLayout";
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -27,7 +30,9 @@ function App() {
             path="/"
             element={
               <PrivateRoute>
-                <Home />
+                <MainLayout>
+                  <Home />
+                </MainLayout>
               </PrivateRoute>
             }
           />
@@ -35,7 +40,19 @@ function App() {
             path="/test-registros"
             element={
               <PrivateRoute>
-                <Testing />
+                <MainLayout>
+                  <Testing />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <Profile />
+                </MainLayout>
               </PrivateRoute>
             }
           />
