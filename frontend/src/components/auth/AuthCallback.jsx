@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import { HashLoader } from "react-spinners";
+import { PropagateLoader } from "react-spinners";
 
 const AuthCallback = () => {
   const [searchParams] = useSearchParams();
@@ -28,7 +28,7 @@ const AuthCallback = () => {
 
   return (
     <div className="flex flex-col justify-center items-center h-dvh">
-      <HashLoader
+      <PropagateLoader
         color={color}
         loading={loading}
         size={150}

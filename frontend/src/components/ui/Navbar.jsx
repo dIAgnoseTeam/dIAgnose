@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { useAuth } from "../../contexts/AuthContext";
 import defaultPic from "./../../assets/images/default_userpic.png";
+import { FileText } from "lucide-react";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -19,8 +20,9 @@ const Navbar = () => {
         <div className="flex items-center space-x-4">
           <Link
             to="/test-registros"
-            className="text-neutral-700 hover:text-primary-600 transition hover:bg-neutral-100 p-2 rounded-lg"
+            className="text-neutral-700 hover:text-primary-600 transition hover:bg-neutral-100 p-2 rounded-lg flex gap-2"
           >
+            <FileText />
             Ver Registros
           </Link>
         </div>

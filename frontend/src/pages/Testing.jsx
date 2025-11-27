@@ -1,9 +1,8 @@
 import { useEffect, useState, useCallback } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { PropagateLoader } from "react-spinners";
 import RegisterCard from "../components/ui/RegisterCard";
-
-// En producción usa el proxy de nginx (/api), en dev local usa variable de entorno
-const API_BASE = import.meta.env.VITE_API_URL || "/api";
+import { API_BASE } from "../config/constants";
 
 function Testing() {
   const [greeting, setGreeting] = useState("");
@@ -104,6 +103,12 @@ function Testing() {
           </button>
         </div>
 
+        {loadingRecord && (
+          <div className="flex justify-center items-center py-8">
+            <PropagateLoader color="#1e3a8a" />
+          </div>
+        )}
+
         {errorRecord && (
           <div className="">
             <p className="">Error</p>
@@ -111,7 +116,7 @@ function Testing() {
           </div>
         )}
 
-        {record && (
+        {record && !loadingRecord && (
           <div className="flex flex-wrap gap-4">
             {Object.entries(record).map(([key, value]) => (
               <div key={key} className="flex-1 min-w-[280px] max-w-[400px]">

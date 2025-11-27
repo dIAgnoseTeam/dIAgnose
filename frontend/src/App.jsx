@@ -4,7 +4,7 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Testing from "./pages/Testing";
 import AuthCallback from "./components/auth/AuthCallback";
-import { HashLoader } from "react-spinners";
+import { PropagateLoader } from "react-spinners";
 import Navbar from "./components/ui/Navbar";
 import Profile from "./pages/Profile";
 import MainLayout from "./components/layout/MainLayout";
@@ -13,7 +13,11 @@ const PrivateRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
-    return <HashLoader />;
+    return (
+      <div className="h-dvh w-dvh flex items-center justify-center">
+        <PropagateLoader color="#1e3a8a" />
+      </div>
+    );
   }
 
   return isAuthenticated ? children : <Navigate to="/login" />;
