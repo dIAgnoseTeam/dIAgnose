@@ -3,11 +3,13 @@ version: "3.8"
 services:
   backend:
     build: ./backend
-    expose:
-      - "5000"
+    ports:
+      - "5000:5000"
     environment:
       - FLASK_ENV=development
-      - HF_TOKEN=${HF_TOKEN}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+    env_file:
+      - ./backend/.env
     networks:
       - diagnose-network
 

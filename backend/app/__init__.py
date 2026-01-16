@@ -8,7 +8,26 @@ def create_app():
     app.config.from_object(Config)
 
     # Inicializamos las extensiones
+<<<<<<< Updated upstream
     CORS(app)
+=======
+    # Docker configurations
+    CORS(app, supports_credentials=True, 
+         origins=[Config.FRONTEND_URL], 
+         allow_headers=["Content-Type", "Authorization"],
+         expose_headers=["Content-Type", "Authorization"])
+    
+    # Prod configurations
+    # CORS(app, supports_credentials=True, 
+    # origins=[Config.FRONTEND_URL], 
+    # allow_headers=["Content-Type", "Authorization"],
+    # expose_headers=["Content-Type", "Authorization"])
+
+    # Configuramos OAuth
+    from app.utils.oauth import configure_oauth
+
+    oauth = configure_oauth(app)
+>>>>>>> Stashed changes
 
     # Registrar blueprints para las rutas
     from app.routes.dataset_routes import dataset_bp
