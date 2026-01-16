@@ -7,10 +7,14 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
+    # Configurar orígenes permitidos según entorno
+    allowed_origins = [Config.FRONTEND_URL]
+
+    # En desarrollo local, normalmente en Docker
+    if "localhost" in Config.FRONTEND_URL:
+        allowed_origins.extend(["http://localhost", "http://localhost:80"])
+
     # Inicializamos las extensiones
-<<<<<<< Updated upstream
-    CORS(app)
-=======
     # Docker configurations
     CORS(app, supports_credentials=True, 
          origins=[Config.FRONTEND_URL], 
@@ -27,7 +31,6 @@ def create_app():
     from app.utils.oauth import configure_oauth
 
     oauth = configure_oauth(app)
->>>>>>> Stashed changes
 
     # Registrar blueprints para las rutas
     from app.routes.dataset_routes import dataset_bp

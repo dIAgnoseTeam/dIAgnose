@@ -11,8 +11,6 @@ class Config:
     # Hugging Face Token
     HF_TOKEN = os.getenv("HF_TOKEN", None)
     HF_CACHE_DIR = os.getenv("HF_CACHE_DIR", "./hf_cache")
-<<<<<<< Updated upstream
-=======
     
     # Auth Configurations
     GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
@@ -27,4 +25,3 @@ class Config:
     
     GOOGLE_DESCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
     OAUTH_SCOPES = ["openid", "email", "profile"]
->>>>>>> Stashed changes

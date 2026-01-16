@@ -3,13 +3,17 @@ version: "3.8"
 services:
   backend:
     build: ./backend
-    ports:
-      - "5000:5000"
+    expose:
+      - "5000"
     environment:
-      - FLASK_ENV=development
+      - FLASK_ENV=production
+      - HF_TOKEN=${HF_TOKEN}
+      - SECRET_KEY=${SECRET_KEY}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
-    env_file:
-      - ./backend/.env
+      - FRONTEND_URL=${FRONTEND_URL}
+      - BACKEND_URL=${BACKEND_URL}
     networks:
       - diagnose-network
 
