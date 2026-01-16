@@ -6,11 +6,21 @@ services:
     environment:
       - FLASK_ENV=production
       - HF_TOKEN=${HF_TOKEN}
+      - SECRET_KEY=${SECRET_KEY}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - FRONTEND_URL=${FRONTEND_URL}
+      - BACKEND_URL=${BACKEND_URL}
     restart: unless-stopped
     networks:
       - diagnose-network
 
   frontend:
+    build:
+      context: ./frontend
+      args:
+        - VITE_API_URL=${VITE_API_URL:-https://diagnose.riberadeltajo.es/api}
     image: ghcr.io/diagnoseteam/diagnose/frontend:latest
     ports:
       - "80:80"

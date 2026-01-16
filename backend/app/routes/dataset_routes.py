@@ -17,3 +17,14 @@ def get_registro(num: int):
         return error_response(str(e), 404)
     except Exception as e:
         return error_response(f"Error interno del servidor: {str(e)}", 500)
+
+
+@dataset_bp.route("/registro/max-registers", methods=["GET"])
+def get_max_registers():
+    try:
+        max_registers = dataset_service.get_max_registers()
+        return success_response(
+            max_registers, "Numero maximo de registros obtenido con exito"
+        )
+    except Exception as e:
+        return error_response(f"Error interno del servidor: {str(e)}", 500)

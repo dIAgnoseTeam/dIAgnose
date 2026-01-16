@@ -7,3 +7,6 @@ class DatasetService:
 
     def get_registro(self, num: int) -> dict:
         return self.dataset_repository.get_registro(num)
+
+    def get_max_registers(self) -> dict:
+        return self.dataset_repository.get_max_register()
