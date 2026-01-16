@@ -9,7 +9,7 @@ def create_app():
     app.secret_key = Config.SECRET_KEY
 
     # Inicializamos las extensiones
-    CORS(app, supports_credentials=True, origins=[Config.FRONTEND_URL])
+    CORS(app)
 
     # Configuramos OAuth
     from app.utils.oauth import configure_oauth
