@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = () => {
-    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+    const apiUrl = import.meta.env.VITE_API_URL || "";
     const width = 500;
     const height = 600;
     const left = window.screen.width / 2 - width / 2;

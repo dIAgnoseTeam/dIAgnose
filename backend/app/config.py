@@ -26,6 +26,8 @@ class Config:
     
     GOOGLE_DESCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
     OAUTH_SCOPES = ["openid", "email", "profile"]
+<<<<<<< HEAD
+=======
 
     FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
     BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:5000")
@@ -33,3 +35,4 @@ class Config:
     GOOGLE_DESCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
     OAUTH_SCOPES = ["openid", "email", "profile"]
 
+>>>>>>> 3859922564e6b32a2394126c4a3a814e75961134
