@@ -1,0 +1,9 @@
+.login-container {
+  background-image: url(./../images/login-bg.jpg);
+  background-size: cover;
+}
+
+.google-icon {
+  width: 24px;
+  height: 24px;
+}

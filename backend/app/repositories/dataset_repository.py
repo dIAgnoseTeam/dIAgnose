@@ -26,3 +26,6 @@ class DatasetRepository:
         if num < 0 or num >= len(self.df):
             raise IndexError("Número de registro fuera de rango.")
         return self.df.iloc[num].to_dict()
+
+    def get_max_register(self) -> dict:
+        return len(self.df)
