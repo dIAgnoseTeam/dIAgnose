@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from app.config import Config
+from werkzeug.middleware.proxy_fix import ProxyFix
 import logging
 
 
@@ -8,6 +9,13 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     app.secret_key = Config.SECRET_KEY
+
+    # Configurar ProxyFix para producción (confiar en headers del proxy)
+    # x_for=1: confiar en un proxy para X-Forwarded-For
+    # x_proto=1: confiar en un proxy para X-Forwarded-Proto (HTTP vs HTTPS)
+    # x_host=1: confiar en un proxy para X-Forwarded-Host
+    # x_prefix=1: confiar en un proxy para X-Forwarded-Prefix
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
     # Configurar logging para debug
     logging.basicConfig(
