@@ -11,6 +11,10 @@ services:
       - diagnose-network
 
   frontend:
+    build:
+      context: ./frontend
+      args:
+        - VITE_API_URL=${VITE_API_URL:-https://diagnose.riberadeltajo.es/api}
     image: ghcr.io/diagnoseteam/diagnose/frontend:latest
     ports:
       - "80:80"
