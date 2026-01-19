@@ -37,7 +37,15 @@ def google_callback():
     logger.debug("=" * 60)
     logger.debug("CALLBACK DE GOOGLE RECIBIDO")
     logger.debug(f"URL completa de la petición: {request.url}")
+    logger.debug(f"request.scheme: {request.scheme}")
+    logger.debug(f"request.host: {request.host}")
+    logger.debug(f"request.path: {request.path}")
+    logger.debug(f"request.full_path: {request.full_path}")
     logger.debug(f"Args de la petición: {request.args}")
+    logger.debug(
+        f"Headers X-Forwarded-Proto: {request.headers.get('X-Forwarded-Proto')}"
+    )
+    logger.debug(f"Headers X-Forwarded-Host: {request.headers.get('X-Forwarded-Host')}")
     logger.debug("=" * 60)
 
     try:
