@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import { authService } from "../services/api";
+import { API_BASE } from "../config/constants";
 
 const AuthContext = createContext(null);
 
@@ -34,7 +35,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = () => {
-    const apiUrl = import.meta.env.VITE_API_URL || "";
+    const apiUrl = API_BASE;
     const width = 500;
     const height = 600;
     const left = window.screen.width / 2 - width / 2;

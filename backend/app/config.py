@@ -20,9 +20,6 @@ class Config:
     # Docker configurations
     FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost")
     BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:5000")
-    # Prod configurations
-    # FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
-    # BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:5000")
     
     GOOGLE_DESCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
     OAUTH_SCOPES = ["openid", "email", "profile"]
