@@ -1,12 +1,32 @@
 from flask import Flask
 from flask_cors import CORS
 from app.config import Config
+import logging
 
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     app.secret_key = Config.SECRET_KEY
+
+    # Configurar logging para debug
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    )
+
+    # Obtener logger y mostrar configuración inicial
+    logger = logging.getLogger(__name__)
+    logger.debug("=" * 80)
+    logger.debug("CONFIGURACIÓN DE LA APLICACIÓN")
+    logger.debug(f"FRONTEND_URL: {Config.FRONTEND_URL}")
+    logger.debug(f"BACKEND_URL: {Config.BACKEND_URL}")
+    logger.debug(
+        f"GOOGLE_CLIENT_ID: {Config.GOOGLE_CLIENT_ID[:20]}..."
+        if hasattr(Config, "GOOGLE_CLIENT_ID")
+        else "No configurado"
+    )
+    logger.debug("=" * 80)
 
     # Configurar orígenes permitidos según entorno
     allowed_origins = [Config.FRONTEND_URL]
@@ -17,14 +37,17 @@ def create_app():
 
     # Inicializamos las extensiones
     # Docker configurations
-    CORS(app, supports_credentials=True, 
-         origins=[Config.FRONTEND_URL], 
-         allow_headers=["Content-Type", "Authorization"],
-         expose_headers=["Content-Type", "Authorization"])
-    
+    CORS(
+        app,
+        supports_credentials=True,
+        origins=[Config.FRONTEND_URL],
+        allow_headers=["Content-Type", "Authorization"],
+        expose_headers=["Content-Type", "Authorization"],
+    )
+
     # Prod configurations
-    # CORS(app, supports_credentials=True, 
-    # origins=[Config.FRONTEND_URL], 
+    # CORS(app, supports_credentials=True,
+    # origins=[Config.FRONTEND_URL],
     # allow_headers=["Content-Type", "Authorization"],
     # expose_headers=["Content-Type", "Authorization"])
 
