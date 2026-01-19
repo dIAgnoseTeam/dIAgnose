@@ -1,4 +1,4 @@
-mi_proyecto/
+dIAgnose/
 ├── app/
 │   ├── __init__.py              # Inicialización de la app Flask
 │   ├── config.py                # Configuraciones
