@@ -8,8 +8,25 @@ def create_app():
     app.config.from_object(Config)
     app.secret_key = Config.SECRET_KEY
 
+    # Configurar orígenes permitidos según entorno
+    allowed_origins = [Config.FRONTEND_URL]
+
+    # En desarrollo local, normalmente en Docker
+    if "localhost" in Config.FRONTEND_URL:
+        allowed_origins.extend(["http://localhost", "http://localhost:80"])
+
     # Inicializamos las extensiones
-    CORS(app, supports_credentials=True, origins=[Config.FRONTEND_URL])
+    # Docker configurations
+    CORS(app, supports_credentials=True, 
+         origins=[Config.FRONTEND_URL], 
+         allow_headers=["Content-Type", "Authorization"],
+         expose_headers=["Content-Type", "Authorization"])
+    
+    # Prod configurations
+    # CORS(app, supports_credentials=True, 
+    # origins=[Config.FRONTEND_URL], 
+    # allow_headers=["Content-Type", "Authorization"],
+    # expose_headers=["Content-Type", "Authorization"])
 
     # Configuramos OAuth
     from app.utils.oauth import configure_oauth
