@@ -2,6 +2,10 @@ from flask import Blueprint, request, jsonify, redirect
 from app.utils.oauth import get_google_oauth_client
 from app.utils.oauth_decorator import create_token, token_required
 from app.config import Config
+import logging
+
+# Configurar logger
+logger = logging.getLogger(__name__)
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -9,14 +13,33 @@ auth_bp = Blueprint("auth", __name__)
 @auth_bp.route("/google/login")
 def google_login():
     # Iniciar proceso de login con Google
+    logger.debug("=" * 60)
+    logger.debug("INICIANDO PROCESO DE LOGIN CON GOOGLE")
+    logger.debug("=" * 60)
+
+    # Log de la configuración
+    logger.debug(f"BACKEND_URL desde Config: {Config.BACKEND_URL}")
+    logger.debug(f"BACKEND_URL después de rstrip: {Config.BACKEND_URL.rstrip('/')}")
+
     google = get_google_oauth_client()
     redirect_uri = Config.BACKEND_URL.rstrip("/") + "/auth/google/callback"
+
+    # Log de la URL completa del callback
+    logger.debug(f"URL COMPLETA DEL CALLBACK: {redirect_uri}")
+    logger.debug("=" * 60)
+
     return google.authorize_redirect(redirect_uri)
 
 
 @auth_bp.route("/google/callback")
 def google_callback():
     # Callback después de autenticación con Google
+    logger.debug("=" * 60)
+    logger.debug("CALLBACK DE GOOGLE RECIBIDO")
+    logger.debug(f"URL completa de la petición: {request.url}")
+    logger.debug(f"Args de la petición: {request.args}")
+    logger.debug("=" * 60)
+
     try:
         google = get_google_oauth_client()
 
