@@ -10,7 +10,7 @@ auth_bp = Blueprint("auth", __name__)
 def google_login():
     # Iniciar proceso de login con Google
     google = get_google_oauth_client()
-    redirect_uri = request.host_url.rstrip("/") + "/auth/google/callback"
+    redirect_uri = Config.BACKEND_URL.rstrip("/") + "/auth/google/callback"
     return google.authorize_redirect(redirect_uri)
 
 
