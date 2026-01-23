@@ -10,8 +10,8 @@ services:
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
-      - FRONTEND_URL=${FRONTEND_URL}
-      - BACKEND_URL=${BACKEND_URL}
+      - FRONTEND_URL=https://diagnose.riberadeltajo.es
+      - BACKEND_URL=https://diagnose.riberadeltajo.es/api
     restart: unless-stopped
     networks:
       - diagnose-network
