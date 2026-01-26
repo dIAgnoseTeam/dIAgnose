@@ -23,7 +23,7 @@ jobs:
           ref: ${{ github.ref }}
           check-name: "Lint Backend (Python)"
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 10
+          wait-interval: 1000
 
       - name: Wait for frontend lint
         uses: lewagon/wait-on-check-action@v1.3.4
@@ -31,7 +31,7 @@ jobs:
           ref: ${{ github.ref }}
           check-name: "Lint Frontend (React)"
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 10
+          wait-interval: 1000
 
   build-and-push:
     name: Build and Push Docker Images
