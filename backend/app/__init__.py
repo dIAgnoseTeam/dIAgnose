@@ -45,10 +45,10 @@ def create_app():
 
     # Registrar blueprints para las rutas
     from app.routes.auth_routes import auth_bp
+    from app.routes.case_routes import case_bp
     from app.routes.dataset_routes import dataset_bp
     from app.routes.health_routes import health_bp
     from app.routes.review_routes import review_bp
-    from app.routes.case_routes import case_bp
 
     app.register_blueprint(dataset_bp, url_prefix="/dataset")
     app.register_blueprint(health_bp, url_prefix="/health")

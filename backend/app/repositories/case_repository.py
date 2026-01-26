@@ -1,12 +1,13 @@
 from sqlalchemy import select
-from db.config.session import SessionLocal
+
 from app.models.clinical_case import CasoClinico
- 
+from db.config.session import SessionLocal
+
 
 class CaseRepository:
     def __init__(self):
         self.session = SessionLocal()
-    
+
     # Obtener cantidad de registros de casos clínicos
     def get_case_count(self, limit: int = 1000, offset: int = 0):
         try:
@@ -14,7 +15,7 @@ class CaseRepository:
             return self.session.scalar(stmt).all()
         finally:
             self.session.close()
-    
+
     # Obtener un caso clínico a partir de su ID
     def get_case_by_id(self, case_id: int):
         try:
@@ -22,7 +23,3 @@ class CaseRepository:
             return self.session.scalar(stmt)
         finally:
             self.session.close()
-    
-    
-
-
