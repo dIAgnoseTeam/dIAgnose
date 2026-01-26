@@ -7,7 +7,7 @@ from app.models import Usuario, Valoracion, Rol, CasoClinico
 
 # Verificar si la base de datos existe
 def database_exists():
-    db_path = Path(__file__).parent / "db" / "db.sqlite"
+    db_path = Path(__file__).resolve().parent / "db.sqlite"
     return db_path.exists()
 
 # Inicializar la base de datos solo si no existe
@@ -17,9 +17,6 @@ def init_database():
         return False
     
     print("Inicializando la base de datos...")
-    # Creamos el directorio
-    db_dir = Path(__file__).parent / "db"
-    db_dir.mkdir(exist_ok=True)
     # Ejecutar desde la raíz del proyecto
     # Los modelos deben estar importados antes de hacer create_all
     base.metadata.create_all(bind=engine)
