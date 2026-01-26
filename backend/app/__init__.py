@@ -1,8 +1,10 @@
+import logging
+
 from flask import Flask
 from flask_cors import CORS
-from app.config import Config
 from werkzeug.middleware.proxy_fix import ProxyFix
-import logging
+
+from app.config import Config
 
 
 def create_app():
@@ -11,10 +13,6 @@ def create_app():
     app.secret_key = Config.SECRET_KEY
 
     # Configurar ProxyFix para producción (confiar en headers del proxy)
-    # x_for=1: confiar en un proxy para X-Forwarded-For
-    # x_proto=1: confiar en un proxy para X-Forwarded-Proto (HTTP vs HTTPS)
-    # x_host=1: confiar en un proxy para X-Forwarded-Host
-    # x_prefix=1: confiar en un proxy para X-Forwarded-Prefix
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
     # Configurar orígenes permitidos según entorno
@@ -46,9 +44,9 @@ def create_app():
     oauth = configure_oauth(app)
 
     # Registrar blueprints para las rutas
+    from app.routes.auth_routes import auth_bp
     from app.routes.dataset_routes import dataset_bp
     from app.routes.health_routes import health_bp
-    from app.routes.auth_routes import auth_bp
 
     app.register_blueprint(dataset_bp, url_prefix="/dataset")
     app.register_blueprint(health_bp, url_prefix="/health")
