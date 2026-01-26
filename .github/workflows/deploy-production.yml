@@ -12,8 +12,30 @@ env:
   IMAGE_NAME_FRONTEND: ${{ github.repository }}/frontend
 
 jobs:
+  # Espera a que el lint pase antes de desplegar
+  check-lint:
+    name: Wait for Lint to Pass
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for backend lint
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: ${{ github.ref }}
+          check-name: "Lint Backend (Python)"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+
+      - name: Wait for frontend lint
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: ${{ github.ref }}
+          check-name: "Lint Frontend (React)"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+
   build-and-push:
     name: Build and Push Docker Images
+    needs: check-lint
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -100,14 +122,18 @@ jobs:
             # Pull las nuevas imágenes
             docker-compose -f docker-compose.prod.yml pull
 
-            # Actualizar contenedores conservando volúmenes
-            # El volumen db-data se mantiene entre actualizaciones
-            docker-compose -f docker-compose.prod.yml up -d --no-deps --build backend frontend
+            # Detener y eliminar contenedores (SIN tocar volúmenes)
+            docker-compose -f docker-compose.prod.yml stop
+            docker-compose -f docker-compose.prod.yml rm -f
 
-            # Verificar estado de los contenedores
+            # Recrear contenedores desde cero con las nuevas imágenes
+            # El volumen db-data se preserva automáticamente
+            docker-compose -f docker-compose.prod.yml up -d
+
+            # Verificar estado de los servicios
             docker-compose -f docker-compose.prod.yml ps
 
             # Limpiar imágenes antiguas
             docker image prune -af
 
-            echo "Deployment completed successfully!"
+            echo "Deployment completed"

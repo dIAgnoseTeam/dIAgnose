@@ -1,9 +1,11 @@
-from flask import Blueprint, request, jsonify, redirect
-from app.utils.oauth import get_google_oauth_client
-from app.utils.oauth_decorator import create_token, token_required
+import logging
+
+from flask import Blueprint, jsonify, redirect, request
+
 from app.config import Config
 from app.services.user_service import UserService
-import logging
+from app.utils.oauth import get_google_oauth_client
+from app.utils.oauth_decorator import create_token, token_required
 
 # Configurar logger
 logger = logging.getLogger(__name__)
@@ -45,11 +47,9 @@ def google_callback():
         }
 
         user_service = UserService()
-        user = user_service.create_or_update_user(
-            correo=user_data["email"], nombre=user_data["name"]
-        )
+        user = user_service.create_or_update_user(correo=user_data["email"], nombre=user_data["name"])
         print(f"User inserted/updated: {user.correo}")
-        
+
         # Crear JWT token
         jwt_token = create_token(user_data)
 

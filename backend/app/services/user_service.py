@@ -1,18 +1,19 @@
 from sqlalchemy import select
-from db.config.session import SessionLocal
+
 from app.models.user import Usuario
+from db.config.session import SessionLocal
 
 
 class UserService:
     def __init__(self):
         self.session = SessionLocal()
-    
+
     def create_or_update_user(self, correo: str, nombre: str, id_rol: int = 2) -> Usuario:
         try:
             # Buscamos al usuario si existe
             stmt = select(Usuario).where(Usuario.correo == correo)
             usuario_existente = self.session.scalar(stmt)
-            
+
             if usuario_existente:
                 # El usuario existe, actualizamos el nombre si ha cambiado
                 usuario_existente.nombre = nombre
