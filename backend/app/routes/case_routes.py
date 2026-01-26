@@ -28,7 +28,7 @@ def get_case_by_id(current_user, case_id: int):
         return jsonify({"error": "Error al obtener el caso"}), 500
 
 
-@case_bp.route("/count", methods=["POST"])
+@case_bp.route("/count", methods=["GET"])
 @token_required
 def get_case_count(current_user):
     try:
