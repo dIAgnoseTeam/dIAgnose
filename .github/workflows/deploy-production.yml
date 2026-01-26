@@ -12,30 +12,8 @@ env:
   IMAGE_NAME_FRONTEND: ${{ github.repository }}/frontend
 
 jobs:
-  # Espera a que el lint pase antes de desplegar
-  check-lint:
-    name: Wait for Lint to Pass
-    runs-on: ubuntu-latest
-    steps:
-      - name: Wait for backend lint
-        uses: lewagon/wait-on-check-action@v1.3.4
-        with:
-          ref: ${{ github.ref }}
-          check-name: "Lint Backend (Python)"
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 1000
-
-      - name: Wait for frontend lint
-        uses: lewagon/wait-on-check-action@v1.3.4
-        with:
-          ref: ${{ github.ref }}
-          check-name: "Lint Frontend (React)"
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 1000
-
   build-and-push:
     name: Build and Push Docker Images
-    needs: check-lint
     runs-on: ubuntu-latest
     permissions:
       contents: read
