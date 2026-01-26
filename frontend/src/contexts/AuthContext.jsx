@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
     const left = window.screen.width / 2 - width / 2;
     const top = window.screen.height / 2 - height / 2;
 
-    const popup = window.open(
+    window.open(
       `${apiUrl}/auth/google/login`,
       "Google Login",
       `width=${width},height=${height},top=${top},left=${left}`

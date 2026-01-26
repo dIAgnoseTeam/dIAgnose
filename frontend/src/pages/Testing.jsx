@@ -5,7 +5,6 @@ import RegisterCard from "../components/ui/RegisterCard";
 import { API_BASE } from "../config/constants";
 
 function Testing() {
-  const [greeting, setGreeting] = useState("");
   const [num, setNum] = useState(0);
   const [maxRegisters, setMaxRegisters] = useState(0);
   const [record, setRecord] = useState(null);
@@ -16,7 +15,7 @@ function Testing() {
   useEffect(() => {
     fetch(`${API_BASE}/health/hello`)
       .then((r) => r.json())
-      .then((data) => setGreeting(data.message))
+      .then((data) => console.log(data.message))
       .catch((err) => console.error("Error saludo:", err));
   }, []);
 
@@ -50,7 +49,7 @@ function Testing() {
 
       return () => controller.abort();
     },
-    [num]
+    [num],
   );
 
   useEffect(() => {
