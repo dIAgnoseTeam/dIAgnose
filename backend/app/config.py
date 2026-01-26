@@ -1,12 +1,17 @@
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
 
+# Ruta base del proyecto (carpeta backend)
+BASE_DIR = Path(__file__).resolve().parent.parent  # Sube dos niveles desde app/config.py
+DB_PATH = BASE_DIR / "db" / "db.sqlite"
+
 
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "default_secret_key")
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///site.db")
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", f"sqlite:///{DB_PATH}")
 
     # Hugging Face Token
     HF_TOKEN = os.getenv("HF_TOKEN", None)

@@ -1,4 +1,4 @@
-from .assessment import Valoracion
+from .review import Valoracion
 from .clinical_case import CasoClinico
 from .role import Rol
 from .user import Usuario
