@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify, redirect
 from app.utils.oauth import get_google_oauth_client
 from app.utils.oauth_decorator import create_token, token_required
 from app.config import Config
+from app.services.user_service import UserService
 import logging
 
 # Configurar logger
@@ -13,41 +14,15 @@ auth_bp = Blueprint("auth", __name__)
 @auth_bp.route("/google/login")
 def google_login():
     # Iniciar proceso de login con Google
-    logger.debug("=" * 60)
-    logger.debug("INICIANDO PROCESO DE LOGIN CON GOOGLE")
-    logger.debug("=" * 60)
-
-    # Log de la configuración
-    logger.debug(f"BACKEND_URL desde Config: {Config.BACKEND_URL}")
-    logger.debug(f"BACKEND_URL después de rstrip: {Config.BACKEND_URL.rstrip('/')}")
-
     google = get_google_oauth_client()
     redirect_uri = Config.BACKEND_URL.rstrip("/") + "/auth/google/callback"
-
-    # Log de la URL completa del callback
-    logger.debug(f"URL COMPLETA DEL CALLBACK: {redirect_uri}")
-    logger.debug("=" * 60)
 
     return google.authorize_redirect(redirect_uri)
 
 
 @auth_bp.route("/google/callback")
 def google_callback():
-    # Callback después de autenticación con Google
-    logger.debug("=" * 60)
-    logger.debug("CALLBACK DE GOOGLE RECIBIDO")
-    logger.debug(f"URL completa de la petición: {request.url}")
-    logger.debug(f"request.scheme: {request.scheme}")
-    logger.debug(f"request.host: {request.host}")
-    logger.debug(f"request.path: {request.path}")
-    logger.debug(f"request.full_path: {request.full_path}")
-    logger.debug(f"Args de la petición: {request.args}")
-    logger.debug(
-        f"Headers X-Forwarded-Proto: {request.headers.get('X-Forwarded-Proto')}"
-    )
-    logger.debug(f"Headers X-Forwarded-Host: {request.headers.get('X-Forwarded-Host')}")
-    logger.debug("=" * 60)
-
+    # Manejar el callback de Google
     try:
         google = get_google_oauth_client()
 
@@ -69,8 +44,12 @@ def google_callback():
             "email_verified": user_info.get("email_verified", False),
         }
 
-        # TODO: Guardar en este punto en la base de datos si es necesario
-
+        user_service = UserService()
+        user = user_service.create_or_update_user(
+            correo=user_data["email"], nombre=user_data["name"]
+        )
+        print(f"User inserted/updated: {user.correo}")
+        
         # Crear JWT token
         jwt_token = create_token(user_data)
 

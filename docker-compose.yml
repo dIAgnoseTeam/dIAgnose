@@ -9,6 +9,9 @@ services:
       - FLASK_ENV=production
     env_file:
       - ./backend/.env
+    volumes:
+      # Volumen para la base de datos SQLite
+      - db-data:/app/db
     networks:
       - diagnose-network
 
@@ -25,3 +28,7 @@ services:
 networks:
   diagnose-network:
     driver: bridge
+
+volumes:
+  db-data:
+    driver: local

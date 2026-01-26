@@ -18,7 +18,10 @@ RUN python -m pip install --upgrade pip \
 # Copiar código fuente (estructura completa del proyecto)
 COPY . .
 
+# Crear directorio para la base de datos
+RUN mkdir -p /app/db
+
 EXPOSE 5000
 
-# Usar run.py como punto de entrada (Flask Application Factory)
+# La inicialización de la DB se ejecuta automáticamente en run.py
 CMD ["python", "run.py"]

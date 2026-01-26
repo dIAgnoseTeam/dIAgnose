@@ -12,6 +12,9 @@ services:
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
       - FRONTEND_URL=https://diagnose.riberadeltajo.es
       - BACKEND_URL=https://diagnose.riberadeltajo.es/api
+    volumes:
+      # Volumen para la base de datos SQLite
+      - db-data:/app/db
     restart: unless-stopped
     networks:
       - diagnose-network
@@ -33,3 +36,7 @@ services:
 networks:
   diagnose-network:
     driver: bridge
+
+volumes:
+  db-data:
+    driver: local

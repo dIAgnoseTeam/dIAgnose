@@ -100,9 +100,12 @@ jobs:
             # Pull las nuevas imágenes
             docker-compose -f docker-compose.prod.yml pull
 
-            # Actualizar contenedores con imágenes del registry
-            docker-compose -f docker-compose.prod.yml down
-            docker-compose -f docker-compose.prod.yml up -d
+            # Actualizar contenedores conservando volúmenes
+            # El volumen db-data se mantiene entre actualizaciones
+            docker-compose -f docker-compose.prod.yml up -d --no-deps --build backend frontend
+
+            # Verificar estado de los contenedores
+            docker-compose -f docker-compose.prod.yml ps
 
             # Limpiar imágenes antiguas
             docker image prune -af
