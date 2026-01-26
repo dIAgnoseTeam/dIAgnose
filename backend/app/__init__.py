@@ -17,25 +17,6 @@ def create_app():
     # x_prefix=1: confiar en un proxy para X-Forwarded-Prefix
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
-    # Configurar logging para debug
-    logging.basicConfig(
-        level=logging.DEBUG,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    )
-
-    # Obtener logger y mostrar configuración inicial
-    logger = logging.getLogger(__name__)
-    logger.debug("=" * 80)
-    logger.debug("CONFIGURACIÓN DE LA APLICACIÓN")
-    logger.debug(f"FRONTEND_URL: {Config.FRONTEND_URL}")
-    logger.debug(f"BACKEND_URL: {Config.BACKEND_URL}")
-    logger.debug(
-        f"GOOGLE_CLIENT_ID: {Config.GOOGLE_CLIENT_ID[:20]}..."
-        if hasattr(Config, "GOOGLE_CLIENT_ID")
-        else "No configurado"
-    )
-    logger.debug("=" * 80)
-
     # Configurar orígenes permitidos según entorno
     allowed_origins = [Config.FRONTEND_URL]
 
