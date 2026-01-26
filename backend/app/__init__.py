@@ -11,10 +11,6 @@ def create_app():
     app.secret_key = Config.SECRET_KEY
 
     # Configurar ProxyFix para producción (confiar en headers del proxy)
-    # x_for=1: confiar en un proxy para X-Forwarded-For
-    # x_proto=1: confiar en un proxy para X-Forwarded-Proto (HTTP vs HTTPS)
-    # x_host=1: confiar en un proxy para X-Forwarded-Host
-    # x_prefix=1: confiar en un proxy para X-Forwarded-Prefix
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
     # Configurar orígenes permitidos según entorno
