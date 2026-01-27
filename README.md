@@ -5,14 +5,14 @@
 ### Sistema de Gestión Hospitalaria
 
 [![Status](https://img.shields.io/badge/Status-In%20Development-yellow?style=for-the-badge)](https://github.com/dIAgnoseTeam/dIAgnose)
-[![Version](https://img.shields.io/badge/Version-1.0-blue?style=for-the-badge)](https://github.com/dIAgnoseTeam/dIAgnose)
+[![Version](https://img.shields.io/badge/Version-0.1-blue?style=for-the-badge)](https://github.com/dIAgnoseTeam/dIAgnose)
 
 ![React](https://img.shields.io/badge/React-18.2+-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-3.0+-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.11.+-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Flask](https://img.shields.io/badge/Flask-2.0+-000000?style=for-the-badge&logo=flask&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-13+-336791?style=for-the-badge&logo=postgresql&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-5.0+-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-3.43.+-336791?style=for-the-badge&logo=sqlite&logoColor=white)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-13+-841238?style=for-the-badge&logo=sqlalchemy&logoColor=white)
 
 ---
 
@@ -91,7 +91,7 @@ graph LR
 
 ### Backend con Flask
 
-El backend es una API REST en Flask que maneja toda la lógica de negocio. Usa SQLAlchemy como ORM para PostgreSQL y PyMongo para MongoDB. La autenticación va con JWT y las contraseñas están encriptadas con bcrypt. Existe soporte opcional para servicios en tiempo real mediante WebSockets (Flask-SocketIO).
+El backend es una API REST en Flask que maneja toda la lógica de negocio. Usa SQLAlchemy como ORM para SQLite. La autenticación va con JWT y las contraseñas están encriptadas con bcrypt. Existe soporte opcional para servicios en tiempo real mediante WebSockets (Flask-SocketIO).
 
 ```mermaid
 graph LR
@@ -111,11 +111,7 @@ graph LR
 
 ## 💾 Bases de Datos
 
-Usamos dos bases de datos para aprovechar lo mejor de cada una:
-
-- **PostgreSQL** 🐘: Para los datos importantes y estructurados (usuarios, pacientes, historiales médicos). Necesitamos las relaciones y la integridad que ofrece SQL.
-  
-- **MongoDB** 🍃: Para almacenamiento flexible de datos semiestructurados (logs, auditoría, documentos auxiliares).
+Usamos SQLite como motor de base de datos, gracias a su integración con SQLAlchemy, nos permite realizar múltiples acciones
 
 ```mermaid
 graph TB
@@ -171,16 +167,14 @@ sequenceDiagram
 - **Socket.io Client** (opcional) para servicios en tiempo real
 
 ### Backend
-- **Python 3.9+** con **Flask 2.0+**
-- **SQLAlchemy** como ORM para PostgreSQL
-- **PyMongo** para conectar con MongoDB
+- **Python 3.11.+** con **Flask 2.0+**
+- **SQLAlchemy** como ORM para SQLite
 - **Flask-SocketIO** (opcional) para soporte de WebSockets
 - **PyJWT** para generar y validar tokens
 - **Bcrypt** para hashear contraseñas
 
 ### Bases de Datos
-- **PostgreSQL 13+** para datos estructurados
-- **MongoDB 5.0+** para datos semiestructurados
+- **SQLite 3.43.+** para datos estructurados
 
 ### Herramientas
 - Git para control de versiones
