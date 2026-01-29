@@ -8,8 +8,8 @@ class CaseService:
     def get_case_by_id(self, case_id: int):
         return self.case_repository.get_case_by_id(case_id)
 
-    def get_case_count(self, limit: int = 1000, offset: int = 0):
-        return self.case_repository.get_case_count(limit, offset)
+    def get_case_count(self):
+        return self.case_repository.get_case_count()
     
     def create_new_case(self, caso_data: dict):
         return self.case_repository.create_case(caso_data)
