@@ -8,5 +8,5 @@ DATABASE_URL = f"sqlite:///{DB_PATH}"
 
 engine = create_engine(
     DATABASE_URL, 
-    echo=True,
+    echo=False,
     connect_args={"check_same_thread": False})

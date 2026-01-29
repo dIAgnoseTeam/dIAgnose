@@ -32,10 +32,8 @@ def get_case_by_id(current_user, case_id: int):
 @token_required
 def get_case_count(current_user):
     try:
-        filters = request.json.get("filters", {})
-
         service = CaseService()
-        count = service.get_case_count(filters)
+        count = service.get_case_count()
 
         return jsonify({"cantidad_casos": count}), 200
     except Exception as e:

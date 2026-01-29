@@ -3,9 +3,10 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { PropagateLoader } from "react-spinners";
 import RegisterCard from "../components/ui/RegisterCard";
 import { API_BASE } from "../config/constants";
+import api from "../services/api";
 
 function Testing() {
-  const [num, setNum] = useState(0);
+  const [num, setNum] = useState(1); // Empezar en 1
   const [maxRegisters, setMaxRegisters] = useState(0);
   const [record, setRecord] = useState(null);
   const [loadingRecord, setLoadingRecord] = useState(false);
@@ -20,58 +21,45 @@ function Testing() {
   }, []);
 
   const fetchRecord = useCallback(
-    (n) => {
+    async (n) => {
       setLoadingRecord(true);
       setErrorRecord(null);
-      const controller = new AbortController();
       const id = n ?? num;
 
-      fetch(`${API_BASE}/dataset/registro/${id}`, { signal: controller.signal })
-        .then((r) => {
-          if (!r.ok) throw new Error(`HTTP ${r.status}`);
-          return r.json();
-        })
-        .then((response) => {
-          // El backend ahora retorna {success: true, data: {...}, message: "..."}
-          if (response.success && response.data) {
-            setRecord(response.data);
-          } else {
-            throw new Error(response.message || "Error al obtener registro");
-          }
-        })
-        .catch((err) => {
-          if (err.name !== "AbortError") {
-            setErrorRecord(err.message);
-            setRecord(null);
-          }
-        })
-        .finally(() => setLoadingRecord(false));
-
-      return () => controller.abort();
+      try {
+        const response = await api.get(`/cases/${id}`);
+        setRecord(response.data);
+      } catch (err) {
+        const errorMsg =
+          err.response?.data?.error ||
+          err.message ||
+          "Error al obtener registro";
+        setErrorRecord(errorMsg);
+        setRecord(null);
+      } finally {
+        setLoadingRecord(false);
+      }
     },
-    [num],
+    [], // Sin dependencias para evitar recrear la función
   );
 
   useEffect(() => {
-    fetch(`${API_BASE}/dataset/registro/max-registers`)
-      .then((r) => {
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return r.json();
-      })
-      .then((data) => {
-        setMaxRegisters(data.data || 99);
-      })
-      .catch((err) => {
+    const fetchCount = async () => {
+      try {
+        const response = await api.get("/cases/count");
+        setMaxRegisters(response.data.cantidad_casos);
+      } catch (err) {
         console.error("Error obteniendo max registros:", err);
-        setMaxRegisters(99); // Fallback por defecto
-      });
+        setMaxRegisters(99);
+      }
+    };
+    fetchCount();
   }, []);
 
-  // Auto-cargar registro inicial
+  // Auto-cargar registro cuando cambia el num
   useEffect(() => {
-    const cleanup = fetchRecord(num);
-    return cleanup;
-  }, [fetchRecord, num]);
+    fetchRecord(num);
+  }, [num, fetchRecord]);
 
   const safeField = (value, fallback = "No disponible") =>
     value ? value : fallback;
@@ -86,12 +74,12 @@ function Testing() {
           <button
             className="p-4 bg-secondary-800 rounded-xl hover:bg-secondary-900"
             onClick={() => setNum(num - 1)}
-            disabled={loadingRecord || num <= 0}
+            disabled={loadingRecord || num <= 1}
           >
             <ArrowLeft color="white" strokeWidth={3} />
           </button>
           <span className="p-4 bg-secondary-50 rounded-xl text-xl font-bold ">
-            {num + 1} / {maxRegisters + 1}
+            {num} / {maxRegisters}
           </span>
           <button
             className="p-4 bg-secondary-800 rounded-xl hover:bg-secondary-900"
