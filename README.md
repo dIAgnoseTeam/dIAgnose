@@ -13,6 +13,7 @@
 ![Flask](https://img.shields.io/badge/Flask-2.0+-000000?style=for-the-badge&logo=flask&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-3.43.+-336791?style=for-the-badge&logo=sqlite&logoColor=white)
 ![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0.46+-841238?style=for-the-badge&logo=sqlalchemy&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-3.0+-87CEEB?style=for-the-badge&logo=docker&logoColor=white)
 
 ---
 
