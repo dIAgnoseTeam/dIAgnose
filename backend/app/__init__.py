@@ -18,16 +18,21 @@ def create_app():
     # Configurar orígenes permitidos según entorno
     allowed_origins = [Config.FRONTEND_URL]
 
-    # En desarrollo local, normalmente en Docker
+    # En desarrollo local, añadir variantes de localhost
     if "localhost" in Config.FRONTEND_URL:
-        allowed_origins.extend(["http://localhost", "http://localhost:80"])
+        allowed_origins.extend([
+            "http://localhost",
+            "http://localhost:80",
+            "http://localhost:5173",
+            "http://127.0.0.1:5173"
+        ])
 
     # Inicializamos las extensiones
     # Docker configurations
     CORS(
         app,
         supports_credentials=True,
-        origins=[Config.FRONTEND_URL],
+        origins=allowed_origins,
         allow_headers=["Content-Type", "Authorization"],
         expose_headers=["Content-Type", "Authorization"],
     )
