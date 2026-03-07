@@ -23,7 +23,10 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const response = await authService.getCurrentUser();
-      setUser(response.data.user);
+      const rolResponse = await authService.getRolById(response.data.user.id_rol);
+      const { nombre } = rolResponse.data;
+      
+      setUser({ ...response.data.user, rol: nombre });
       setError(null);
     } catch (err) {
       console.error("Auth check failed:", err);

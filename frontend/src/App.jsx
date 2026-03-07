@@ -8,6 +8,7 @@ import { PropagateLoader } from "react-spinners";
 import Navbar from "./components/ui/Navbar";
 import Profile from "./pages/Profile";
 import MainLayout from "./components/layout/MainLayout";
+import Dashboard from "./pages/Dashboard";
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -22,6 +23,26 @@ const PrivateRoute = ({ children }) => {
 
   return isAuthenticated ? children : <Navigate to="/login" />;
 };
+
+const AdminRoute = ({ children }) => {
+  const { isAuthenticated, user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="h-dvh w-dvh flex items-center justify-center">
+        <PropagateLoader color="#1e3a8a" />
+      </div>
+    );
+  }
+
+  if(!isAuthenticated) {
+    return (
+      <Navigate to="/login" />
+    );
+  }
+
+  return user.rol === "admin" ? children : <Navigate to="/"/>;
+}
 
 function App() {
   return (
@@ -55,11 +76,18 @@ function App() {
             element={
               <PrivateRoute>
                 <MainLayout>
-                  <Profile />
+                  <Profile/>
                 </MainLayout>
               </PrivateRoute>
             }
           />
+          <Route path="/dashboard" element={
+            <AdminRoute>
+              <MainLayout>
+                <Dashboard/>
+              </MainLayout>
+            </AdminRoute>
+          }/>
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>

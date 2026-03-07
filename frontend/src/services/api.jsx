@@ -39,6 +39,7 @@ api.interceptors.response.use(
 
 export const authService = {
   getCurrentUser: () => api.get("/auth/me"),
+  getRolById: (id) => api.get(`/roles/${id}`),
   logout: () => api.post("/auth/logout"),
   getProtectedData: () => api.get("/auth/protected"),
 };

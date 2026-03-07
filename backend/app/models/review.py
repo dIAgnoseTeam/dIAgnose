@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, Date
 from sqlalchemy.orm import relationship
 
 from db.config.base import base
@@ -22,6 +22,7 @@ class Valoracion(base):
     relevancia_clinica = Column(Integer, nullable=False)
     adecuacion_contextual = Column(Integer, nullable=False)
     nivel_tecnico = Column(Integer, nullable=False)
-
+    fecha = Column(Date, nullable=False)
+    
     usuario = relationship("Usuario", back_populates="valoraciones")
     caso = relationship("CasoClinico", back_populates="valoraciones")

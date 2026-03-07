@@ -45,6 +45,7 @@ def create_token(user_data):
         "email": user_data["email"],
         "name": user_data["name"],
         "picture": user_data.get("picture"),
+        "id_rol": user_data.get("id_rol"),
         "exp": datetime.utcnow() + timedelta(days=7),
         "iat": datetime.utcnow(),
     }
