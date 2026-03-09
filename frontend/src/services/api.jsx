@@ -44,4 +44,8 @@ export const authService = {
   getProtectedData: () => api.get("/auth/protected"),
 };
 
+export const reviewService = {
+  getAllReviews: () => api.get("/reviews/")
+};
+
 export default api;
