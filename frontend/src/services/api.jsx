@@ -48,4 +48,8 @@ export const reviewService = {
   getAllReviews: () => api.get("/reviews/")
 };
 
+export const userService = {
+  getAllUsers: () => api.get("/users/")
+};
+
 export default api;

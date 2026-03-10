@@ -8,7 +8,7 @@ from db.config.session import SessionLocal
 class CaseRepository:
     def __init__(self):
         self.session = SessionLocal()
-
+    
     # Obtener cantidad de registros de casos clínicos
     def get_case_count(self):
         try:

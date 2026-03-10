@@ -1,15 +1,7 @@
 import React from "react";
 
 const DashboardTable = (props) => {
-    const { reviews, dataLoading } = props;
-
-    if(dataLoading) {
-        return (
-            <div className="flex justify-center p-10">
-                <div className="animate-spin h-8 w-8 border-2 border-gray-400 border-t-transparent rounded-full"></div>
-            </div>
-        )
-    }
+    const { reviews, userMap } = props;
 
     return (
         <div className="overflow-hidden bg-gray-50 border-2 border-gray-200 rounded-lg shadow-sm">
@@ -25,8 +17,8 @@ const DashboardTable = (props) => {
                 <tbody>
                     {reviews.map(review => (
                         <tr key={review.id} className="text-gray-600 hover:bg-gray-100 transition-colors">
-                            <td className="px-4 py-3">{review.id_usuario}</td>
-                            <td className="px-4 py-3">{review.fecha_creacion}</td>
+                            <td className="px-4 py-3">{userMap[review.id_usuario]}</td>
+                            <td className="px-4 py-3">{review.fecha}</td>
                             <td className="px-4 py-3">{review.puntuacion}</td>
                             <td className="px-4 py-3">{review.mensaje}</td>
                         </tr>

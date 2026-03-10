@@ -5,7 +5,10 @@ from db.config.session import SessionLocal
 class UserRepository:
     def __init__(self):
         self.session = SessionLocal()
-    
+        
+    def get_all_users(self):
+        return self.session.query(Usuario).all()
+            
     def get_user_by_id(self, user_id: int):
         try:
             stmt = select(Usuario).where(Usuario.id == user_id)
