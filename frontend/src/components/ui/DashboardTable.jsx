@@ -1,7 +1,15 @@
-import React from 'react';
+import React from "react";
 
 const DashboardTable = (props) => {
-    const { reviews } = props;
+    const { reviews, dataLoading } = props;
+
+    if(dataLoading) {
+        return (
+            <div className="flex justify-center p-10">
+                <div className="animate-spin h-8 w-8 border-2 border-gray-400 border-t-transparent rounded-full"></div>
+            </div>
+        )
+    }
 
     return (
         <div className="overflow-hidden bg-gray-50 border-2 border-gray-200 rounded-lg shadow-sm">

@@ -49,14 +49,7 @@ def google_callback():
         user_service = UserService()
         user = user_service.create_or_update_user(correo=user_data["email"], nombre=user_data["name"])
         
-        # 🔍 DEBUG - borra estos prints cuando funcione
-        print(f"User object: {user.__dict__}")
-        print(f"id_rol value: {user.id_rol}")
-        print(f"id_rol type: {type(user.id_rol)}")
-
         user_data["id_rol"] = user.id_rol
-        print(f"user_data completo: {user_data}")
-        
         
         # Crear JWT token
         jwt_token = create_token(user_data)
