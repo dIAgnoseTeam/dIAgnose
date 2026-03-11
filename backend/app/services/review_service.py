@@ -16,3 +16,9 @@ class ReviewService:
 
     def get_reviews_by_user_id(self, user_id: int):
         return self.review_repository.get_by_user(user_id)
+
+    def count_reviews_by_case(self, case_id: int):
+        return self.review_repository.count_reviews_by_case(case_id)
+    
+    def user_has_reviewed_case(self, user_id: int, case_id:int):
+        return self.review_repository.user_has_reviewed_case(user_id, case_id)

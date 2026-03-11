@@ -39,8 +39,23 @@ api.interceptors.response.use(
 
 export const authService = {
   getCurrentUser: () => api.get("/auth/me"),
+  getRolById: (id) => api.get(`/roles/${id}`),
   logout: () => api.post("/auth/logout"),
   getProtectedData: () => api.get("/auth/protected"),
+};
+
+export const reviewService = {
+  getAllReviews: () => api.get("/reviews/"),
+  submitReview: (reviewData) => api.post("/reviews/", reviewData),
+};
+
+export const datasetService = {
+  getCase: (num) => api.get(`/dataset/registro/${num}`),
+  getMaxRegisters: () => api.get("/dataset/registro/max-registers"),
+};
+
+export const userService = {
+  getAllUsers: () => api.get("/users/")
 };
 
 export default api;

@@ -39,3 +39,18 @@ def get_case_count(current_user):
     except Exception as e:
         logger.error(f"Error al contar los casos: {str(e)}")
         return jsonify({"error": "Error al contar los casos"}), 500
+
+@case_bp.route("/next", methods=["GET"])
+@token_required
+def get_next_case_for_user(current_user):
+    try:
+        service = CaseService()
+        case = service.get_next_case_for_user(current_user["user_id"])
+
+        if not case:
+            return jsonify({"error": "No hay casos disponibles"}), 404
+        
+        return jsonify(case_to_dict(case)), 200
+    except Exception as e:
+        logger.error(f"Error al contar los casos: {str(e)}")
+        return jsonify({"error": "Error al mostrar el siguiente caso"}), 500
