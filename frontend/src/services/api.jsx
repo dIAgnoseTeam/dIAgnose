@@ -45,7 +45,13 @@ export const authService = {
 };
 
 export const reviewService = {
-  getAllReviews: () => api.get("/reviews/")
+  getAllReviews: () => api.get("/reviews/"),
+  submitReview: (reviewData) => api.post("/reviews/", reviewData),
+};
+
+export const datasetService = {
+  getCase: (num) => api.get(`/dataset/registro/${num}`),
+  getMaxRegisters: () => api.get("/dataset/registro/max-registers"),
 };
 
 export const userService = {
