@@ -4,29 +4,38 @@ const DashboardTable = (props) => {
     const { reviews, userMap } = props;
 
     return (
-        <div className="overflow-hidden bg-gray-50 border-2 border-gray-200 rounded-lg shadow-sm">
+        <div className="overflow-hidden bg-white border border-gray-100 rounded-xl shadow-sm">
             <table className="w-full text-sm text-left">
-                <thead className="bg-gray-100 border-b border-gray-200 text-gray-700">
-                    <tr>
-                        <th className="px-4 py-3 font-semibold">Médico</th>
-                        <th className="px-4 py-3 font-semibold">Fecha </th>
-                        <th className="px-4 py-3 font-semibold">Puntuación</th>
-                        <th className="px-4 py-3 font-semibold">Comentario</th>
+                <thead className="bg-gray-100">
+                    <tr className="border-b border-gray-100">
+                        <th className="px-6 py-3 font-semibold text-gray-500">Médico</th>
+                        <th className="px-6 py-3 font-semibold text-gray-500">Fecha</th>
+                        <th className="px-6 py-3 font-semibold text-gray-500">Puntuación</th>
+                        <th className="px-6 py-3 font-semibold text-gray-500">Comentario</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-gray-50">
                     {reviews.map(review => (
-                        <tr key={review.id} className="text-gray-600 hover:bg-gray-100 transition-colors">
-                            <td className="px-4 py-3">{userMap[review.id_usuario]}</td>
-                            <td className="px-4 py-3">{review.fecha}</td>
-                            <td className="px-4 py-3">{review.puntuacion}</td>
-                            <td className="px-4 py-3">{review.mensaje}</td>
+                        <tr key={review.id} className="hover:bg-gray-50 transition-colors duration-100">
+                            <td className="px-6 py-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-full bg-teal-50 flex items-center justify-center flex-shrink-0">
+                                        <span className="text-teal-600 font-semibold text-xs">
+                                            {userMap[review.id_usuario]?.charAt(0).toUpperCase()}
+                                        </span>
+                                    </div>
+                                    <span className="text-gray-700 font-medium">{userMap[review.id_usuario]}</span>
+                                </div>
+                            </td>
+                            <td className="px-6 py-3 text-gray-500">{review.fecha}</td>
+                            <td className="px-6 py-3 text-gray-700">{review.puntuacion}</td>
+                            <td className="px-6 py-3 text-gray-500">{review.mensaje}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
         </div>
-    )
+    );
 }
 
 export default DashboardTable;

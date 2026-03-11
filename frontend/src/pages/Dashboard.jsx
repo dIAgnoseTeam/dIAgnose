@@ -75,12 +75,12 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="w-full">
       <StatsSection reviews={filteredReviews}></StatsSection>
       <FiltersSection setFilterUser={setFilterUser} setFilterDate={setFilterDate} setFilterScore={setFilterScore}></FiltersSection>
       <DashboardTable reviews={filteredReviews} userMap={userMap}></DashboardTable>
     </div>
-  )
+  );
 }
 
 export default Dashboard;
