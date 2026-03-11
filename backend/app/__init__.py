@@ -1,5 +1,3 @@
-import logging
-
 from flask import Flask
 from flask_cors import CORS
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -13,7 +11,10 @@ def create_app():
     app.secret_key = Config.SECRET_KEY
 
     # Configurar ProxyFix para producción (confiar en headers del proxy)
-    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
+    app.wsgi_app = ProxyFix(
+        app.wsgi_app, x_for=1, x_proto=1,
+        x_host=1, x_prefix=1
+    )
 
     # Configurar orígenes permitidos según entorno
     allowed_origins = [Config.FRONTEND_URL]
@@ -46,7 +47,7 @@ def create_app():
     # Configuramos OAuth
     from app.utils.oauth import configure_oauth
 
-    oauth = configure_oauth(app)
+    configure_oauth(app)
 
     # Registrar blueprints para las rutas
     from app.routes.auth_routes import auth_bp

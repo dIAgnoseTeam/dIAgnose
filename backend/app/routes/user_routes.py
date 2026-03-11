@@ -1,6 +1,6 @@
 import logging
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify
 
 from app.schemas.user_schema import user_to_dict
 from app.services.user_service import UserService
@@ -9,6 +9,7 @@ from app.utils.oauth_decorator import token_required
 logger = logging.getLogger(__name__)
 
 user_bp = Blueprint("users", __name__)
+
 
 @user_bp.route("/", methods=["GET"])
 @token_required
@@ -20,6 +21,7 @@ def get_all_users(current_user):
     except Exception as e:
         logger.error(f"Error obteniendo todos los usuarios: {str(e)}")
         return jsonify({"error": "Error al obtener los usuarios"}), 500
+
 
 @user_bp.route("/<int:user_id>", methods=["GET"])
 @token_required
@@ -35,6 +37,7 @@ def get_user_by_id(current_user, user_id: int):
     except Exception as e:
         logger.error(f"Error obteniendo el usuario por ID: {str(e)}")
         return jsonify({"error": "Error al obtener el usuario"}), 500
+
 
 @user_bp.route("/count", methods=["GET"])
 @token_required

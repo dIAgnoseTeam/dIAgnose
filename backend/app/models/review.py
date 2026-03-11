@@ -24,6 +24,6 @@ class Valoracion(base):
     adecuacion_contextual = Column(Integer, nullable=False)
     nivel_tecnico = Column(Integer, nullable=False)
     fecha = Column(Date, default=date.today, nullable=False)
-    
+
     usuario = relationship("Usuario", back_populates="valoraciones")
     caso = relationship("CasoClinico", back_populates="valoraciones")
