@@ -24,7 +24,7 @@ class UserRepository:
         finally:
             self.session.close()
 
-    def create_or_update(self, correo: str, nombre: str, id_rol: int = 3):
+    def create_or_update(self, correo: str, nombre: str, id_rol: int = 2):
         session = SessionLocal()
         try:
             # Buscar usuario existente
@@ -35,7 +35,7 @@ class UserRepository:
                 # Actualizar nombre si cambió
                 user.nombre = nombre
             else:
-                # Crear nuevo usuario con rol por defecto (3 = usuario normal)
+                # Crear nuevo usuario con rol por defecto
                 user = Usuario(correo=correo, nombre=nombre, id_rol=id_rol)
                 session.add(user)
 
