@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { userService, reviewService } from '../services/api';
 import DashboardTable from "../components/ui/DashboardTable";
 import FiltersSection from '../components/ui/FiltersSection';
+import StatsSection from '../components/ui/StatsSection';
 
 const Dashboard = () => {
   const [reviews, setReviews] = useState([]);
@@ -75,6 +76,7 @@ const Dashboard = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <StatsSection reviews={filteredReviews}></StatsSection>
       <FiltersSection setFilterUser={setFilterUser} setFilterDate={setFilterDate} setFilterScore={setFilterScore}></FiltersSection>
       <DashboardTable reviews={filteredReviews} userMap={userMap}></DashboardTable>
     </div>
