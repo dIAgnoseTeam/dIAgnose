@@ -1,5 +1,6 @@
 from sqlalchemy import select, func
 
+from app.models.review import Valoracion
 from app.models.clinical_case import CasoClinico
 from db.config.session import SessionLocal
 
@@ -7,7 +8,7 @@ from db.config.session import SessionLocal
 class CaseRepository:
     def __init__(self):
         self.session = SessionLocal()
-
+    
     # Obtener cantidad de registros de casos clínicos
     def get_case_count(self):
         try:
@@ -49,5 +50,21 @@ class CaseRepository:
             )
             result = self.session.scalar(stmt)
             return result is not None
+        finally:
+            self.session.close()
+    
+    def get_next_case_for_user(self, user_id:int):
+        try:
+            subq = select(Valoracion.id_caso).where(Valoracion.id_usuario == user_id)
+
+            count_subq = (select(Valoracion.id_caso).group_by(Valoracion.id_caso).having(func.count(Valoracion.id)>=3))
+
+            stmt = (
+                select(CasoClinico)
+                .where(~CasoClinico.id.in_(subq))
+                .where(~CasoClinico.id.in_(count_subq))
+                .limit(1)
+            )
+            return self.session.scalar(stmt)
         finally:
             self.session.close()

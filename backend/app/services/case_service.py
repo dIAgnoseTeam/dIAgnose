@@ -16,3 +16,6 @@ class CaseService:
     
     def case_already_exists(self, motivo: str, diagnostico_final: str, edad: int, sexo: str):
         return self.case_repository.case_exists(motivo, diagnostico_final, edad, sexo)
+
+    def get_next_case_for_user(self, user_id:int):
+        return self.case_repository.get_next_case_for_user(user_id)

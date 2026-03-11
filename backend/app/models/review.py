@@ -1,5 +1,6 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, Date
 from sqlalchemy.orm import relationship
+from datetime import date
 
 from db.config.base import base
 
@@ -14,6 +15,7 @@ class Valoracion(base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     id_usuario = Column(Integer, ForeignKey("Usuarios.id"), nullable=False)
+    id_caso = Column(Integer, ForeignKey("CasosClinicos.id"), nullable=False)
     puntuacion = Column(Integer, nullable=False)
     mensaje = Column(String(255), nullable=True)
     precision_diagnostica = Column(Integer, nullable=False)
@@ -21,5 +23,7 @@ class Valoracion(base):
     relevancia_clinica = Column(Integer, nullable=False)
     adecuacion_contextual = Column(Integer, nullable=False)
     nivel_tecnico = Column(Integer, nullable=False)
+    fecha = Column(Date, default=date.today, nullable=False)
 
     usuario = relationship("Usuario", back_populates="valoraciones")
+    caso = relationship("CasoClinico", back_populates="valoraciones")

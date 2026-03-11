@@ -1,6 +1,6 @@
 import logging
 
-from flask import Blueprint, jsonify, redirect, request
+from flask import Blueprint, jsonify, redirect
 
 from app.config import Config
 from app.services.user_service import UserService
@@ -47,14 +47,22 @@ def google_callback():
         }
 
         user_service = UserService()
-        user = user_service.create_or_update_user(correo=user_data["email"], nombre=user_data["name"])
-        print(f"User inserted/updated: {user.correo}")
+        user = user_service.create_or_update_user(
+            correo=user_data["email"],
+            nombre=user_data["name"]
+        )
+
+        user_data["id_rol"] = user.id_rol
 
         # Crear JWT token
         jwt_token = create_token(user_data)
 
         # Redirigir al frontend con el token
-        return redirect(f"{Config.FRONTEND_URL}/auth/callback?token={jwt_token}")
+        redirect_url = (
+            f"{Config.FRONTEND_URL}/auth/callback"
+            f"?token={jwt_token}"
+        )
+        return redirect(redirect_url)
 
     except Exception as e:
         print(f"Error in callback: {str(e)}")
@@ -72,6 +80,7 @@ def get_current_user(current_user):
                 "email": current_user["email"],
                 "name": current_user["name"],
                 "picture": current_user.get("picture"),
+                "id_rol": current_user.get("id_rol"),
             }
         }
     )

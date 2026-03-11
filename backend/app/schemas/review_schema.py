@@ -2,6 +2,7 @@ def review_to_dict(valoracion):
     return {
         "id": valoracion.id,
         "id_usuario": valoracion.id_usuario,
+        "id_caso": valoracion.id_caso,
         "puntuacion": valoracion.puntuacion,
         "mensaje": valoracion.mensaje,
         "precision_diagnostica": valoracion.precision_diagnostica,
@@ -9,4 +10,5 @@ def review_to_dict(valoracion):
         "relevancia_clinica": valoracion.relevancia_clinica,
         "adecuacion_contextual": valoracion.adecuacion_contextual,
         "nivel_tecnico": valoracion.nivel_tecnico,
+        "fecha": valoracion.fecha.isoformat()
     }
