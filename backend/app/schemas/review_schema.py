@@ -10,4 +10,5 @@ def review_to_dict(valoracion):
         "relevancia_clinica": valoracion.relevancia_clinica,
         "adecuacion_contextual": valoracion.adecuacion_contextual,
         "nivel_tecnico": valoracion.nivel_tecnico,
+        "fecha": valoracion.fecha.isoformat()
     }
