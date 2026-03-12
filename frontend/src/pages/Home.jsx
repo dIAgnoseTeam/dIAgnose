@@ -16,10 +16,8 @@ const Home = () => {
     const loadMaxRegisters = async () => {
       try {
         const response = await datasetService.getMaxRegisters();
-        setMaxRegisters(response.data.data);
-        // Cargar un caso aleatorio automáticamente
-        const randomNum = Math.floor(Math.random() * response.data.data);
-        loadCase(randomNum);
+        setMaxRegisters(response.data.cantidad_casos);
+        loadCase();
       } catch (err) {
         console.error("Error loading max registers:", err);
         setError("Error al cargar los datos del dataset");
@@ -30,13 +28,14 @@ const Home = () => {
     }
   }, [loading, user]);
 
-  const loadCase = async (num) => {
+  const loadCase = async () => {
     setDataLoading(true);
     setError(null);
     try {
-      const response = await datasetService.getCase(num);
-      setCurrentCase(response.data.data);
-      setCaseNumber(num);
+      const response = await datasetService.getCase();
+      setCurrentCase(response.data);
+      setCaseNumber(response.data.id);
+      console.log(response);
     } catch (err) {
       console.error("Error loading case:", err);
       setError("Error al cargar los datos del dataset");
@@ -45,20 +44,22 @@ const Home = () => {
     }
   };
 
-  const handleLoadRandomCase = () => {
-    const randomNum = Math.floor(Math.random() * maxRegisters);
-    loadCase(randomNum);
-  };
+  //  const handleLoadRandomCase = () => {
+  //    const randomNum = Math.floor(Math.random() * maxRegisters);
+  //    loadCase(randomNum);
+  //  };
 
   // Callback que el compañero puede llamar desde su formulario
   const handleReviewSubmitted = () => {
-    // Cargar un nuevo caso aleatorio
-    const randomNum = Math.floor(Math.random() * maxRegisters);
-    loadCase(randomNum);
+    loadCase();
   };
 
   if (loading) {
-    return <div className="flex justify-center items-center h-screen">Cargando...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Cargando...
+      </div>
+    );
   }
 
   if (!user) {
@@ -82,7 +83,8 @@ const Home = () => {
               Diagnóstico Clínico & Análisis
             </h1>
             <p className="text-lg text-gray-500">
-              Análisis seguro impulsado por IA para diagnóstico diferencial, interacciones farmacológicas y síntesis de historias clínicas.
+              Análisis seguro impulsado por IA para diagnóstico diferencial,
+              interacciones farmacológicas y síntesis de historias clínicas.
             </p>
           </div>
 
@@ -105,9 +107,12 @@ const Home = () => {
                 <div className="bg-gradient-to-r from-teal-50 to-cyan-50 px-8 py-6 border-b border-teal-100">
                   <div className="flex justify-between items-center">
                     <div>
-                      <h2 className="text-2xl font-semibold text-gray-900">Caso Clínico</h2>
+                      <h2 className="text-2xl font-semibold text-gray-900">
+                        Caso Clínico
+                      </h2>
                       <p className="text-sm text-gray-600 mt-1">
-                        Caso {caseNumber + 1} de {maxRegisters} • {currentCase.split}
+                        Caso {caseNumber + 1} de {maxRegisters} •{" "}
+                        {currentCase.split}
                       </p>
                     </div>
                   </div>
@@ -116,18 +121,24 @@ const Home = () => {
                 {/* Case Content */}
                 <div className="px-8 py-8">
                   <div className="space-y-6 max-h-96 overflow-y-auto pr-4">
-                    {Object.entries(currentCase).map(([key, value]) => (
-                      key !== "split" && (
-                        <div key={key} className="border-b border-gray-100 pb-6 last:border-b-0 last:pb-0">
-                          <h3 className="text-sm font-semibold text-teal-700 uppercase tracking-wide mb-2">
-                            {key.replace(/_/g, " ")}
-                          </h3>
-                          <p className="text-gray-700 text-base leading-relaxed whitespace-pre-wrap">
-                            {typeof value === "string" ? value : JSON.stringify(value, null, 2)}
-                          </p>
-                        </div>
-                      )
-                    ))}
+                    {Object.entries(currentCase).map(
+                      ([key, value]) =>
+                        key !== "split" && (
+                          <div
+                            key={key}
+                            className="border-b border-gray-100 pb-6 last:border-b-0 last:pb-0"
+                          >
+                            <h3 className="text-sm font-semibold text-teal-700 uppercase tracking-wide mb-2">
+                              {key.replace(/_/g, " ")}
+                            </h3>
+                            <p className="text-gray-700 text-base leading-relaxed whitespace-pre-wrap">
+                              {typeof value === "string"
+                                ? value
+                                : JSON.stringify(value, null, 2)}
+                            </p>
+                          </div>
+                        ),
+                    )}
                   </div>
                 </div>
 
@@ -136,54 +147,6 @@ const Home = () => {
                   <button className="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 flex items-center gap-2">
                     <span>→</span>
                     Rellenar Formulario
-                  </button>
-                </div>
-              </div>
-
-              {/* Navigation Section */}
-              <div className="space-y-4">
-                {/* Main Navigation Buttons */}
-                <div className="grid grid-cols-2 gap-4">
-                  <button
-                    onClick={handleLoadRandomCase}
-                    className="bg-white border-2 border-gray-200 text-gray-700 hover:border-teal-200 hover:bg-teal-50 font-semibold py-3 px-6 rounded-lg transition duration-200"
-                  >
-                    ← Otro caso
-                  </button>
-                  <div className="flex items-center justify-center bg-white border-2 border-gray-200 rounded-lg text-gray-700 font-semibold">
-                    <span>{caseNumber + 1} / {maxRegisters}</span>
-                  </div>
-                </div>
-
-                {/* Go to Specific Case */}
-                <div className="flex gap-3">
-                  <input
-                    type="number"
-                    min="1"
-                    max={maxRegisters}
-                    defaultValue={caseNumber + 1}
-                    onKeyPress={(e) => {
-                      if (e.key === "Enter") {
-                        const num = parseInt(e.target.value) - 1;
-                        if (num >= 0 && num < maxRegisters) {
-                          loadCase(num);
-                        }
-                      }
-                    }}
-                    className="flex-1 border-2 border-gray-200 focus:border-teal-500 focus:outline-none px-4 py-3 rounded-lg text-gray-700 placeholder-gray-400"
-                    placeholder="Ir al caso número..."
-                  />
-                  <button
-                    onClick={(e) => {
-                      const input = e.target.parentElement.querySelector("input");
-                      const num = parseInt(input.value) - 1;
-                      if (num >= 0 && num < maxRegisters) {
-                        loadCase(num);
-                      }
-                    }}
-                    className="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200"
-                  >
-                    Ir
                   </button>
                 </div>
               </div>
