@@ -8,6 +8,7 @@ import Navbar from "./components/ui/Navbar";
 import Profile from "./pages/Profile";
 import MainLayout from "./components/layout/MainLayout";
 import Dashboard from "./pages/Dashboard";
+import CaseForm from "./components/ui/CaseForm";
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -78,6 +79,15 @@ function App() {
               </AdminRoute>
             }
           />
+          <Route
+            path="/CaseForm/:idCase"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <CaseForm />
+                </MainLayout>
+              </PrivateRoute>
+            } />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>

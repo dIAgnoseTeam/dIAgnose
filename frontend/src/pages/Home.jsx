@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { datasetService } from "../services/api";
 import { CaseProvider } from "../contexts/CaseContext";
+import { useNavigate } from "react-router";
 
 const Home = () => {
   const { user, loading } = useAuth();
@@ -10,6 +11,7 @@ const Home = () => {
   const [maxRegisters, setMaxRegisters] = useState(0);
   const [dataLoading, setDataLoading] = useState(false);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   // Cargar el máximo de registros al montar el componente
   useEffect(() => {
@@ -144,7 +146,7 @@ const Home = () => {
 
                 {/* Action Button */}
                 <div className="bg-gray-50 px-8 py-6 border-t border-gray-100 flex justify-end">
-                  <button className="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 flex items-center gap-2">
+                  <button onClick={() => navigate(`/CaseForm/${caseNumber}`)} className="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 flex items-center gap-2">
                     <span>→</span>
                     Rellenar Formulario
                   </button>
