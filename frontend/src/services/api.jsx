@@ -45,7 +45,7 @@ export const authService = {
 
 export const reviewService = {
   getAllReviews: () => api.get("/reviews/"),
-  submitReview: (reviewData) => api.post("/reviews/", reviewData),
+  createReview: (review) => api.post("/reviews/create", review)
 };
 
 export const datasetService = {
