@@ -47,21 +47,16 @@ def google_callback():
         }
 
         user_service = UserService()
-        user = user_service.create_or_update_user(
-            correo=user_data["email"],
-            nombre=user_data["name"]
-        )
+        user = user_service.create_or_update_user(correo=user_data["email"], nombre=user_data["name"])
 
         user_data["id_rol"] = user.id_rol
+        user_data["internal_id"] = user.id
 
         # Crear JWT token
         jwt_token = create_token(user_data)
 
         # Redirigir al frontend con el token
-        redirect_url = (
-            f"{Config.FRONTEND_URL}/auth/callback"
-            f"?token={jwt_token}"
-        )
+        redirect_url = f"{Config.FRONTEND_URL}/auth/callback" f"?token={jwt_token}"
         return redirect(redirect_url)
 
     except Exception as e:

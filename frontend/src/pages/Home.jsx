@@ -37,7 +37,6 @@ const Home = () => {
       const response = await datasetService.getCase();
       setCurrentCase(response.data);
       setCaseNumber(response.data.id);
-      console.log(response);
     } catch (err) {
       console.error("Error loading case:", err);
       setError("Error al cargar los datos del dataset");
@@ -146,7 +145,10 @@ const Home = () => {
 
                 {/* Action Button */}
                 <div className="bg-gray-50 px-8 py-6 border-t border-gray-100 flex justify-end">
-                  <button onClick={() => navigate(`/CaseForm/${caseNumber}`)} className="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 flex items-center gap-2">
+                  <button
+                    onClick={() => navigate(`/caseform/${caseNumber}`)}
+                    className="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 flex items-center gap-2"
+                  >
                     <span>→</span>
                     Rellenar Formulario
                   </button>

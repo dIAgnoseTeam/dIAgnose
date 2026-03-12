@@ -43,7 +43,7 @@ def token_required(f):
 def create_token(user_data):
     """Crear JWT token"""
     payload = {
-        "user_id": user_data["id"],
+        "user_id": user_data.get("internal_id") or user_data["id"],
         "email": user_data["email"],
         "name": user_data["name"],
         "picture": user_data.get("picture"),
