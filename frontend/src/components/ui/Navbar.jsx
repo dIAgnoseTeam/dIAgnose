@@ -8,7 +8,7 @@ const navItems = [
     icon: LayoutDashboard,
     label: "Dashboard",
     id: "dashboard",
-    path: "/dashboard1",
+    path: "/dashboard",
   },
 ];
 
@@ -17,7 +17,7 @@ const Navbar = () => {
   const location = useLocation();
 
   const filteredNavItems = navItems.filter((item) => {
-    if (item.id === "dashboard") return user?.role === "admin";
+    if (item.id === "dashboard") return user?.rol === "admin";
     return true;
   });
 

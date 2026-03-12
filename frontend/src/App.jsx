@@ -80,14 +80,15 @@ function App() {
             }
           />
           <Route
-            path="/CaseForm/:idCase"
+            path="/caseform/:idCase"
             element={
               <PrivateRoute>
                 <MainLayout>
                   <CaseForm />
                 </MainLayout>
               </PrivateRoute>
-            } />
+            }
+          />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>
