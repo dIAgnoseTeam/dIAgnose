@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
 from db.config.base import base
@@ -29,5 +29,6 @@ class CasoClinico(base):
     situacion_basal = Column(String(255), nullable=True)
     tratamiento_farmacologico = Column(String(255), nullable=True)
     tratamiento_no_farmacologico = Column(String(255), nullable=True)
+    agente = Column(String(255), nullable=False)
 
     valoraciones = relationship("Valoracion", back_populates="caso")

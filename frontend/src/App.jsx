@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
-import Testing from "./pages/Testing";
 import AuthCallback from "./components/auth/AuthCallback";
 import { PropagateLoader } from "react-spinners";
 import Navbar from "./components/ui/Navbar";
@@ -35,14 +34,12 @@ const AdminRoute = ({ children }) => {
     );
   }
 
-  if(!isAuthenticated) {
-    return (
-      <Navigate to="/login" />
-    );
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
   }
 
-  return user.rol === "admin" ? children : <Navigate to="/"/>;
-}
+  return user.rol === "admin" ? children : <Navigate to="/" />;
+};
 
 function App() {
   return (
@@ -62,32 +59,25 @@ function App() {
             }
           />
           <Route
-            path="/test-registros"
+            path="/profile"
             element={
               <PrivateRoute>
                 <MainLayout>
-                  <Testing />
+                  <Profile />
                 </MainLayout>
               </PrivateRoute>
             }
           />
           <Route
-            path="/profile"
+            path="/dashboard1"
             element={
-              <PrivateRoute>
+              <AdminRoute>
                 <MainLayout>
-                  <Profile/>
+                  <Dashboard />
                 </MainLayout>
-              </PrivateRoute>
+              </AdminRoute>
             }
           />
-          <Route path="/dashboard1" element={
-            <AdminRoute>
-              <MainLayout>
-                <Dashboard/>
-              </MainLayout>
-            </AdminRoute>
-          }/>
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>
