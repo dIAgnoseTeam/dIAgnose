@@ -69,7 +69,7 @@ function App() {
             }
           />
           <Route
-            path="/dashboard1"
+            path="/dashboard"
             element={
               <AdminRoute>
                 <MainLayout>
