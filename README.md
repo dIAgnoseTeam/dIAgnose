@@ -208,7 +208,7 @@ Proyecto desarrollado por dos equipos de estudiantes de 2o DAM en el IES Ribera 
 ## Documentacion
 
 [![SRS](https://img.shields.io/badge/Docs-SRS-blue?style=for-the-badge)](./SRS.md)
-[![GitHub](https://img.shields.io/badge/GitHub-dIAgnose-181717?style=for-the-badge&logo=github)](https://github.com/gzzlz/dIAgnose)
+[![GitHub](https://img.shields.io/badge/GitHub-dIAgnose-181717?style=for-the-badge&logo=github)](https://github.com/dIAgnoseTeam/dIAgnose)
 
 **dIAgnose** - Sistema de Gestion Hospitalaria  
 *Proyecto Intermodular 2o DAM 2025-2026*  
