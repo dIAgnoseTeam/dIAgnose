@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.venv/
+env/
+db.sqlite
+db/
+migrations_temp/
+.pytest_cache/
+*.log

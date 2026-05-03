@@ -12,6 +12,7 @@ services:
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
       - FRONTEND_URL=https://diagnose.riberadeltajo.es
       - BACKEND_URL=https://diagnose.riberadeltajo.es/api
+      - RUN_MIGRATIONS=true
     volumes:
       # Volumen para la base de datos SQLite
       - db-data:/app/db

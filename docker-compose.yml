@@ -1,12 +1,10 @@
-version: "3.8"
-
 services:
   backend:
     build: ./backend
     ports:
       - "5000:5000"
     environment:
-      - FLASK_ENV=production
+      - RUN_MIGRATIONS=true
     env_file:
       - ./backend/.env
     volumes:
