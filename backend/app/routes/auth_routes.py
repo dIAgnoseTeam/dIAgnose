@@ -1,7 +1,14 @@
-from flask import Blueprint, request, jsonify, redirect
+import logging
+
+from flask import Blueprint, jsonify, redirect
+
+from app.config import Config
+from app.services.user_service import UserService
 from app.utils.oauth import get_google_oauth_client
 from app.utils.oauth_decorator import create_token, token_required
-from app.config import Config
+
+# Configurar logger
+logger = logging.getLogger(__name__)
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -10,13 +17,14 @@ auth_bp = Blueprint("auth", __name__)
 def google_login():
     # Iniciar proceso de login con Google
     google = get_google_oauth_client()
-    redirect_uri = request.host_url.rstrip("/") + "/auth/google/callback"
+    redirect_uri = Config.BACKEND_URL.rstrip("/") + "/auth/google/callback"
+
     return google.authorize_redirect(redirect_uri)
 
 
 @auth_bp.route("/google/callback")
 def google_callback():
-    # Callback después de autenticación con Google
+    # Manejar el callback de Google
     try:
         google = get_google_oauth_client()
 
@@ -38,13 +46,18 @@ def google_callback():
             "email_verified": user_info.get("email_verified", False),
         }
 
-        # TODO: Guardar en este punto en la base de datos si es necesario
+        user_service = UserService()
+        user = user_service.create_or_update_user(correo=user_data["email"], nombre=user_data["name"])
+
+        user_data["id_rol"] = user.id_rol
+        user_data["internal_id"] = user.id
 
         # Crear JWT token
         jwt_token = create_token(user_data)
 
         # Redirigir al frontend con el token
-        return redirect(f"{Config.FRONTEND_URL}/auth/callback?token={jwt_token}")
+        redirect_url = f"{Config.FRONTEND_URL}/auth/callback" f"?token={jwt_token}"
+        return redirect(redirect_url)
 
     except Exception as e:
         print(f"Error in callback: {str(e)}")
@@ -62,6 +75,7 @@ def get_current_user(current_user):
                 "email": current_user["email"],
                 "name": current_user["name"],
                 "picture": current_user.get("picture"),
+                "id_rol": current_user.get("id_rol"),
             }
         }
     )

@@ -1,11 +1,14 @@
+import Header from "../ui/Header";
 import Navbar from "../ui/Navbar";
 
 const MainLayout = ({ children }) => {
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <Navbar />
-      <main>{children}</main>
-      {/* <Footer /> */}
+      <div className="ml-64 flex flex-col min-h-screen">
+        <Header />
+        <main className="flex-1 p-8">{children}</main>
+      </div>
     </div>
   );
 };

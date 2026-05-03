@@ -2,7 +2,6 @@ import axios from "axios";
 
 import { API_BASE } from "../config/constants";
 
-
 const api = axios.create({
   baseURL: API_BASE,
   withCredentials: true,
@@ -22,7 +21,7 @@ api.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Interceptores para manjear errores de auth
@@ -34,13 +33,28 @@ api.interceptors.response.use(
       window.location.href = "/login";
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export const authService = {
   getCurrentUser: () => api.get("/auth/me"),
+  getRolById: (id) => api.get(`/roles/${id}`),
   logout: () => api.post("/auth/logout"),
   getProtectedData: () => api.get("/auth/protected"),
+};
+
+export const reviewService = {
+  getAllReviews: () => api.get("/reviews/"),
+  createReview: (review) => api.post("/reviews/create", review)
+};
+
+export const datasetService = {
+  getCase: () => api.get(`/cases/next`),
+  getMaxRegisters: () => api.get("/cases/count"),
+};
+
+export const userService = {
+  getAllUsers: () => api.get("/users/"),
 };
 
 export default api;

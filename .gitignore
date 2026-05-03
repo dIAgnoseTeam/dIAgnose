@@ -43,6 +43,8 @@ coverage/
 .coverage*
 htmlcov/
 *.sqlite3
+*.sqlite
+db.sqlite
 
 ## ---------------------------------------------------------------------------
 ## Environment & secrets (keep examples)
