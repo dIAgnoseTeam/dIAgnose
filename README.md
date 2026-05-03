@@ -34,7 +34,7 @@
 
 ## Arquitectura del Sistema
 
-dIAgnose sigue una arquitectura de tres capas: frontend en React, backend en Flask y persistencia de datos. El diseño se centra en separacion de responsabilidades y mantenimiento sencillo.
+dIAgnose sigue una arquitectura de tres capas: frontend en React, backend en Flask y persistencia de datos en SQLite. El diseño se centra en separacion de responsabilidades y mantenimiento sencillo.
 
 ```mermaid
 graph TB
@@ -44,25 +44,19 @@ graph TB
 
     subgraph API["CAPA DE APLICACION"]
         Flask[Flask API<br/>Puerto 5000]
-        WS[WebSocket Server<br/>Socket.IO]
 
         Services[Servicios:<br/>Users, Patients<br/>Records]
     end
 
     subgraph Database["CAPA DE DATOS"]
-        PG[(PostgreSQL<br/>Usuarios, Pacientes<br/>Historiales)]
-
-        MDB[(MongoDB<br/>Almacenamiento<br/>NoSQL)]
+        SQLite[(SQLite<br/>Usuarios, Pacientes<br/>Historiales)]
     end
 
     UI -->|HTTPS/REST| Flask
-    UI -->|WebSocket| WS
 
     Flask --> Services
-    WS --> Services
 
-    Services --> PG
-    Services --> MDB
+    Services --> SQLite
 
     style Client fill:#61dafb,stroke:#333,stroke-width:3px,color:#000
     style API fill:#3c873a,stroke:#333,stroke-width:3px,color:#fff
@@ -92,7 +86,7 @@ graph LR
 
 ### Backend con Flask
 
-El backend es una API REST con Flask. La logica de negocio se gestiona con servicios y repositorios. SQLAlchemy actua como ORM para SQLite. La autenticacion utiliza JWT y las contraseñas se almacenan con bcrypt. Existe soporte opcional para WebSockets mediante Flask-SocketIO.
+El backend es una API REST con Flask. La logica de negocio se gestiona con servicios y repositorios. SQLAlchemy actua como ORM para SQLite. La autenticacion utiliza JWT y las contraseñas se almacenan con bcrypt.
 
 ```mermaid
 graph LR
@@ -100,23 +94,23 @@ graph LR
     API --> Patient[Patient Service]
     API --> Record[Record Service]
 
-    Auth --> PG[(PostgreSQL)]
-    Patient --> PG
-    Record --> PG
+    Auth --> SQLite[(SQLite)]
+    Patient --> SQLite
+    Record --> SQLite
 
     style API fill:#3c873a,stroke:#333,stroke-width:2px,color:#fff
-    style PG fill:#336791,stroke:#333,stroke-width:2px,color:#fff
+    style SQLite fill:#336791,stroke:#333,stroke-width:2px,color:#fff
 ```
 
 ---
 
 ## Bases de Datos
 
-El proyecto usa SQLite como motor de base de datos. Su integracion con SQLAlchemy permite gestionar datos estructurados de forma simple.
+El proyecto usa SQLite como motor de base de datos. Su integracion con SQLAlchemy permite gestionar datos estructurados de forma simple en un archivo local.
 
 ```mermaid
 graph TB
-    subgraph PostgreSQL["PostgreSQL"]
+    subgraph SQLite["SQLite"]
         Users[users]
         Patients_data[patients_data]
         Records[medical_records]
@@ -125,8 +119,7 @@ graph TB
     Users -->|1:N| Records
     Patients_data -->|1:N| Records
 
-    style PostgreSQL fill:#336791,stroke:#333,stroke-width:3px,color:#fff
-    style MongoDB fill:#47a248,stroke:#333,stroke-width:3px,color:#fff
+    style SQLite fill:#336791,stroke:#333,stroke-width:3px,color:#fff
 ```
 
 ---
@@ -164,13 +157,11 @@ sequenceDiagram
 ### Frontend
 - **React 18.2+** con Vite como bundler.
 - **Tailwind CSS** para estilos.
-- **Axios** para llamadas a la API.
-- **Socket.io Client** (opcional) para tiempo real.
+- **Fetch API** para llamadas a la API.
 
 ### Backend
 - **Python 3.11.+** con **Flask 2.0+**.
 - **SQLAlchemy** como ORM para SQLite.
-- **Flask-SocketIO** (opcional) para WebSockets.
 - **PyJWT** para generar y validar tokens.
 - **Bcrypt** para almacenar contraseñas.
 
