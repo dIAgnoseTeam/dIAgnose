@@ -11,6 +11,7 @@ import MainLayout from "./components/layout/MainLayout";
 import Dashboard from "./pages/Dashboard";
 import CaseForm from "./components/ui/CaseForm";
 import { useFeatureFlags } from "./contexts/FeatureFlagContext";
+import { FeatureFlagProvider } from "./contexts/FeatureFlagContext";
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -53,65 +54,67 @@ const ChatRoute = ({ children }) => {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/auth/callback" element={<AuthCallback />} />
-          <Route
-            path="/"
-            element={
-              <PrivateRoute>
-                <MainLayout>
-                  <Home />
-                </MainLayout>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/chat"
-            element={
-              <PrivateRoute>
-                <ChatRoute>
+      <FeatureFlagProvider>
+        <Router>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
                   <MainLayout>
-                    <Chat />
+                    <Home />
                   </MainLayout>
-                </ChatRoute>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <PrivateRoute>
-                <MainLayout>
-                  <Profile />
-                </MainLayout>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={
-              <AdminRoute>
-                <MainLayout>
-                  <Dashboard />
-                </MainLayout>
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/caseform/:idCase"
-            element={
-              <PrivateRoute>
-                <MainLayout>
-                  <CaseForm />
-                </MainLayout>
-              </PrivateRoute>
-            }
-          />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </Router>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/chat"
+              element={
+                <PrivateRoute>
+                  <ChatRoute>
+                    <MainLayout>
+                      <Chat />
+                    </MainLayout>
+                  </ChatRoute>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute>
+                  <MainLayout>
+                    <Profile />
+                  </MainLayout>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <AdminRoute>
+                  <MainLayout>
+                    <Dashboard />
+                  </MainLayout>
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/caseform/:idCase"
+              element={
+                <PrivateRoute>
+                  <MainLayout>
+                    <CaseForm />
+                  </MainLayout>
+                </PrivateRoute>
+              }
+            />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </Router>
+      </FeatureFlagProvider>
     </AuthProvider>
   );
 }

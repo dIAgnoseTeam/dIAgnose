@@ -3,6 +3,7 @@ import { userService, reviewService } from "../services/api";
 import DashboardTable from "../components/ui/DashboardTable";
 import FiltersSection from "../components/ui/FiltersSection";
 import StatsSection from "../components/ui/StatsSection";
+import { useFeatureFlags } from "../contexts/FeatureFlagContext";
 
 const Dashboard = () => {
   const [reviews, setReviews] = useState([]);
