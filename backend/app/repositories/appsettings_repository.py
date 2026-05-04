@@ -1,10 +1,9 @@
 from sqlalchemy import select, func
 
 from app.models.app_settings import AppSettings
-from db.config.base import session
+from db.config.session import SessionLocal as session
 
 class AppSettingsRepository:
-    
     # Obtener app settings
     @staticmethod
     def get_settings():

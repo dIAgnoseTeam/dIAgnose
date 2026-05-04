@@ -7,7 +7,6 @@ class ChatRepository:
     def __init__(self):
         self.session = SessionLocal()
     
-
     # Obtener cantidad de registros de chats
     def get_chat_count(self):
         try:
