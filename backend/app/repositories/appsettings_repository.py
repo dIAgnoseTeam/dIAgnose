@@ -1,26 +1,26 @@
 from sqlalchemy import select, func
 
 from app.models.app_settings import AppSettings
-from db.config.session import SessionLocal as session
-
+from db.config.session import SessionLocal
 class AppSettingsRepository:
+
     # Obtener app settings
     @staticmethod
+    @staticmethod
     def get_settings():
-        """Obtener app settings."""
-        with session() as s:
-            settings = s.execute(select(AppSettings)).scalar_one_or_none()
-            return settings
+        with SessionLocal() as s:
+            return s.execute(select(AppSettings)).scalar_one_or_none()
 
     # Actualizar app settings
     @staticmethod
-    def update_settings(new_settings: AppSettings):
-        """Actualizar app settings"""
-        with session() as s:
-            existing_settings = s.execute(select(AppSettings)).scalar_one_or_none()
-            if existing_settings:
-                existing_settings.chat_enabled = new_settings.chat_enabled
-                s.commit()
+    def update_settings(settings_data: dict):
+        with SessionLocal() as s:
+            settings = s.execute(select(AppSettings)).scalar_one_or_none()
+            if settings:
+                settings.chat_enabled = bool(settings_data.get("chat_enabled", settings.chat_enabled))
             else:
-                s.add(new_settings)
-                s.commit()
+                settings = AppSettings(chat_enabled=bool(settings_data.get("chat_enabled", False)))
+                s.add(settings)
+            s.commit()
+            s.refresh(settings)
+            return settings

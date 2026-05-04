@@ -58,7 +58,7 @@ export const userService = {
 };
 
 export const settingsService = {
-  getSettings: () => api.get("/settings"),
+  getSettings: () => api.get("/settings/"),
   setChatEnabled: (value) =>
     api.patch("/settings/chat", { chat_enabled: value }),
 };

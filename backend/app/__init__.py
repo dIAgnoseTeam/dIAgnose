@@ -50,6 +50,7 @@ def create_app():
     from app.routes.role_routes import role_bp
     from app.routes.chat_routes import chat_bp
     from app.routes.historic_routes import historic_bp
+    from app.routes.settings_routes import settings_bp
 
     app.register_blueprint(health_bp, url_prefix="/health")
     app.register_blueprint(auth_bp, url_prefix="/auth")
@@ -59,5 +60,6 @@ def create_app():
     app.register_blueprint(role_bp, url_prefix="/roles")
     app.register_blueprint(chat_bp, url_prefix="/chats")
     app.register_blueprint(historic_bp, url_prefix="/historics")
+    app.register_blueprint(settings_bp, url_prefix="/settings")
 
     return app
