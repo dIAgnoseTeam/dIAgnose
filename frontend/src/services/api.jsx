@@ -63,4 +63,16 @@ export const settingsService = {
     api.patch("/settings/chat", { chat_enabled: value }),
 };
 
+export const chatService = {
+  getChatsByUser: (userId) => api.get(`/chats/user/${userId}`),
+  createChat: (data) => api.post("/chats/", data),
+  deleteChat: (chatId) => api.delete(`/chats/${chatId}`),
+  updateChat: (chatId, data) => api.put(`/chats/${chatId}`, data),
+};
+
+export const historicService = {
+  getByChat: (chatId) => api.get(`/historics/chat/${chatId}`),
+  create: (data) => api.post("/historics/", data),
+};
+
 export default api;

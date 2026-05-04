@@ -1,3 +1,4 @@
+from datetime import datetime
 import logging
 
 from flask import Blueprint, jsonify, request
@@ -9,6 +10,7 @@ from app.utils.oauth_decorator import token_required
 logger = logging.getLogger(__name__)
 
 chat_bp = Blueprint("chats", __name__)
+
 
 @chat_bp.route("/count", methods=["GET"])
 @token_required
@@ -37,7 +39,8 @@ def get_chat_by_id(current_user, chat_id: int):
     except Exception as e:
         logger.error(f"Error al obtener el chat por ID: {str(e)}")
         return jsonify({"error": "Error al obtener el chat"}), 500
-    
+
+
 @chat_bp.route("/user/<int:user_id>", methods=["GET"])
 @token_required
 def get_chats_by_user_id(current_user, user_id: int):
@@ -49,6 +52,7 @@ def get_chats_by_user_id(current_user, user_id: int):
     except Exception as e:
         logger.error(f"Error al obtener los chats por ID de usuario: {str(e)}")
         return jsonify({"error": "Error al obtener los chats"}), 500
+
 
 @chat_bp.route("/", methods=["POST"])
 @token_required
@@ -62,6 +66,7 @@ def create_chat(current_user):
     except Exception as e:
         logger.error(f"Error al crear el chat: {str(e)}")
         return jsonify({"error": "Error al crear el chat"}), 500
+
 
 @chat_bp.route("/<int:chat_id>", methods=["DELETE"])
 @token_required
@@ -77,6 +82,7 @@ def delete_chat(current_user, chat_id: int):
     except Exception as e:
         logger.error(f"Error al eliminar el chat: {str(e)}")
         return jsonify({"error": "Error al eliminar el chat"}), 500
+
 
 @chat_bp.route("/<int:chat_id>", methods=["PUT"])
 @token_required
