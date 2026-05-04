@@ -28,6 +28,24 @@ alembic upgrade head
 5) Probar la app.
 6) Commitear los cambios, incluyendo `migrations/versions/`.
 
+## Downgrade (rollback)
+
+Si necesitas revertir migraciones:
+
+- Volver una migracion:
+
+```
+alembic downgrade -1
+```
+
+- Volver a una revision concreta (ID de la migracion):
+
+```
+alembic downgrade <revision_id>
+```
+
+Tip: usa `alembic history` para ver los IDs disponibles.
+
 ## Flujo recomendado (produccion)
 
 1) Generar migraciones en desarrollo.
