@@ -1,10 +1,12 @@
 import os
 import sys
 import logging
+from alembic import command
+from alembic.config import Config as AlembicConfig
 from app import create_app
-from db import init_database
 from seed_roles import seed_roles
 from seed_cases import seed_cases
+from pathlib import Path
 
 # Configurar logging
 logging.basicConfig(
@@ -13,31 +15,54 @@ logging.basicConfig(
     datefmt='%H:%M:%S'
 )
 
+# Método para ejecutar las migraciones de Alembic automáticamente al iniciar la aplicación
+def run_alembic_upgrade() -> None:
+    """Aplica todas las migraciones pendientes antes de arrancar la app."""
+    base_dir = Path(__file__).resolve().parent
+    alembic_ini_path = base_dir / "alembic.ini"
+    alembic_cfg = AlembicConfig(str(alembic_ini_path))
+    command.upgrade(alembic_cfg, "head")
+    logging.info("Migraciones Alembic aplicadas (head).")
+
+
+def run_seeders() -> None:
+    """
+    Seeders opcionales por variables de entorno:
+    RUN_SEED_ROLES=true
+    RUN_SEED_CASES=true
+    """
+    run_roles = os.getenv("RUN_SEED_ROLES", "true").lower() == "true"
+    run_cases = os.getenv("RUN_SEED_CASES", "false").lower() == "true"
+
+    if run_roles:
+        logging.info("Ejecutando seed_roles...")
+        seed_roles()
+        logging.info("seed_roles completado.")
+
+    if run_cases:
+        logging.info("Ejecutando seed_cases...")
+        seed_cases()
+        logging.info("seed_cases completado.")
+
 # Funcion para inicializar la aplicacion
 def initialize_app():
     try:
         logging.info("INICIALIZANDO dIAgnose...")
         
-        # PASO 1: Inicializar base de datos
-        logging.info("PASO 1/3: Inicializando base de datos...")
-        init_database()
-        logging.info("Base de datos inicializada correctamente\n")
-        
-        # PASO 2: Sembrar roles
-        logging.info("PASO 2/3: Cargando roles del sistema...")
-        seed_roles()
-        logging.info("Roles cargados correctamente\n")
-        
-        # PASO 3: Sembrar casos clínicos
-        logging.info("PASO 3/3: Cargando casos clínicos desde Hugging Face...")
-        seed_cases()
-        logging.info("Casos clínicos cargados correctamente\n")
-        
+        # PASO 1: Aplicar migraciones de alembic solo y siempre que se solicita
+        run_migrations = os.getenv("RUN_MIGRATIONS", "true").lower() == "true"
+        if run_migrations:
+            logging.info("PASO 1/2: Aplicando migraciones y Inicializando DB...")
+            run_alembic_upgrade()
+
+        # PASO 2: Ejecutar seeders
+        logging.info("PASO 2/2: Ejecutando seeders configurados...")
+        run_seeders()
+
         logging.info("INICIALIZACIÓN COMPLETADA CON ÉXITO")
-        
     except Exception as e:
         logging.error("ERROR DURANTE LA INICIALIZACIÓN")
-        logging.error(f"Error: {str(e)}")
+        logging.error("Error: %s", str(e))
         logging.error("La aplicación no puede iniciarse. Revisa los logs anteriores.")
         sys.exit(1)
 

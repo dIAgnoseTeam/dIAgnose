@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
+import Chat from "./pages/Chat";
 import AuthCallback from "./components/auth/AuthCallback";
 import { PropagateLoader } from "react-spinners";
 import Navbar from "./components/ui/Navbar";
@@ -9,6 +10,8 @@ import Profile from "./pages/Profile";
 import MainLayout from "./components/layout/MainLayout";
 import Dashboard from "./pages/Dashboard";
 import CaseForm from "./components/ui/CaseForm";
+import { useFeatureFlags } from "./contexts/FeatureFlagContext";
+import { FeatureFlagProvider } from "./contexts/FeatureFlagContext";
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -42,56 +45,76 @@ const AdminRoute = ({ children }) => {
   return user.rol === "admin" ? children : <Navigate to="/" />;
 };
 
+const ChatRoute = ({ children }) => {
+  const { chatEnabled, loading } = useFeatureFlags();
+  if (loading) return null; // o spinner
+  return chatEnabled ? children : <Navigate to="/" />;
+};
+
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/auth/callback" element={<AuthCallback />} />
-          <Route
-            path="/"
-            element={
-              <PrivateRoute>
-                <MainLayout>
-                  <Home />
-                </MainLayout>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <PrivateRoute>
-                <MainLayout>
-                  <Profile />
-                </MainLayout>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={
-              <AdminRoute>
-                <MainLayout>
-                  <Dashboard />
-                </MainLayout>
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/caseform/:idCase"
-            element={
-              <PrivateRoute>
-                <MainLayout>
-                  <CaseForm />
-                </MainLayout>
-              </PrivateRoute>
-            }
-          />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </Router>
+      <FeatureFlagProvider>
+        <Router>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <MainLayout>
+                    <Home />
+                  </MainLayout>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/chat"
+              element={
+                <PrivateRoute>
+                  <ChatRoute>
+                    <MainLayout>
+                      <Chat />
+                    </MainLayout>
+                  </ChatRoute>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute>
+                  <MainLayout>
+                    <Profile />
+                  </MainLayout>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <AdminRoute>
+                  <MainLayout>
+                    <Dashboard />
+                  </MainLayout>
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/caseform/:idCase"
+              element={
+                <PrivateRoute>
+                  <MainLayout>
+                    <CaseForm />
+                  </MainLayout>
+                </PrivateRoute>
+              }
+            />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </Router>
+      </FeatureFlagProvider>
     </AuthProvider>
   );
 }

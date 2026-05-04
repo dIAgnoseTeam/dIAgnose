@@ -1,9 +1,17 @@
 import { Link, useLocation } from "react-router";
 import { useAuth } from "../../contexts/AuthContext";
-import { Home, LayoutDashboard, LogOut, Brain } from "lucide-react";
+import { useFeatureFlags } from "../../contexts/FeatureFlagContext";
+import {
+  Home,
+  LayoutDashboard,
+  LogOut,
+  Brain,
+  BotMessageSquare,
+} from "lucide-react";
 
 const navItems = [
   { icon: Home, label: "Home", id: "home", path: "/" },
+  { icon: BotMessageSquare, label: "Chat", id: "chat", path: "/chat" },
   {
     icon: LayoutDashboard,
     label: "Dashboard",
@@ -15,9 +23,11 @@ const navItems = [
 const Navbar = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
+  const { chatEnabled } = useFeatureFlags();
 
   const filteredNavItems = navItems.filter((item) => {
     if (item.id === "dashboard") return user?.rol === "admin";
+    if (item.id === "chat") return chatEnabled;
     return true;
   });
 

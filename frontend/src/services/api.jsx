@@ -45,7 +45,7 @@ export const authService = {
 
 export const reviewService = {
   getAllReviews: () => api.get("/reviews/"),
-  createReview: (review) => api.post("/reviews/create", review)
+  createReview: (review) => api.post("/reviews/create", review),
 };
 
 export const datasetService = {
@@ -55,6 +55,12 @@ export const datasetService = {
 
 export const userService = {
   getAllUsers: () => api.get("/users/"),
+};
+
+export const settingsService = {
+  getSettings: () => api.get("/settings/"),
+  setChatEnabled: (value) =>
+    api.patch("/settings/chat", { chat_enabled: value }),
 };
 
 export default api;

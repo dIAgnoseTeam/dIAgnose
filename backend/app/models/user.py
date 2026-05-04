@@ -14,3 +14,4 @@ class Usuario(base):
 
     rol = relationship("Rol", back_populates="usuarios")
     valoraciones = relationship("Valoracion", back_populates="usuario")
+    chats = relationship("Chat", back_populates="usuario", cascade="all, delete-orphan")

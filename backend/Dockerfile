@@ -23,5 +23,5 @@ RUN mkdir -p /app/db
 
 EXPOSE 5000
 
-# La inicialización de la DB se ejecuta automáticamente en run.py
+# La inicialización y migración de la DB se ejecuta automáticamente en run.py
 CMD ["python", "run.py"]
