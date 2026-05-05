@@ -1,4 +1,3 @@
-import React from "react";
 import StatCard from "./StatCard";
 
 const StatsSection = (props) => {
@@ -18,7 +17,7 @@ const StatsSection = (props) => {
     : null;
 
   return (
-    <section className="grid xs:grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    <section className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-10">
       <StatCard
         title={"Total valoraciones"}
         value={totalReviews}
