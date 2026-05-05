@@ -25,11 +25,11 @@ const CaseSection = ({ section, data }) => {
   if (!hasContent) return null;
   return (
     <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
-      <div className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-teal-50 to-cyan-50 border-b border-teal-100">
+      <div className="flex items-center gap-2 px-4 sm:px-5 py-3 bg-gradient-to-r from-teal-50 to-cyan-50 border-b border-teal-100">
         <DynamicIcon name={section.icon} size={14} className="text-teal-600" />
         <h3 className="text-xs font-semibold text-gray-800">{section.title}</h3>
       </div>
-      <div className="px-5 py-4 space-y-3">
+      <div className="px-4 sm:px-5 py-4 space-y-3">
         {section.fields.map((field) => (
           <CaseField
             key={field.key}
@@ -51,14 +51,14 @@ const METRIC_LABELS = {
 };
 
 const ReviewSummary = ({ review }) => (
-  <div className="bg-white rounded-xl border border-gray-100 overflow-hidden sticky top-0">
-    <div className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-teal-50 to-cyan-50 border-b border-teal-100">
+  <div className="bg-white rounded-xl border border-gray-100 overflow-hidden lg:sticky lg:top-0">
+    <div className="flex items-center gap-2 px-4 sm:px-5 py-3 bg-gradient-to-r from-teal-50 to-cyan-50 border-b border-teal-100">
       <DynamicIcon name="ClipboardList" size={14} className="text-teal-600" />
       <h3 className="text-xs font-semibold text-gray-800">
         Valoración registrada
       </h3>
     </div>
-    <div className="px-5 py-4 space-y-3">
+    <div className="px-4 sm:px-5 py-4 space-y-3">
       {Object.entries(METRIC_LABELS).map(([key, label]) => (
         <div key={key}>
           <div className="flex justify-between mb-1">
@@ -112,32 +112,28 @@ const CaseModal = ({ review, onClose }) => {
       />
 
       {/* Contenedor centrado */}
-      <div className="fixed inset-0 flex items-center justify-center p-4">
-        <DialogPanel
-          className="w-full min-w-[70vw] max-w-4xl max-h-[90vh] bg-gray-50 rounded-2xl shadow-xl
-                                flex flex-col overflow-hidden border border-gray-200"
-        >
+      <div className="fixed inset-0 flex items-center justify-center p-2 sm:p-4">
+        <DialogPanel className="w-full max-w-4xl max-h-[95vh] sm:max-h-[90vh] bg-gray-50 rounded-xl sm:rounded-2xl shadow-xl flex flex-col overflow-hidden border border-gray-200">
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-100 shrink-0">
-            <div>
+          <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-white border-b border-gray-100 shrink-0">
+            <div className="min-w-0 flex-1">
               <DialogTitle className="text-sm font-semibold text-gray-800">
                 Detalle de valoración
               </DialogTitle>
-              <p className="text-xs text-gray-400 mt-0.5">
+              <p className="text-xs text-gray-400 mt-0.5 truncate">
                 Caso #{review?.id_caso} · {review?.fecha}
               </p>
             </div>
             <button
               onClick={onClose}
-              className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400
-                         hover:bg-gray-100 hover:text-gray-600 transition-colors"
+              className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors shrink-0 ml-2"
             >
               <DynamicIcon name="X" size={16} />
             </button>
           </div>
 
           {/* Body */}
-          <div className="flex-1 overflow-y-auto p-6 min-h-0">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 min-h-0">
             {loading ? (
               <div className="flex justify-center py-16">
                 <div className="w-7 h-7 border-2 border-teal-500 border-t-transparent rounded-full animate-spin" />
@@ -145,7 +141,7 @@ const CaseModal = ({ review, onClose }) => {
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
                 {/* Columna izquierda: caso clínico */}
-                <div className="space-y-4 lg:col-span-3">
+                <div className="space-y-4 lg:col-span-3 order-2 lg:order-1">
                   {caseData &&
                     CASE_SECTIONS.map((section) => (
                       <CaseSection
@@ -156,7 +152,7 @@ const CaseModal = ({ review, onClose }) => {
                     ))}
                 </div>
                 {/* Columna derecha: métricas de la valoración */}
-                <div className="space-y-4">
+                <div className="space-y-4 order-1 lg:order-2">
                   {review && <ReviewSummary review={review} />}
                 </div>
               </div>
