@@ -4,6 +4,7 @@ import { useCaseContext } from "../../contexts/CaseContext";
 import { reviewService } from "../../services/api";
 import { useToast } from "../../hooks/useToast";
 import Toast from "./Toast";
+import Slider from "@mui/material/Slider";
 
 function CaseForm({ idCase }) {
   const initialScore = {
@@ -46,6 +47,13 @@ function CaseForm({ idCase }) {
     }));
   };
 
+  const handleSliderChange = (name) => (event, newValue) => {
+    setScore((prev) => ({
+      ...prev,
+      [name]: newValue,
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -71,14 +79,14 @@ function CaseForm({ idCase }) {
   return (
     <section className="bg-white rounded-xl border border-gray-100 shadow-sm h-[calc(100vh-6.5rem)] max-h-[calc(100vh-6.5rem)] flex flex-col overflow-hidden">
       <div className="p-6 pb-5 border-b border-gray-100 shrink-0">
-        <h2 className="text-2xl font-bold text-gray-800 mb-1">
+        <h2 className="text-xl font-bold text-gray-800 mb-1">
           Valoración del caso clínico
         </h2>
         <p className="text-sm text-gray-400">Evalúa cada apartado del 1 al 5</p>
       </div>
 
       <form
-        className="flex-1 overflow-y-auto p-6 space-y-4"
+        className="flex-1 overflow-y-auto p-4 space-y-4"
         onSubmit={handleSubmit}
       >
         <div className="bg-teal-50 border border-teal-100 rounded-lg p-4">
@@ -89,16 +97,20 @@ function CaseForm({ idCase }) {
               <span className="text-xs text-gray-400 font-normal">/5</span>
             </span>
           </div>
-          <input
-            className="w-full accent-teal-600"
-            type="range"
-            name="puntuacion"
+          <Slider
+            size="small"
+            value={score.puntuacion}
+            onChange={handleSliderChange("puntuacion")}
             min={1}
             max={5}
             step={1}
-            value={score.puntuacion}
-            onChange={handleChange}
-            required
+            valueLabelDisplay="auto"
+            sx={{
+              color: "#14B8A6",
+              "& .MuiSlider-thumb": {
+                backgroundColor: "#14B8A6",
+              },
+            }}
           />
           <div className="flex justify-between text-xs text-teal-400 mt-1">
             <p>1</p>
@@ -122,16 +134,20 @@ function CaseForm({ idCase }) {
                   <span className="text-xs text-gray-400 font-normal">/5</span>
                 </span>
               </div>
-              <input
-                className="w-full accent-teal-500"
-                type="range"
-                name={name}
+              <Slider
+                size="small"
+                value={score[name]}
+                onChange={handleSliderChange(name)}
                 min={1}
                 max={5}
                 step={1}
-                value={score[name]}
-                onChange={handleChange}
-                required
+                valueLabelDisplay="auto"
+                sx={{
+                  color: "#14B8A6",
+                  "& .MuiSlider-thumb": {
+                    backgroundColor: "#14B8A6",
+                  },
+                }}
               />
             </div>
           ))}
@@ -151,7 +167,7 @@ function CaseForm({ idCase }) {
           />
         </div>
 
-        <div className="sticky bottom-0 bg-white pt-4">
+        <div className="sticky bottom-0 bg-white">
           <div className="flex justify-end">
             <button
               className="bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white text-sm font-semibold py-2.5 px-6 rounded-lg transition-colors duration-150 shadow-sm"
