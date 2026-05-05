@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Plus } from "lucide-react";
+import { Send, Plus, ChevronLeft, MessageSquare } from "lucide-react";
 
 const MOCK_SESSIONS = [
   { id: 1, title: "Dolor de cabeza persistente", date: "Hoy", active: true },
@@ -34,6 +34,7 @@ const Chat = () => {
   const [messages, setMessages] = useState(MOCK_MESSAGES);
   const [input, setInput] = useState("");
   const [sessions, setSessions] = useState(MOCK_SESSIONS);
+  const [showSidebar, setShowSidebar] = useState(false);
   const bottomRef = useRef(null);
 
   useEffect(() => {
@@ -55,21 +56,51 @@ const Chat = () => {
     }
   };
 
+  const handleSessionClick = (sessionId) => {
+    setSessions(sessions.map((x) => ({ ...x, active: x.id === sessionId })));
+    // Cerrar sidebar en mobile despues de seleccionar
+    setShowSidebar(false);
+  };
+
   return (
-    <div className="flex gap-4 h-full overflow-hidden">
+    <div className="flex gap-4 h-full overflow-hidden relative">
+      {/* Overlay para moviles */}
+      {showSidebar && (
+        <div
+          className="fixed inset-0 bg-black/30 z-40 md:hidden"
+          onClick={() => setShowSidebar(false)}
+        />
+      )}
       {/* ── Panel izquierdo: sesiones ── */}
-      <div className="flex flex-col w-64 shrink-0 bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+      <div
+        className={`
+          flex flex-col w-64 shrink-0 bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm
+          fixed md:relative inset-y-0 left-0 z-50 md:z-auto
+          transform transition-transform duration-300 ease-in-out
+          ${showSidebar ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+          md:flex
+        `}
+      >
         {/* Cabecera */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
           <span className="text-sm font-semibold text-gray-800">
             Conversaciones
           </span>
-          <button
-            className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-500
-                             hover:bg-teal-50 hover:text-teal-700 transition-colors"
-          >
-            <Plus />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-500
+                               hover:bg-teal-50 hover:text-teal-700 transition-colors"
+            >
+              <Plus size={18} />
+            </button>
+            <button
+              className="md:hidden w-7 h-7 flex items-center justify-center rounded-lg text-gray-500
+                               hover:bg-gray-100 transition-colors"
+              onClick={() => setShowSidebar(false)}
+            >
+              <ChevronLeft size={18} />
+            </button>
+          </div>
         </div>
 
         {/* Lista */}
@@ -77,11 +108,7 @@ const Chat = () => {
           {sessions.map((s) => (
             <button
               key={s.id}
-              onClick={() =>
-                setSessions(
-                  sessions.map((x) => ({ ...x, active: x.id === s.id })),
-                )
-              }
+              onClick={() => handleSessionClick(s.id)}
               className={`w-full text-left px-4 py-2.5 rounded-lg mx-1 transition-colors
                 ${
                   s.active
@@ -101,10 +128,18 @@ const Chat = () => {
         </div>
       </div>
 
-      {/* ── Panel derecho: chat ── */}
-      <div className="flex flex-col flex-1 bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+      {/* Panel derecho: chat */}
+      <div className="flex flex-col flex-1 bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm min-w-0">
         {/* Cabecera */}
-        <div className="flex items-center gap-3 px-5 py-3 border-b border-gray-100 shrink-0">
+        <div className="flex items-center gap-3 px-3 sm:px-5 py-3 border-b border-gray-100 shrink-0">
+          {/* Boton para mostrar sesiones en mobile */}
+          <button
+            className="md:hidden w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors shrink-0"
+            onClick={() => setShowSidebar(true)}
+          >
+            <MessageSquare size={16} />
+          </button>
+
           <div className="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center shrink-0">
             <svg
               width="15"
@@ -119,19 +154,19 @@ const Chat = () => {
               <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 3a3 3 0 1 1-3 3 3 3 0 0 1 3-3zm0 14.2a7.2 7.2 0 0 1-6-3.22c.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.2 7.2 0 0 1-6 3.22z" />
             </svg>
           </div>
-          <div>
-            <p className="text-sm font-semibold text-gray-800">
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-gray-800 truncate">
               Asistente dlAgnose
             </p>
             <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-teal-500 inline-block" />
-              <p className="text-xs text-gray-400">En línea</p>
+              <span className="w-1.5 h-1.5 rounded-full bg-teal-500 inline-block shrink-0" />
+              <p className="text-xs text-gray-400">En l&iacute;nea</p>
             </div>
           </div>
         </div>
 
         {/* Mensajes */}
-        <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4 min-h-0">
+        <div className="flex-1 overflow-y-auto px-3 sm:px-5 py-4 space-y-4 min-h-0">
           {messages.map((msg) => (
             <div
               key={msg.id}
@@ -146,7 +181,7 @@ const Chat = () => {
               )}
 
               <div
-                className={`max-w-[70%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed
+                className={`max-w-[85%] sm:max-w-[70%] px-3 sm:px-4 py-2.5 rounded-2xl text-sm leading-relaxed
                 ${
                   msg.role === "user"
                     ? "bg-teal-600 text-white rounded-br-sm"
@@ -161,19 +196,19 @@ const Chat = () => {
         </div>
 
         {/* Input */}
-        <div className="px-4 py-3 border-t border-gray-100 shrink-0">
+        <div className="px-3 sm:px-4 py-3 border-t border-gray-100 shrink-0">
           <div
-            className="flex items-end gap-2 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2
+            className="flex items-end gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 sm:px-4 py-2
                           focus-within:border-teal-400 focus-within:ring-1 focus-within:ring-teal-100 transition-all"
           >
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Escribe tu consulta... (Enter para enviar)"
+              placeholder="Escribe tu consulta..."
               rows={1}
               className="flex-1 bg-transparent text-sm text-gray-800 placeholder-gray-400 
-                         resize-none outline-none leading-relaxed py-1"
+                         resize-none outline-none leading-relaxed py-1 min-w-0"
               style={{ maxHeight: "120px" }}
             />
             <button
@@ -186,6 +221,9 @@ const Chat = () => {
               <Send width={16} />
             </button>
           </div>
+          <p className="text-xs text-gray-400 mt-2 text-center hidden sm:block">
+            Presiona Enter para enviar
+          </p>
         </div>
       </div>
     </div>
