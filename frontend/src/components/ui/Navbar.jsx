@@ -7,6 +7,7 @@ import {
   LogOut,
   Brain,
   BotMessageSquare,
+  X,
 } from "lucide-react";
 
 const navItems = [
@@ -20,7 +21,7 @@ const navItems = [
   },
 ];
 
-const Navbar = () => {
+const Navbar = ({ isOpen, onClose }) => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const { chatEnabled } = useFeatureFlags();
@@ -31,21 +32,44 @@ const Navbar = () => {
     return true;
   });
 
+  const handleNavClick = () => {
+    // Cerrar el sidebar en mobile al navegar
+    if (window.innerWidth < 1024) {
+      onClose?.();
+    }
+  };
+
   return (
-    <aside className="w-64 h-screen flex flex-col bg-white border-r border-gray-100 shadow-sm fixed left-0 top-0 z-50">
+    <aside
+      className={`
+        w-64 h-screen flex flex-col bg-white border-r border-gray-100 shadow-sm fixed left-0 top-0 z-50
+        transform transition-transform duration-300 ease-in-out
+        ${isOpen ? "translate-x-0" : "-translate-x-full"}
+        lg:translate-x-0
+      `}
+    >
       {/* Header */}
-      <header className="flex items-center gap-3 px-4 py-5 border-b border-gray-100">
-        <div className="w-10 h-10 rounded-xl bg-teal-600 flex items-center justify-center flex-shrink-0 shadow-md shadow-teal-100">
-          <Brain size={20} className="text-white" />
+      <header className="flex items-center justify-between px-4 py-5 border-b border-gray-100">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-teal-600 flex items-center justify-center flex-shrink-0 shadow-md shadow-teal-100">
+            <Brain size={20} className="text-white" />
+          </div>
+          <main className="flex flex-col leading-tight">
+            <span className="text-gray-800 font-bold text-lg tracking-tight">
+              d<span className="text-teal-600">IA</span>gnose
+            </span>
+            <span className="text-gray-400 text-xs font-medium uppercase tracking-widest">
+              IA Atenci&oacute;n Primaria
+            </span>
+          </main>
         </div>
-        <main className="flex flex-col leading-tight">
-          <span className="text-gray-800 font-bold text-lg tracking-tight">
-            d<span className="text-teal-600">IA</span>gnose
-          </span>
-          <span className="text-gray-400 text-xs font-medium uppercase tracking-widest">
-            IA Atención Primaria
-          </span>
-        </main>
+        {/* Boton cerrar solo visible en mobile */}
+        <button
+          onClick={onClose}
+          className="lg:hidden w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
+        >
+          <X size={20} />
+        </button>
       </header>
 
       {/* Nav */}
@@ -56,6 +80,7 @@ const Navbar = () => {
             <Link
               key={path}
               to={path}
+              onClick={handleNavClick}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 group
                 ${
                   isActive
@@ -91,7 +116,7 @@ const Navbar = () => {
           <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-red-100 transition-colors duration-150">
             <LogOut size={16} />
           </div>
-          Cerrar sesión
+          Cerrar sesi&oacute;n
         </button>
       </div>
     </aside>

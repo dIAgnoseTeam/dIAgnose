@@ -79,13 +79,13 @@ const Home = () => {
   return (
     <CaseProvider value={caseContextValue}>
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-        <div className="max-w-fit mx-auto px-4 py-12">
+        <div className="max-w-7xl mx-auto px-4 py-6 sm:py-12">
           {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+          <div className="text-center mb-8 sm:mb-12">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
               Diagnóstico Clínico & Análisis
             </h1>
-            <p className="text-lg text-gray-500">
+            <p className="text-sm sm:text-base lg:text-lg text-gray-500 px-4">
               Análisis seguro impulsado por IA para diagnóstico diferencial,
               interacciones farmacológicas y síntesis de historias clínicas.
             </p>
@@ -93,7 +93,7 @@ const Home = () => {
 
           {/* Error Alert */}
           {error && (
-            <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg">
+            <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 sm:px-6 py-4 rounded-lg">
               {error}
             </div>
           )}
@@ -104,17 +104,17 @@ const Home = () => {
               <p className="text-gray-500 text-lg">Cargando caso clínico...</p>
             </div>
           ) : currentCase ? (
-            <div className="flex items-start gap-6">
+            <div className="flex flex-col xl:flex-row items-start gap-6">
               {/* Case Content Card */}
-              <div className="flex items-start gap-6">
+              <div className="w-full xl:flex-1 min-w-0">
                 <CaseViewer
                   caseData={currentCase}
                   caseNumber={caseNumber}
                   maxRegisters={maxRegisters}
                 />
-                <div className="w-[420px] shrink-0 sticky top-0 self-start max-h-[calc(100vh-5rem)]">
-                  <CaseForm idCase={caseNumber} />
-                </div>
+              </div>
+              <div className="w-full xl:w-[420px] xl:shrink-0 xl:sticky xl:top-0 xl:self-start xl:max-h-[calc(100vh-5rem)]">
+                <CaseForm idCase={caseNumber} />
               </div>
             </div>
           ) : (
