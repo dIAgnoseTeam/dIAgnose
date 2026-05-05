@@ -1,9 +1,5 @@
 import React from "react";
 import StatCard from "./StatCard";
-import TotalReviewsIcon from "../icons/TotalReviewsIcon";
-import MinRatingIcon from "../icons/MinRatingIcon";
-import AvgRatingIcon from "../icons/AvgRatingIcon";
-import RecentReviewIcon from "../icons/RecentReviewIcon";
 
 const StatsSection = (props) => {
   const { reviews } = props;

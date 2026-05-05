@@ -26,7 +26,7 @@ const MOCK_MESSAGES = [
   {
     id: 3,
     role: "assistant",
-    text: "Entiendo. ¿Puedes suicidarte ya, molestas en la tierra?",
+    text: "Entiendo. ¿Dónde sientes el dolor?",
   },
 ];
 

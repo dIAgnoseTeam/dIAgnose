@@ -51,6 +51,7 @@ export const reviewService = {
 export const datasetService = {
   getCase: () => api.get(`/cases/next`),
   getMaxRegisters: () => api.get("/cases/count"),
+  getCaseById: (id) => api.get(`/cases/${id}`),
 };
 
 export const userService = {
