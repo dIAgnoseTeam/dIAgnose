@@ -18,21 +18,21 @@ function Login() {
   const error = searchParams.get("error");
 
   return (
-    <div className="login-container h-dvh flex justify-center items-center">
-      <div className="bg-white bg-opacity-90 p-8 rounded-lg shadow-lg w-96 flex flex-col items-center">
-        <h2 className="text-2xl font-bold mb-6 text-center text-primary-900">
-          Iniciar Sesión
+    <div className="login-container h-dvh flex justify-center items-center px-4">
+      <div className="bg-white bg-opacity-90 p-6 sm:p-8 rounded-lg shadow-lg w-full max-w-sm sm:w-96 flex flex-col items-center">
+        <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center text-primary-900">
+          Iniciar Sesi&oacute;n
         </h2>
         <button
-          className="flex gap-3 items-center bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 font-semibold py-2 px-4 rounded shadow w-full justify-center"
+          className="flex gap-3 items-center bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 font-semibold py-2 px-4 rounded shadow w-full justify-center text-sm sm:text-base"
           onClick={login}
         >
           <GoogleIcon />
           Continuar con Google
         </button>
         {error && (
-          <div className="mt-4 text-red-600 text-center">
-            Error de autenticación: {error}
+          <div className="mt-4 text-red-600 text-center text-sm">
+            Error de autenticaci&oacute;n: {error}
           </div>
         )}
       </div>
