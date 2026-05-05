@@ -4,7 +4,7 @@ const FiltersSection = (props) => {
   const { setFilterUser, setFilterDate, setFilterScore } = props;
 
   return (
-    <section className="flex flex-col sm:flex-row justify-end gap-2 mb-10">
+    <section className="flex flex-col sm:flex-row sm:justify-end gap-3 sm:gap-2 mb-6 sm:mb-10">
       <div className="flex flex-col gap-1">
         <label
           className="text-gray-600 text-xs font-medium"
@@ -15,7 +15,7 @@ const FiltersSection = (props) => {
         <input
           type="email"
           id="filter-email"
-          className="text-gray-700 text-sm bg-white border border-gray-200 rounded-md px-4 py-2 focus:outline-none focus:ring-1 focus:ring-teal-600 focus:border-teal-600 placeholder:text-gray-400"
+          className="text-gray-700 text-sm bg-white border border-gray-200 rounded-md px-4 py-2.5 sm:py-2 focus:outline-none focus:ring-1 focus:ring-teal-600 focus:border-teal-600 placeholder:text-gray-400"
           placeholder="medico@gmail.com"
           onChange={(e) => setFilterUser(e.target.value.trim())}
         />
@@ -31,7 +31,7 @@ const FiltersSection = (props) => {
         <input
           type="date"
           id="filter-date"
-          className="text-gray-700 text-sm bg-white border border-gray-200 rounded-md px-4 py-2 focus:outline-none focus:ring-1 focus:ring-teal-600 focus:border-teal-600"
+          className="text-gray-700 text-sm bg-white border border-gray-200 rounded-md px-4 py-2.5 sm:py-2 focus:outline-none focus:ring-1 focus:ring-teal-600 focus:border-teal-600"
           onChange={(e) => setFilterDate(e.target.value.trim())}
         />
       </div>
@@ -41,11 +41,11 @@ const FiltersSection = (props) => {
           htmlFor="filter-score"
           className="text-gray-600 text-xs font-medium "
         >
-          Puntuación
+          Puntuaci&oacute;n
         </label>
         <select
           id="filter-score"
-          className="text-gray-700 text-sm bg-white border border-gray-200 rounded-md px-4 py-2 focus:outline-none focus:ring-1 focus:ring-teal-600 focus:border-teal-600"
+          className="text-gray-700 text-sm bg-white border border-gray-200 rounded-md px-4 py-2.5 sm:py-2 focus:outline-none focus:ring-1 focus:ring-teal-600 focus:border-teal-600"
           onChange={(e) => setFilterScore(e.target.value.trim())}
         >
           <option value="">Todas las puntuaciones</option>
