@@ -9,6 +9,9 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     app.secret_key = Config.SECRET_KEY
+    
+    # Evitar encode incorrecto
+    app.config['JSON_AS_ASCII'] = False
 
     # Configurar ProxyFix para producción (confiar en headers del proxy)
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
@@ -48,6 +51,9 @@ def create_app():
     from app.routes.review_routes import review_bp
     from app.routes.user_routes import user_bp
     from app.routes.role_routes import role_bp
+    from app.routes.chat_routes import chat_bp
+    from app.routes.historic_routes import historic_bp
+    from app.routes.settings_routes import settings_bp
 
     app.register_blueprint(health_bp, url_prefix="/health")
     app.register_blueprint(auth_bp, url_prefix="/auth")
@@ -55,5 +61,8 @@ def create_app():
     app.register_blueprint(case_bp, url_prefix="/cases")
     app.register_blueprint(user_bp, url_prefix="/users")
     app.register_blueprint(role_bp, url_prefix="/roles")
+    app.register_blueprint(chat_bp, url_prefix="/chats")
+    app.register_blueprint(historic_bp, url_prefix="/historics")
+    app.register_blueprint(settings_bp, url_prefix="/settings")
 
     return app

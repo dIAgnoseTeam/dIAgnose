@@ -22,4 +22,7 @@ def case_to_dict(case):
         "situacion_basal": case.situacion_basal,
         "tratamiento_farmacologico": case.tratamiento_farmacologico,
         "tratamiento_no_farmacologico": case.tratamiento_no_farmacologico,
+        "referencias_bibliograficas": case.referencias_bibliograficas,
+        "keywords": case.keywords,
+        "codigo_cie_10": case.codigo_cie_10
     }

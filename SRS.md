@@ -402,5 +402,5 @@ Bases de datos:
 | Rol | Nombre | Fecha |
 |-----|--------|-------|
 | Equipo LosMasones | Héctor de la Llave Ballesteros | 10/11/2025 |
-| Equipo MediScout | Josue Mejías Morante | ___________ |
-| Tutor/Profesor | ___________ | ___________ |
+| Equipo MediScout | Josue Mejías Morante | 03/05/2026 |
+| Tutor/Profesor | Iván López Montalbán | ___________ |

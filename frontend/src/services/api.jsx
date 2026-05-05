@@ -45,16 +45,35 @@ export const authService = {
 
 export const reviewService = {
   getAllReviews: () => api.get("/reviews/"),
-  createReview: (review) => api.post("/reviews/create", review)
+  createReview: (review) => api.post("/reviews/create", review),
 };
 
 export const datasetService = {
   getCase: () => api.get(`/cases/next`),
   getMaxRegisters: () => api.get("/cases/count"),
+  getCaseById: (id) => api.get(`/cases/${id}`),
 };
 
 export const userService = {
   getAllUsers: () => api.get("/users/"),
+};
+
+export const settingsService = {
+  getSettings: () => api.get("/settings/"),
+  setChatEnabled: (value) =>
+    api.patch("/settings/chat", { chat_enabled: value }),
+};
+
+export const chatService = {
+  getChatsByUser: (userId) => api.get(`/chats/user/${userId}`),
+  createChat: (data) => api.post("/chats/", data),
+  deleteChat: (chatId) => api.delete(`/chats/${chatId}`),
+  updateChat: (chatId, data) => api.put(`/chats/${chatId}`, data),
+};
+
+export const historicService = {
+  getByChat: (chatId) => api.get(`/historics/chat/${chatId}`),
+  create: (data) => api.post("/historics/", data),
 };
 
 export default api;

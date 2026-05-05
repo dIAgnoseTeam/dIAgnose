@@ -30,5 +30,8 @@ class CasoClinico(base):
     tratamiento_farmacologico = Column(String(255), nullable=True)
     tratamiento_no_farmacologico = Column(String(255), nullable=True)
     agente = Column(String(255), nullable=False)
+    referencias_bibliograficas = Column(String(255), nullable=True)
+    keywords = Column(String(255), nullable=True)
+    codigo_cie_10 = Column(String(50), nullable=True)
 
     valoraciones = relationship("Valoracion", back_populates="caso")

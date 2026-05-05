@@ -18,7 +18,7 @@ def init_database():
 
     print("Inicializando la base de datos...")
     # Los modelos deben estar importados antes de hacer create_all
-    base.metadata.create_all(bind=engine)
+    # base.metadata.create_all(bind=engine)
 
     print("Base de datos inicializada correctamente")
     return True
