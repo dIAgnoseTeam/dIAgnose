@@ -63,7 +63,7 @@ function App() {
               path="/"
               element={
                 <PrivateRoute>
-                  <MainLayout>
+                  <MainLayout scrollable={true}>
                     <Home />
                   </MainLayout>
                 </PrivateRoute>
@@ -74,7 +74,7 @@ function App() {
               element={
                 <PrivateRoute>
                   <ChatRoute>
-                    <MainLayout>
+                    <MainLayout scrollable={true}>
                       <Chat />
                     </MainLayout>
                   </ChatRoute>
@@ -95,7 +95,7 @@ function App() {
               path="/dashboard"
               element={
                 <AdminRoute>
-                  <MainLayout>
+                  <MainLayout scrollable={true}>
                     <Dashboard />
                   </MainLayout>
                 </AdminRoute>

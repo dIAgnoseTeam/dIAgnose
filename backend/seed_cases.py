@@ -42,6 +42,17 @@ def fetch_existing_keys(db) -> set[tuple]:
 def process_batch(db, batch: list[dict]) -> None:
     db.bulk_insert_mappings(CasoClinico, batch)
     db.commit()
+    
+def fix_encoding(value):
+    if not isinstance(value, str):
+        return value
+    try:
+        return value.encode("latin-1").decode("utf-8")
+    except (UnicodeEncodeError, UnicodeDecodeError):
+        return value
+
+def fix_case_encoding(caso: dict) -> dict:
+    return {k: fix_encoding(v) for k, v in caso.items()}
 
 
 def seed_cases():
@@ -79,6 +90,9 @@ def seed_cases():
         "tratamiento_farmacologico",
         "tratamiento_no_farmacologico",
         "agente",
+        "referencias_bibliograficas",
+        "keywords",
+        "codigo_cie_10",
     ]
 
     try:
@@ -118,8 +132,11 @@ def seed_cases():
         random.seed(RANDOM_SEED)
         muestra = random.sample(casos, min(faltan, len(casos)))
 
-        nuevos = [{field: caso.get(field) for field in CASE_FIELDS} for caso in muestra]
-
+        nuevos = [
+            fix_case_encoding({field: caso.get(field) for field in CASE_FIELDS})
+            for caso in muestra
+        ]
+        
         logging.info(f"Insertando {len(nuevos)} casos nuevos en lotes de {TAMANIO_LOTE}...")
         for i in tqdm(range(0, len(nuevos), TAMANIO_LOTE), desc="Insertando lotes"):
             process_batch(db, nuevos[i : i + TAMANIO_LOTE])
