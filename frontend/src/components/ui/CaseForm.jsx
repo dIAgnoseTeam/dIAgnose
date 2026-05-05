@@ -77,12 +77,14 @@ function CaseForm({ idCase }) {
   };
 
   return (
-    <section className="bg-white rounded-xl border border-gray-100 shadow-sm h-[calc(100vh-6.5rem)] max-h-[calc(100vh-6.5rem)] flex flex-col overflow-hidden">
-      <div className="p-6 pb-5 border-b border-gray-100 shrink-0">
-        <h2 className="text-xl font-bold text-gray-800 mb-1">
+    <section className="bg-white rounded-xl border border-gray-100 shadow-sm h-auto xl:h-[calc(100vh-6.5rem)] xl:max-h-[calc(100vh-6.5rem)] flex flex-col overflow-hidden">
+      <div className="p-4 sm:p-6 pb-4 sm:pb-5 border-b border-gray-100 shrink-0">
+        <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-1">
           Valoración del caso clínico
         </h2>
-        <p className="text-sm text-gray-400">Evalúa cada apartado del 1 al 5</p>
+        <p className="text-xs sm:text-sm text-gray-400">
+          Evalúa cada apartado del 1 al 5
+        </p>
       </div>
 
       <form
@@ -121,15 +123,17 @@ function CaseForm({ idCase }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 xl:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {scoreFields.map(({ name, label, fullWidth }) => (
             <div
               key={name}
-              className={`flex flex-col justify-between bg-gray-50 border border-gray-100 rounded-lg p-4 ${fullWidth ? "xl:col-span-2" : ""}`}
+              className={`flex flex-col justify-between bg-gray-50 border border-gray-100 rounded-lg p-3 sm:p-4 ${fullWidth ? "sm:col-span-2" : ""}`}
             >
-              <div className="flex justify-between items-center mb-2 gap-3">
-                <p className="text-sm font-medium text-gray-600">{label}</p>
-                <span className="text-base font-bold text-teal-500 shrink-0">
+              <div className="flex justify-between items-center mb-2 gap-2 sm:gap-3">
+                <p className="text-xs sm:text-sm font-medium text-gray-600">
+                  {label}
+                </p>
+                <span className="text-sm sm:text-base font-bold text-teal-500 shrink-0">
                   {score[name]}
                   <span className="text-xs text-gray-400 font-normal">/5</span>
                 </span>
@@ -154,7 +158,7 @@ function CaseForm({ idCase }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-600 mb-1">
+          <label className="block text-xs sm:text-sm font-medium text-gray-600 mb-1">
             Mensaje
           </label>
           <textarea
@@ -170,7 +174,7 @@ function CaseForm({ idCase }) {
         <div className="sticky bottom-0 bg-white">
           <div className="flex justify-end">
             <button
-              className="bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white text-sm font-semibold py-2.5 px-6 rounded-lg transition-colors duration-150 shadow-sm"
+              className="bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white text-sm font-semibold py-2.5 px-4 sm:px-6 rounded-lg transition-colors duration-150 shadow-sm w-full sm:w-auto"
               type="submit"
             >
               Enviar valoración
