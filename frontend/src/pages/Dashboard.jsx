@@ -4,6 +4,7 @@ import DashboardTable from "../components/ui/DashboardTable";
 import FiltersSection from "../components/ui/FiltersSection";
 import StatsSection from "../components/ui/StatsSection";
 import AppSettings from "../components/ui/AppSettings";
+import CaseModal from "../components/ui/CaseModal";
 
 const Dashboard = () => {
   const [reviews, setReviews] = useState([]);
@@ -12,6 +13,7 @@ const Dashboard = () => {
   const [filterDate, setFilterDate] = useState("");
   const [filterScore, setFilterScore] = useState(0);
   const [dataLoading, setDataLoading] = useState(false);
+  const [selectedReview, setSelectedReview] = useState(null);
 
   // Mapear todos los usuarios en un objeto 'id: email' para acceder rápido desde cada review
   const userMap = useMemo(() => {
@@ -91,7 +93,14 @@ const Dashboard = () => {
       <DashboardTable
         reviews={filteredReviews}
         userMap={userMap}
+        onViewCase={setSelectedReview}
       ></DashboardTable>
+      {selectedReview && (
+        <CaseModal
+          review={selectedReview}
+          onClose={() => setSelectedReview(null)}
+        />
+      )}
     </div>
   );
 };
