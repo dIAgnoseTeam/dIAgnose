@@ -15,16 +15,37 @@ review_bp = Blueprint("reviews", __name__)
 @token_required
 def get_reviews(current_user):
     try:
-        limit = request.args.get("limit", default=10, type=int)
-        offset = request.args.get("offset", default=0, type=int)
+        limit  = request.args.get("limit",  default=10,  type=int)
+        offset = request.args.get("offset", default=0,   type=int)
+        email  = request.args.get("email",  default=None, type=str)
+        fecha  = request.args.get("fecha",  default=None, type=str)
+        score  = request.args.get("score",  default=None, type=int)
 
         service = ReviewService()
-        valoraciones = service.get_all_reviews(limit, offset)
+        valoraciones, total = service.get_all_reviews(
+            limit=limit,
+            offset=offset,
+            email=email,
+            fecha=fecha,
+            puntuacion=score
+        )
 
-        return jsonify({"data": [review_to_dict(v) for v in valoraciones], "count": len(valoraciones)}), 200
+        return jsonify({"data": [review_to_dict(v) for v in valoraciones], "count": total}), 200
     except Exception as e:
         logger.error(f"Error obteniendo valoraciones: {e}")
         return jsonify({"error": "Error al obtener las valoraciones"}), 500
+    
+# Rutas para las estadisticas de valoraciones
+@review_bp.route("/stats", methods=["GET"])
+@token_required
+def get_review_stats(current_user):
+    try:
+        service = ReviewService()
+        stats = service.get_stats()
+        return jsonify(stats), 200
+    except Exception as e:
+        logger.error(f"Error obteniendo stats: {e}")
+        return jsonify({"error": "Error al obtener las stats"}), 500
 
 
 @review_bp.route("/<int:valoracion_id>", methods=["GET"])

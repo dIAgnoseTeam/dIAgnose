@@ -5,8 +5,8 @@ class ReviewService:
     def __init__(self):
         self.review_repository = ReviewRepository()
 
-    def get_all_reviews(self, limit: int = 100, offset: int = 0):
-        return self.review_repository.get_all(limit, offset)
+    def get_all_reviews(self, limit=10, offset=0, email=None, fecha=None, puntuacion=None):
+        return self.review_repository.get_all(limit, offset, email, fecha, puntuacion)
 
     def get_review_by_id(self, valoracion_id: int):
         return self.review_repository.get_by_id(valoracion_id)
@@ -22,3 +22,6 @@ class ReviewService:
     
     def user_has_reviewed_case(self, user_id: int, case_id:int):
         return self.review_repository.user_has_reviewed_case(user_id, case_id)
+    
+    def get_stats(self):
+        return self.review_repository.get_stats()

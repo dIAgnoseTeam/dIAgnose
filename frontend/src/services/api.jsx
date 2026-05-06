@@ -44,7 +44,8 @@ export const authService = {
 };
 
 export const reviewService = {
-  getAllReviews: () => api.get("/reviews/"),
+  getAllReviews: (params = {}) => api.get("/reviews/", { params }),
+  getStats: () => api.get("/reviews/stats"),
   createReview: (review) => api.post("/reviews/create", review),
 };
 

@@ -1,7 +1,14 @@
 import React from "react";
 
 const FiltersSection = (props) => {
-  const { setFilterUser, setFilterDate, setFilterScore } = props;
+  const {
+    setFilterUser,
+    setFilterDate,
+    setFilterScore,
+    filterUser,
+    filterDate,
+    filterScore,
+  } = props;
 
   return (
     <section className="flex flex-col sm:flex-row sm:justify-end gap-3 sm:gap-2 mb-6 sm:mb-10">
@@ -15,6 +22,7 @@ const FiltersSection = (props) => {
         <input
           type="email"
           id="filter-email"
+          value={filterUser}
           className="text-gray-700 text-sm bg-white border border-gray-200 rounded-md px-4 py-2.5 sm:py-2 focus:outline-none focus:ring-1 focus:ring-teal-600 focus:border-teal-600 placeholder:text-gray-400"
           placeholder="medico@gmail.com"
           onChange={(e) => setFilterUser(e.target.value.trim())}
@@ -31,6 +39,7 @@ const FiltersSection = (props) => {
         <input
           type="date"
           id="filter-date"
+          value={filterDate}
           className="text-gray-700 text-sm bg-white border border-gray-200 rounded-md px-4 py-2.5 sm:py-2 focus:outline-none focus:ring-1 focus:ring-teal-600 focus:border-teal-600"
           onChange={(e) => setFilterDate(e.target.value.trim())}
         />
@@ -45,6 +54,7 @@ const FiltersSection = (props) => {
         </label>
         <select
           id="filter-score"
+          value={filterScore}
           className="text-gray-700 text-sm bg-white border border-gray-200 rounded-md px-4 py-2.5 sm:py-2 focus:outline-none focus:ring-1 focus:ring-teal-600 focus:border-teal-600"
           onChange={(e) => setFilterScore(e.target.value.trim())}
         >

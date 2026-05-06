@@ -12,6 +12,9 @@ def create_app():
     
     # Evitar encode incorrecto
     app.config['JSON_AS_ASCII'] = False
+    
+    # No añadir slash automáticamente al final de las rutas
+    app.config['APPEND_SLASH'] = False
 
     # Configurar ProxyFix para producción (confiar en headers del proxy)
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
