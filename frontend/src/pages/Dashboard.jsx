@@ -5,15 +5,26 @@ import FiltersSection from "../components/ui/FiltersSection";
 import StatsSection from "../components/ui/StatsSection";
 import AppSettings from "../components/ui/AppSettings";
 import CaseModal from "../components/ui/CaseModal";
+import { useDebounce } from "../hooks/useDebounce";
 
 const Dashboard = () => {
   const [reviews, setReviews] = useState([]);
   const [users, setUsers] = useState([]);
-  const [filterUser, setFilterUser] = useState("");
+  const [stats, setStats] = useState({
+    total: 0,
+    media: 0,
+    minima: 0,
+    mas_reciente: null,
+  });
+  const [filterUserInput, setFilterUserInput] = useState("");
+  const filterUser = useDebounce(filterUserInput, 500);
   const [filterDate, setFilterDate] = useState("");
   const [filterScore, setFilterScore] = useState(0);
   const [dataLoading, setDataLoading] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(10);
+  const [totalReviews, setTotalReviews] = useState(0);
 
   // Mapear todos los usuarios en un objeto 'id: email' para acceder rápido desde cada review
   const userMap = useMemo(() => {
@@ -22,56 +33,66 @@ const Dashboard = () => {
     return map;
   }, [users]);
 
-  // Filtrado acumulativo, cada filtro solo se aplica si tiene valor
-  const filteredReviews = useMemo(
-    () =>
-      reviews.filter((review) => {
-        const email = userMap[review.id_usuario] || "";
-
-        return (
-          (!filterUser || email.includes(filterUser.toLowerCase())) &&
-          (!filterDate || review.fecha >= filterDate) &&
-          (!filterScore || review.puntuacion >= filterScore)
-        );
-      }),
-    [reviews, userMap, filterUser, filterDate, filterScore],
-  );
-
   // Obtener todas las valoraciones
-  const getAllReviews = async () => {
-    setDataLoading(true);
-
-    try {
-      const { data } = await reviewService.getAllReviews();
-      setReviews(data.data);
-    } catch (error) {
-      console.error("Error fetching reviews data:", error);
-    } finally {
-      setDataLoading(false);
-    }
-  };
-
-  // Obtener todos los usuarios
-  const getAllUsers = async () => {
-    setDataLoading(true);
-
-    try {
-      const { data } = await userService.getAllUsers();
-      setUsers(data);
-    } catch (error) {
-      console.error("Error fetching cases data:", error);
-    } finally {
-      setDataLoading(false);
-    }
-  };
-
   useEffect(() => {
-    const fetchData = async () => {
-      await getAllReviews();
-      await getAllUsers();
+    const fetchReviews = async () => {
+      setDataLoading(true);
+      try {
+        const { data } = await reviewService.getAllReviews({
+          limit: pageSize,
+          offset: (currentPage - 1) * pageSize,
+          ...(filterUser && { email: filterUser }),
+          ...(filterDate && { fecha: filterDate }),
+          ...(filterScore && { score: filterScore }),
+        });
+        setReviews(data.data);
+        setTotalReviews(data.count);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      } finally {
+        setDataLoading(false);
+      }
     };
-    fetchData();
+    fetchReviews();
+  }, [currentPage, pageSize, filterUser, filterDate, filterScore]);
+
+  // Fetch unbico para obtener los usuarios
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const { data } = await userService.getAllUsers();
+        setUsers(data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+    fetchUsers();
   }, []);
+
+  // Fetch unbico para obtener las estadísticas
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const { data } = await reviewService.getStats();
+        setStats(data);
+      } catch (err) {
+        console.error("Error fetching stats:", err);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  // Resetear página al filtrar
+  useEffect(() => setCurrentPage(1), [filterUser, filterDate, filterScore]);
+
+  const handleFilterDate = (v) => {
+    setCurrentPage(1);
+    setFilterDate(v);
+  };
+  const handleFilterScore = (v) => {
+    setCurrentPage(1);
+    setFilterScore(v);
+  };
 
   if (dataLoading) {
     return (
@@ -84,16 +105,23 @@ const Dashboard = () => {
   return (
     <div className="w-full">
       <AppSettings />
-      <StatsSection reviews={filteredReviews}></StatsSection>
+      <StatsSection stats={stats}></StatsSection>
       <FiltersSection
-        setFilterUser={setFilterUser}
-        setFilterDate={setFilterDate}
-        setFilterScore={setFilterScore}
+        setFilterUser={setFilterUserInput}
+        setFilterDate={handleFilterDate}
+        setFilterScore={handleFilterScore}
+        filterUser={filterUserInput}
+        filterDate={filterDate}
+        filterScore={filterScore}
       ></FiltersSection>
       <DashboardTable
-        reviews={filteredReviews}
+        reviews={reviews}
         userMap={userMap}
         onViewCase={setSelectedReview}
+        currentPage={currentPage}
+        pageSize={pageSize}
+        totalReviews={totalReviews}
+        onPageChange={setCurrentPage}
       ></DashboardTable>
       {selectedReview && (
         <CaseModal
