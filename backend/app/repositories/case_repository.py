@@ -63,6 +63,7 @@ class CaseRepository:
                 select(CasoClinico)
                 .where(~CasoClinico.id.in_(subq))
                 .where(~CasoClinico.id.in_(count_subq))
+                .order_by(func.random())
                 .limit(1)
             )
             return self.session.scalar(stmt)
