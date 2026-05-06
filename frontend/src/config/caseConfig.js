@@ -76,7 +76,7 @@ export const CASE_SECTIONS = [
       { key: "keywords", label: "Keywords" },
       { key: "dificultad", label: "Dificultad" },
       { key: "agente", label: "Agente" },
-      { key: "cie10", label: "Código CIE-10" },
+      { key: "codigo_cie_10", label: "Código CIE-10" },
     ],
   },
 ];

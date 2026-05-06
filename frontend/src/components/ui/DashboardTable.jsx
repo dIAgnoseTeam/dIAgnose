@@ -86,7 +86,17 @@ const ReviewCard = ({ review, userMap, onViewCase }) => (
   </div>
 );
 
-const DashboardTable = ({ reviews, userMap, onViewCase }) => {
+const DashboardTable = ({
+  reviews,
+  userMap,
+  onViewCase,
+  currentPage,
+  pageSize,
+  totalReviews,
+  onPageChange,
+}) => {
+  const totalPages = Math.ceil(totalReviews / pageSize);
+
   if (reviews.length === 0) {
     return (
       <div className="bg-white border border-gray-100 rounded-xl shadow-sm px-6 py-16 text-center">
@@ -114,6 +124,42 @@ const DashboardTable = ({ reviews, userMap, onViewCase }) => {
             onViewCase={onViewCase}
           />
         ))}
+        {/* Vista mobile: paginación */}
+        {totalPages > 1 && (
+          <div className="col-span-full flex justify-center py-4">
+            <button
+              disabled={currentPage === 1}
+              onClick={() => onPageChange(currentPage - 1)}
+              className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium
+                 text-gray-600 hover:bg-teal-50 hover:text-teal-700 transition-colors
+                 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <DynamicIcon name="ChevronLeft" size={13} />
+              Anterior
+            </button>
+            <span className="px-3 py-1.5 text-xs font-semibold text-teal-700 bg-teal-50 rounded-lg">
+              {currentPage} / {totalPages}
+            </span>
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => onPageChange(currentPage + 1)}
+              className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium
+                 text-gray-600 hover:bg-teal-50 hover:text-teal-700 transition-colors
+                 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Siguiente
+              <DynamicIcon name="ChevronRight" size={13} />
+            </button>
+          </div>
+        )}
+        {/* Si no hay reviews, mostrar mensaje */}
+        {reviews.length === 0 && (
+          <div className="col-span-full text-center py-8">
+            <p className="text-gray-500">
+              No hay valoraciones que coincidan con los filtros.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Vista desktop: tabla */}
@@ -214,6 +260,46 @@ const DashboardTable = ({ reviews, userMap, onViewCase }) => {
               ))}
             </tbody>
           </table>
+        </div>
+        {/* Paginación */}
+        <div className="flex items-center justify-between border-t border-gray-100 bg-white px-6 py-3">
+          <span className="text-xs text-gray-400">
+            Mostrando{" "}
+            <span className="font-medium text-gray-600">
+              {(currentPage - 1) * pageSize + 1}–
+              {Math.min(currentPage * pageSize, totalReviews)}
+            </span>{" "}
+            de <span className="font-medium text-gray-600">{totalReviews}</span>{" "}
+            valoraciones
+          </span>
+
+          <div className="flex items-center gap-1">
+            <button
+              disabled={currentPage === 1}
+              onClick={() => onPageChange(currentPage - 1)}
+              className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium
+                 text-gray-600 hover:bg-teal-50 hover:text-teal-700 transition-colors
+                 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <DynamicIcon name="ChevronLeft" size={13} />
+              Anterior
+            </button>
+
+            <span className="px-3 py-1.5 text-xs font-semibold text-teal-700 bg-teal-50 rounded-lg">
+              {currentPage} / {totalPages}
+            </span>
+
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => onPageChange(currentPage + 1)}
+              className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium
+                 text-gray-600 hover:bg-teal-50 hover:text-teal-700 transition-colors
+                 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Siguiente
+              <DynamicIcon name="ChevronRight" size={13} />
+            </button>
+          </div>
         </div>
       </div>
     </>
