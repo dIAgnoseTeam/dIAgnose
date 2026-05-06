@@ -8,4 +8,6 @@ class AppSettings(base):
     __tablename__ = "AppSettings"
 
     id = Column(Integer, primary_key=True, index=True)
+
+    # Control del chat
     chat_enabled = Column(Boolean, default=False, nullable=False)
