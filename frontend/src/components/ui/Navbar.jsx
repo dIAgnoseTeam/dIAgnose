@@ -42,7 +42,7 @@ const Navbar = ({ isOpen, onClose }) => {
   return (
     <aside
       className={`
-        w-64 h-screen flex flex-col bg-white border-r border-gray-100 shadow-sm fixed left-0 top-0 z-50
+        w-64 h-dvh flex flex-col bg-white border-r border-gray-100 shadow-sm fixed left-0 top-0 z-50
         transform transition-transform duration-300 ease-in-out
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0

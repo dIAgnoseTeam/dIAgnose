@@ -75,7 +75,7 @@ const Chat = () => {
       <div
         className={`
           flex flex-col w-64 shrink-0 bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm
-          fixed md:relative inset-y-0 left-0 z-50 md:z-auto
+          fixed md:relative top-0 bottom-0 left-0 h-dvh md:h-full z-50 md:z-auto
           transform transition-transform duration-300 ease-in-out
           ${showSidebar ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
           md:flex

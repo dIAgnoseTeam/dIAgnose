@@ -5,6 +5,7 @@ import { reviewService } from "../../services/api";
 import { useToast } from "../../hooks/useToast";
 import Toast from "./Toast";
 import Slider from "@mui/material/Slider";
+import { DynamicIcon } from "./DynamicIcon";
 
 function CaseForm({ idCase }) {
   const initialScore = {
@@ -38,6 +39,7 @@ function CaseForm({ idCase }) {
   const { onReviewSubmitted } = useCaseContext();
   const [score, setScore] = useState(initialScore);
   const { toast, showToast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -56,6 +58,7 @@ function CaseForm({ idCase }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     const review = {
       id_usuario: user.id,
@@ -69,15 +72,17 @@ function CaseForm({ idCase }) {
       showToast("Valoración enviada correctamente");
       // Hacemos un sleep de 1.5s para que el usuario vea el toast antes de cargar el siguiente caso
       await new Promise((resolve) => setTimeout(resolve, 1600));
-      onReviewSubmitted();
+      onReviewSubmitted(); // Esto carga el siguiente caso asincrónicamente sin recargar la página
     } catch (err) {
       const msg = err.response?.data?.error || "Error al enviar la valoración";
       showToast(msg, "error");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <section className="bg-white rounded-xl border border-gray-100 shadow-sm h-auto xl:h-[calc(100vh-6.5rem)] xl:max-h-[calc(100vh-6.5rem)] flex flex-col overflow-hidden">
+    <section className="bg-white rounded-xl border border-gray-100 shadow-sm h-auto xl:h-[calc(100dvh-6.5rem)] xl:max-h-[calc(100dvh-6.5rem)] flex flex-col overflow-hidden">
       <div className="p-4 sm:p-6 pb-4 sm:pb-5 border-b border-gray-100 shrink-0">
         <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-1">
           Valoración del caso clínico
@@ -176,8 +181,20 @@ function CaseForm({ idCase }) {
             <button
               className="bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white text-sm font-semibold py-2.5 px-4 sm:px-6 rounded-lg transition-colors duration-150 shadow-sm w-full sm:w-auto"
               type="submit"
+              disabled={isSubmitting}
             >
-              Enviar valoración
+              {isSubmitting ? (
+                <span className="flex items-center gap-2">
+                  <DynamicIcon
+                    name="Loader"
+                    size={16}
+                    className="animate-spin"
+                  />
+                  Enviando...
+                </span>
+              ) : (
+                "Enviar valoración"
+              )}
             </button>
           </div>
         </div>

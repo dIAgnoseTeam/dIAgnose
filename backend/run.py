@@ -9,11 +9,8 @@ from seed_cases import seed_cases
 from pathlib import Path
 
 # Configurar logging
-logging.basicConfig(
-    format='%(asctime)s [%(levelname)-8s] %(message)s',
-    level=logging.INFO,
-    datefmt='%H:%M:%S'
-)
+logging.basicConfig(format="%(asctime)s [%(levelname)-8s] %(message)s", level=logging.INFO, datefmt="%H:%M:%S")
+
 
 # Método para ejecutar las migraciones de Alembic automáticamente al iniciar la aplicación
 def run_alembic_upgrade() -> None:
@@ -44,11 +41,12 @@ def run_seeders() -> None:
         seed_cases()
         logging.info("seed_cases completado.")
 
+
 # Funcion para inicializar la aplicacion
 def initialize_app():
     try:
         logging.info("INICIALIZANDO dIAgnose...")
-        
+
         # PASO 1: Aplicar migraciones de alembic solo y siempre que se solicita
         run_migrations = os.getenv("RUN_MIGRATIONS", "true").lower() == "true"
         if run_migrations:
@@ -66,16 +64,17 @@ def initialize_app():
         logging.error("La aplicación no puede iniciarse. Revisa los logs anteriores.")
         sys.exit(1)
 
+
 # Crear la aplicación Flask
 app = create_app()
 
 if __name__ == "__main__":
     # Evitar ejecutar seeders dos veces con el reloader de Flask
-    is_reloader = os.environ.get('WERKZEUG_RUN_MAIN') == 'true'
-    
+    is_reloader = os.environ.get("WERKZEUG_RUN_MAIN") == "true"
+
     if not is_reloader:
         # Solo ejecutar seeders en el proceso principal, si no se ejecuta dos veces
         initialize_app()
-    
-    # Iniciar servidor Flask    
-    app.run(debug=True, host="0.0.0.0", port=5000)
+
+    # Iniciar servidor Flask
+    app.run(debug=os.environ.get("FLASK_DEBUG", "0") == "1", host="0.0.0.0", port=5000)

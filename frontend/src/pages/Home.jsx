@@ -59,7 +59,7 @@ const Home = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-dvh">
         Cargando...
       </div>
     );
@@ -78,7 +78,7 @@ const Home = () => {
 
   return (
     <CaseProvider value={caseContextValue}>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="min-h-dvh bg-gradient-to-br from-slate-50 to-blue-50">
         <div className="max-w-7xl mx-auto px-4 py-6 sm:py-12">
           {/* Header */}
           <div className="text-center mb-8 sm:mb-12">
@@ -113,7 +113,7 @@ const Home = () => {
                   maxRegisters={maxRegisters}
                 />
               </div>
-              <div className="w-full xl:w-[420px] xl:shrink-0 xl:sticky xl:top-0 xl:self-start xl:max-h-[calc(100vh-5rem)]">
+              <div className="w-full xl:w-[420px] xl:shrink-0 xl:sticky xl:top-0 xl:self-start xl:max-h-[calc(100dvh-5rem)]">
                 <CaseForm idCase={caseNumber} />
               </div>
             </div>

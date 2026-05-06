@@ -113,7 +113,7 @@ const CaseModal = ({ review, onClose }) => {
 
       {/* Contenedor centrado */}
       <div className="fixed inset-0 flex items-center justify-center p-2 sm:p-4">
-        <DialogPanel className="w-full max-w-4xl max-h-[95vh] sm:max-h-[90vh] bg-gray-50 rounded-xl sm:rounded-2xl shadow-xl flex flex-col overflow-hidden border border-gray-200">
+        <DialogPanel className="w-full max-w-4xl max-h-[95dvh] sm:max-h-[90dvh] bg-gray-50 rounded-xl sm:rounded-2xl shadow-xl flex flex-col overflow-hidden border border-gray-200">
           {/* Header */}
           <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-white border-b border-gray-100 shrink-0">
             <div className="min-w-0 flex-1">

@@ -122,6 +122,7 @@ const Dashboard = () => {
         pageSize={pageSize}
         totalReviews={totalReviews}
         onPageChange={setCurrentPage}
+        pageLoading={dataLoading}
       ></DashboardTable>
       {selectedReview && (
         <CaseModal
