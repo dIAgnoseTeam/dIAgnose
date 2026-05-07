@@ -1,0 +1,100 @@
+/* Contenedor del popover */
+.dlagnose-tour .driver-popover {
+  font-family: "Inter", system-ui, sans-serif;
+  border-radius: 16px;
+  border: 1px solid #e4e4e7;
+  box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.08);
+  padding: 0;
+  overflow: hidden;
+  max-width: 320px;
+}
+
+/* Franja superior teal — identidad de la app */
+.dlagnose-tour .driver-popover-title {
+  background: linear-gradient(135deg, #f0fdf9 0%, #e6fffa 100%);
+  border-bottom: 1px solid #ccfbf1;
+  padding: 14px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f766e;
+  margin: 0;
+}
+
+/* Descripción */
+.dlagnose-tour .driver-popover-description {
+  padding: 14px 18px;
+  font-size: 13px;
+  color: #52525b;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Footer */
+.dlagnose-tour .driver-popover-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 18px;
+  border-top: 1px solid #f4f4f5;
+  background: #fafafa;
+}
+
+/* Progreso */
+.dlagnose-tour .driver-popover-progress-text {
+  font-size: 11px;
+  color: #a1a1aa;
+  font-weight: 500;
+}
+
+/* Botón anterior */
+.dlagnose-tour .driver-popover-prev-btn {
+  background: transparent;
+  border: 1px solid #e4e4e7;
+  color: #71717a;
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.dlagnose-tour .driver-popover-prev-btn:hover {
+  background: #f4f4f5;
+  color: #3f3f46;
+}
+
+/* Botón siguiente / Entendido */
+.dlagnose-tour .driver-popover-next-btn {
+  background: #0d9488;
+  border: 1px solid #0d9488;
+  color: white;
+  border-radius: 8px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.dlagnose-tour .driver-popover-next-btn:hover {
+  background: #0f766e;
+  border-color: #0f766e;
+}
+
+/* Botón cerrar (X) */
+.dlagnose-tour .driver-popover-close-btn {
+  color: #a1a1aa;
+  font-size: 16px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.dlagnose-tour .driver-popover-close-btn:hover {
+  color: #3f3f46;
+}
+
+/* Flecha del popover */
+.dlagnose-tour .driver-popover-arrow-side-left.driver-popover-arrow {
+  border-right-color: #e4e4e7;
+}
+.dlagnose-tour .driver-popover-arrow-side-right.driver-popover-arrow {
+  border-left-color: #e4e4e7;
+}

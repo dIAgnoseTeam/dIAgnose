@@ -78,6 +78,7 @@ const Navbar = ({ isOpen, onClose }) => {
           const isActive = location.pathname === path;
           return (
             <NavItem
+              id={id}
               key={id}
               icon={icon}
               label={label}
