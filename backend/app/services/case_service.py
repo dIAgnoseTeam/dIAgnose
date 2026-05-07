@@ -10,12 +10,18 @@ class CaseService:
 
     def get_case_count(self):
         return self.case_repository.get_case_count()
-    
+
     def create_new_case(self, caso_data: dict):
         return self.case_repository.create_case(caso_data)
-    
+
     def case_already_exists(self, motivo: str, diagnostico_final: str, edad: int, sexo: str):
         return self.case_repository.case_exists(motivo, diagnostico_final, edad, sexo)
 
-    def get_next_case_for_user(self, user_id:int):
+    def get_next_case_for_user(self, user_id: int):
         return self.case_repository.get_next_case_for_user(user_id)
+
+    def delete_case(self, case_id: int):
+        return self.case_repository.delete_case(case_id)
+
+    def get_all_cases(self, limit: int = 10, offset: int = 0, search: str = None, dificultad: str = None):
+        return self.case_repository.get_all_cases(limit=limit, offset=offset, search=search, dificultad=dificultad)

@@ -6,7 +6,7 @@ const MainLayout = ({ children, scrollable = false }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="h-screen overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="h-dvh overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50">
       <Navbar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       {/* Overlay para movil cuando el sidebar está abierto */}
       {sidebarOpen && (

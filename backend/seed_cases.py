@@ -5,6 +5,7 @@ from app.models.clinical_case import CasoClinico
 from app.services.case_service import CaseService
 from app.config import Config
 from tqdm import tqdm
+from sqlalchemy import func
 import logging
 import random
 
@@ -67,13 +68,16 @@ def fetch_existing_keys(db) -> set[tuple]:
         CasoClinico.diagnostico_final,
         CasoClinico.edad,
         CasoClinico.sexo,
-    ).all()
+    )
     return {(r.motivo, r.diagnostico_final, r.edad, r.sexo) for r in rows}
 
 def fetch_group_counts(db) -> dict[tuple, int]:
+    dificultad_normalizada = func.lower(func.trim(CasoClinico.dificultad))
     rows = db.query(
         CasoClinico.agente,
-        CasoClinico.dificultad,
+        dificultad_normalizada.label("dificultad"),
+    ).filter(
+        dificultad_normalizada.in_(["facil", "fácil", "media", "dificil", "difícil"])
     ).all()
     
     counts = {}
@@ -127,6 +131,9 @@ def seed_cases():
 
         # Controlados de nulos sin agente o dificultad
         df = df.dropna(subset=["agente", "dificultad"])
+        # Normalizar y filtrar dificultad para evitar valores fuera de regla (ej. "f")
+        df["dificultad"] = df["dificultad"].astype(str).str.strip().str.lower()
+        df = df[df["dificultad"].isin(["facil", "fácil", "media", "dificil", "difícil"])]
 
         # Obtenemos las claves ya existentes para no duplicar
         existing_keys = fetch_existing_keys(db)

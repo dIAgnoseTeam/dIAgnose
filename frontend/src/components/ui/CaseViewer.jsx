@@ -1,6 +1,14 @@
 import { CASE_SECTIONS } from "../../config/caseConfig";
 import { DynamicIcon } from "./DynamicIcon";
 
+const DIFICULTAD_COLORS = {
+  facil: "bg-green-50 text-green-700",
+  fácil: "bg-green-50 text-green-700",
+  media: "bg-yellow-50 text-yellow-700",
+  dificil: "bg-red-50 text-red-700",
+  difícil: "bg-red-50 text-red-700",
+};
+
 const CaseField = ({ label, value }) => {
   if (!value && value !== 0) return null; // omite campos vacíos
 
@@ -52,8 +60,10 @@ const CaseViewer = ({ caseData, caseNumber, maxRegisters }) => (
       <p className="text-sm text-gray-500 mt-1">
         Caso {caseNumber + 1} de {maxRegisters}
         {caseData.dificultad && (
-          <span className="ml-2 inline-block px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 text-xs font-medium">
-            {caseData.dificultad}
+          <span
+            className={`ml-2 inline-block px-2 py-0.5 rounded-full ${DIFICULTAD_COLORS[caseData.dificultad] || "bg-gray-50 text-gray-700"} text-xs font-medium`}
+          >
+            {caseData.dificultad.toUpperCase()}
           </span>
         )}
       </p>

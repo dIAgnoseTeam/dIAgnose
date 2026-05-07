@@ -53,16 +53,24 @@ export const datasetService = {
   getCase: () => api.get(`/cases/next`),
   getMaxRegisters: () => api.get("/cases/count"),
   getCaseById: (id) => api.get(`/cases/${id}`),
+  deleteCase: (id) => api.delete(`/cases/${id}`),
+  getAllCases: (params = {}) => api.get("/cases/", { params }),
 };
 
 export const userService = {
   getAllUsers: () => api.get("/users/"),
+  updateUser: (userId, data) => api.put(`/users/${userId}`, data),
+  changeUserRole: (userId, newRole) =>
+    api.put(`/users/${userId}/role`, { id_rol: newRole }),
 };
 
 export const settingsService = {
   getSettings: () => api.get("/settings/"),
+  updateSettings: (data) => api.patch("/settings/", data),
   setChatEnabled: (value) =>
     api.patch("/settings/chat", { chat_enabled: value }),
+  getDashboard: () => api.get("/settings/dashboard"),
+  getStatus: () => api.get("/settings/status"),
 };
 
 export const chatService = {
@@ -70,6 +78,8 @@ export const chatService = {
   createChat: (data) => api.post("/chats/", data),
   deleteChat: (chatId) => api.delete(`/chats/${chatId}`),
   updateChat: (chatId, data) => api.put(`/chats/${chatId}`, data),
+  sendMessage: (chatId, message) =>
+    api.post(`/chats/${chatId}/message`, { message }),
 };
 
 export const historicService = {
