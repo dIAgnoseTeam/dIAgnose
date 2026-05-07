@@ -10,6 +10,9 @@ import Profile from "./pages/Profile";
 import MainLayout from "./components/layout/MainLayout";
 import Dashboard from "./pages/Dashboard";
 import CaseForm from "./components/ui/CaseForm";
+import CasesManagement from "./pages/dashboard/CasesManagement";
+import UsersManagement from "./pages/dashboard/UsersManagement";
+import Settings from "./pages/dashboard/Settings";
 import { useFeatureFlags } from "./contexts/FeatureFlagContext";
 import { FeatureFlagProvider } from "./contexts/FeatureFlagContext";
 
@@ -97,6 +100,37 @@ function App() {
                 <AdminRoute>
                   <MainLayout scrollable={true}>
                     <Dashboard />
+                  </MainLayout>
+                </AdminRoute>
+              }
+            />
+            {/* Rutas para los submenus de Dashboard */}
+            <Route
+              path="/dashboard/settings"
+              element={
+                <AdminRoute>
+                  <MainLayout scrollable={true}>
+                    <Settings />
+                  </MainLayout>
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/dashboard/cases"
+              element={
+                <AdminRoute>
+                  <MainLayout scrollable={true}>
+                    <CasesManagement />
+                  </MainLayout>
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/dashboard/users"
+              element={
+                <AdminRoute>
+                  <MainLayout scrollable={true}>
+                    <UsersManagement />
                   </MainLayout>
                 </AdminRoute>
               }

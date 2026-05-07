@@ -5,6 +5,7 @@ import { CaseProvider } from "../contexts/CaseContext";
 import { useNavigate } from "react-router";
 import CaseForm from "../components/ui/CaseForm";
 import CaseViewer from "../components/ui/CaseViewer";
+import { useTour } from "../hooks/useTour";
 
 const Home = () => {
   const { user, loading } = useAuth();
@@ -14,6 +15,9 @@ const Home = () => {
   const [dataLoading, setDataLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  // Cargar el tour interactivo al montar el componente
+  useTour();
 
   // Cargar el máximo de registros al montar el componente
   useEffect(() => {
@@ -59,9 +63,7 @@ const Home = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-dvh">
-        Cargando...
-      </div>
+      <div className="flex justify-center items-center h-dvh">Cargando...</div>
     );
   }
 
@@ -106,14 +108,17 @@ const Home = () => {
           ) : currentCase ? (
             <div className="flex flex-col xl:flex-row items-start gap-6">
               {/* Case Content Card */}
-              <div className="w-full xl:flex-1 min-w-0">
+              <div id="case-card" className="w-full xl:flex-1 min-w-0">
                 <CaseViewer
                   caseData={currentCase}
                   caseNumber={caseNumber}
                   maxRegisters={maxRegisters}
                 />
               </div>
-              <div className="w-full xl:w-[420px] xl:shrink-0 xl:sticky xl:top-0 xl:self-start xl:max-h-[calc(100dvh-5rem)]">
+              <div
+                id="case-form"
+                className="w-full xl:w-[420px] xl:shrink-0 xl:sticky xl:top-0 xl:self-start xl:max-h-[calc(100dvh-5rem)]"
+              >
                 <CaseForm idCase={caseNumber} />
               </div>
             </div>

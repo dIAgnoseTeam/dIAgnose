@@ -3,6 +3,7 @@ import logging
 from flask import Blueprint, jsonify, redirect
 
 from app.config import Config
+from app.services.app_settings_service import AppSettingsService
 from app.services.user_service import UserService
 from app.utils.oauth import get_google_oauth_client
 from app.utils.oauth_decorator import create_token, token_required
@@ -47,6 +48,15 @@ def google_callback():
         }
 
         user_service = UserService()
+        existing_user = user_service.get_user_by_email(user_data["email"])
+
+        # Si el usuario no existe, verificar si está permitido crear nuevos usuarios
+        if not existing_user:
+            settings_service = AppSettingsService()
+            app_settings = settings_service.get_or_create()
+            if not app_settings.allow_new_users:
+                return redirect(f"{Config.FRONTEND_URL}/login?error=registration_disabled")
+
         user = user_service.create_or_update_user(correo=user_data["email"], nombre=user_data["name"])
 
         user_data["id_rol"] = user.id_rol

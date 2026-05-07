@@ -57,12 +57,19 @@ export const datasetService = {
 
 export const userService = {
   getAllUsers: () => api.get("/users/"),
+  deleteUser: (userId) => api.delete(`/users/${userId}`),
+  updateUser: (userId, data) => api.put(`/users/${userId}`, data),
+  changeUserRole: (userId, newRole) =>
+    api.put(`/users/${userId}/role`, { id_rol: newRole }),
 };
 
 export const settingsService = {
   getSettings: () => api.get("/settings/"),
+  updateSettings: (data) => api.patch("/settings/", data),
   setChatEnabled: (value) =>
     api.patch("/settings/chat", { chat_enabled: value }),
+  getDashboard: () => api.get("/settings/dashboard"),
+  getStatus: () => api.get("/settings/status"),
 };
 
 export const chatService = {
