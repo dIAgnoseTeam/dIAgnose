@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Link, useLocation } from "react-router";
 import { useAuth } from "../../contexts/AuthContext";
 import { useFeatureFlags } from "../../contexts/FeatureFlagContext";
+import { NavItem, NavItemChildren } from "./NavItem";
 import {
   Home,
   LayoutDashboard,
@@ -8,6 +10,9 @@ import {
   Brain,
   BotMessageSquare,
   X,
+  Users,
+  FileText,
+  Settings2,
 } from "lucide-react";
 
 const navItems = [
@@ -18,6 +23,11 @@ const navItems = [
     label: "Dashboard",
     id: "dashboard",
     path: "/dashboard",
+    children: [
+      { icon: Users, label: "Usuarios", path: "/dashboard/users" },
+      { icon: FileText, label: "Casos clínicos", path: "/dashboard/cases" },
+      { icon: Settings2, label: "Ajustes", path: "/dashboard/settings" },
+    ],
   },
 ];
 
@@ -25,6 +35,7 @@ const Navbar = ({ isOpen, onClose }) => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const { chatEnabled } = useFeatureFlags();
+  const [expandedItem, setExpandedItem] = useState("dashboard");
 
   const filteredNavItems = navItems.filter((item) => {
     if (item.id === "dashboard") return user?.rol === "admin";
@@ -37,6 +48,10 @@ const Navbar = ({ isOpen, onClose }) => {
     if (window.innerWidth < 1024) {
       onClose?.();
     }
+  };
+
+  const handleToggle = (id) => {
+    setExpandedItem((prev) => (prev === id ? null : id));
   };
 
   return (
@@ -63,7 +78,6 @@ const Navbar = ({ isOpen, onClose }) => {
             </span>
           </main>
         </div>
-        {/* Boton cerrar solo visible en mobile */}
         <button
           onClick={onClose}
           className="lg:hidden w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
@@ -73,9 +87,26 @@ const Navbar = ({ isOpen, onClose }) => {
       </header>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 py-4 flex flex-col gap-1">
-        {filteredNavItems.map(({ icon: Icon, label, path }) => {
-          const isActive = location.pathname === path;
+      <nav className="flex-1 px-3 py-4 flex flex-col gap-1 overflow-y-auto">
+        {filteredNavItems.map((item) => {
+          const { id, icon, label, path, children } = item;
+
+          if (children) {
+            return (
+              <NavItemChildren
+                key={id}
+                icon={icon}
+                label={label}
+                path={path}
+                children={children}
+                isExpanded={expandedItem === id}
+                onToggle={() => handleToggle(id)}
+                currentPath={location.pathname}
+                onNavClick={handleNavClick}
+              />
+            );
+          }
+
           return (
             <NavItem
               id={id}
@@ -85,28 +116,7 @@ const Navbar = ({ isOpen, onClose }) => {
               path={path}
               isActive={location.pathname === path}
               onClick={handleNavClick}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 group
-                ${
-                  isActive
-                    ? "bg-teal-50 text-teal-700"
-                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"
-                }`}
-            >
-              <div
-                className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-150
-                ${
-                  isActive
-                    ? "bg-teal-600 text-white shadow-sm shadow-teal-200"
-                    : "bg-gray-100 text-gray-400 group-hover:bg-gray-200 group-hover:text-gray-600"
-                }`}
-              >
-                <Icon size={16} />
-              </div>
-              {label}
-              {isActive && (
-                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-teal-500" />
-              )}
-            </Link>
+            />
           );
         })}
       </nav>

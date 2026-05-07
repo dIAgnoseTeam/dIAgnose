@@ -50,26 +50,9 @@ def get_user_count(current_user):
     except Exception as e:
         logger.error(f"Error al contar los usuarios: {str(e)}")
         return jsonify({"error": "Error al contar los usuarios"}), 500
-    
+
+
 # CRUD routes, protegidas para usuarios con rol 1 (Administrador)
-@user_bp.route("/<int:user_id>", methods=["DELETE"])
-@token_required
-def delete_user(current_user, user_id: int):
-    try:
-        if int(current_user.get("id_rol", 0)) != 1:
-            return jsonify({"error": "Acceso denegado"}), 403
-
-        service = UserService()
-        success = service.delete_user(user_id)
-
-        if not success:
-            return jsonify({"error": "Usuario no encontrado"}), 404
-
-        return jsonify({"message": "Usuario eliminado exitosamente"}), 200
-    except Exception as e:
-        logger.error(f"Error eliminando el usuario: {str(e)}")
-        return jsonify({"error": "Error al eliminar el usuario"}), 500
-    
 @user_bp.route("/<int:user_id>", methods=["PUT"])
 @token_required
 def update_user(current_user, user_id: int):
@@ -88,7 +71,8 @@ def update_user(current_user, user_id: int):
     except Exception as e:
         logger.error(f"Error actualizando el usuario: {str(e)}")
         return jsonify({"error": "Error al actualizar el usuario"}), 500
-    
+
+
 @user_bp.route("/<int:user_id>/role", methods=["PUT"])
 @token_required
 def change_user_role(current_user, user_id: int):

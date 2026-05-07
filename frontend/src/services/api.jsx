@@ -53,11 +53,12 @@ export const datasetService = {
   getCase: () => api.get(`/cases/next`),
   getMaxRegisters: () => api.get("/cases/count"),
   getCaseById: (id) => api.get(`/cases/${id}`),
+  deleteCase: (id) => api.delete(`/cases/${id}`),
+  getAllCases: (params = {}) => api.get("/cases/", { params }),
 };
 
 export const userService = {
   getAllUsers: () => api.get("/users/"),
-  deleteUser: (userId) => api.delete(`/users/${userId}`),
   updateUser: (userId, data) => api.put(`/users/${userId}`, data),
   changeUserRole: (userId, newRole) =>
     api.put(`/users/${userId}/role`, { id_rol: newRole }),

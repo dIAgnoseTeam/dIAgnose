@@ -28,7 +28,7 @@ const Home = () => {
         loadCase();
       } catch (err) {
         console.error("Error loading max registers:", err);
-        setError("Error al cargar los datos del dataset");
+        setError("Error al cargar los datos del servidor");
       }
     };
     if (!loading && user) {
@@ -45,16 +45,11 @@ const Home = () => {
       setCaseNumber(response.data.id);
     } catch (err) {
       console.error("Error loading case:", err);
-      setError("Error al cargar los datos del dataset");
+      setError("Error al cargar los datos del servidor");
     } finally {
       setDataLoading(false);
     }
   };
-
-  //  const handleLoadRandomCase = () => {
-  //    const randomNum = Math.floor(Math.random() * maxRegisters);
-  //    loadCase(randomNum);
-  //  };
 
   // Callback que el compañero puede llamar desde su formulario
   const handleReviewSubmitted = () => {

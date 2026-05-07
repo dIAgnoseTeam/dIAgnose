@@ -1,12 +1,28 @@
 /* Contenedor del popover */
-.dlagnose-tour .driver-popover {
+.dlagnose-tour {
   font-family: "Inter", system-ui, sans-serif;
   border-radius: 16px;
   border: 1px solid #e4e4e7;
   box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.08);
   padding: 0;
-  overflow: hidden;
   max-width: 320px;
+  box-sizing: border-box;
+  color: #2d2d2d;
+  margin: 0;
+  border-radius: 5px;
+  min-width: 250px;
+  max-width: 300px;
+  box-shadow: 0 1px 10px #0006;
+  z-index: 1000000000;
+  position: fixed;
+  background-color: #fff;
+}
+
+.diagnose-tour::after .diagnose-tour::before {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: #e5e7eb;
 }
 
 /* Franja superior teal — identidad de la app */
@@ -43,7 +59,7 @@
 .dlagnose-tour .driver-popover-progress-text {
   font-size: 11px;
   color: #a1a1aa;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* Botón anterior */
@@ -54,7 +70,8 @@
   border-radius: 8px;
   padding: 5px 12px;
   font-size: 12px;
-  font-weight: 500;
+  text-shadow: none;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.15s;
 }
@@ -71,7 +88,8 @@
   border-radius: 8px;
   padding: 5px 14px;
   font-size: 12px;
-  font-weight: 500;
+  text-shadow: none;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.15s;
 }
@@ -83,7 +101,7 @@
 /* Botón cerrar (X) */
 .dlagnose-tour .driver-popover-close-btn {
   color: #a1a1aa;
-  font-size: 16px;
+  font-size: 24px;
   line-height: 1;
   transition: color 0.15s;
 }

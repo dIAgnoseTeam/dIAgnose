@@ -33,7 +33,6 @@ const UsersManagement = () => {
   const [editingId, setEditingId] = useState(null);
   const [editName, setEditName] = useState("");
   const [loading, setLoading] = useState(true);
-  const [deletingId, setDeletingId] = useState(null); // confirmación
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -58,17 +57,6 @@ const UsersManagement = () => {
     const matchRole = !filterRole || String(u.id_rol) === filterRole;
     return matchSearch && matchRole;
   });
-
-  const handleDelete = async (userId) => {
-    try {
-      console.log("Eliminando usuario con ID:", userId); // Debug
-      await userService.deleteUser(userId);
-      setUsers((prev) => prev.filter((u) => u.id !== userId));
-      setDeletingId(null);
-    } catch (err) {
-      console.error("Error al eliminar usuario:", err);
-    }
-  };
 
   const handleUpdateName = async (userId) => {
     try {
@@ -236,25 +224,7 @@ const UsersManagement = () => {
 
                   {/* Acciones */}
                   <td className="px-6 py-4">
-                    {deletingId === user.id ? (
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-500">
-                          ¿Eliminar?
-                        </span>
-                        <button
-                          onClick={() => handleDelete(user.id)}
-                          className="px-2.5 py-1 rounded-lg text-xs font-medium bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
-                        >
-                          Sí
-                        </button>
-                        <button
-                          onClick={() => setDeletingId(null)}
-                          className="px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
-                        >
-                          No
-                        </button>
-                      </div>
-                    ) : (
+                    {editingId !== user.id && (
                       <div className="flex items-center gap-1">
                         {/* Editar nombre */}
                         <button
@@ -275,15 +245,6 @@ const UsersManagement = () => {
                           title="Cambiar rol"
                         >
                           <Shield size={13} />
-                        </button>
-
-                        {/* Eliminar */}
-                        <button
-                          onClick={() => setDeletingId(user.id)}
-                          className="p-1.5 rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-500 transition-colors"
-                          title="Eliminar usuario"
-                        >
-                          <Trash2 size={13} />
                         </button>
                       </div>
                     )}

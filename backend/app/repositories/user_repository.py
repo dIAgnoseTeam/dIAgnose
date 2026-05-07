@@ -30,24 +30,7 @@ class UserRepository:
             return self.session.scalar(stmt)
         finally:
             self.session.close()
-            
-    def delete_user(self, user_id: int):
-        try:
-            stmt = select(Usuario).where(Usuario.id == user_id)
-            user = self.session.scalar(stmt)
 
-            if not user:
-                return False
-
-            self.session.delete(user)
-            self.session.commit()
-            return True
-        except Exception as e:
-            self.session.rollback()
-            raise e
-        finally:
-            self.session.close()
-            
     def update_user(self, user_id: int, data: dict):
         try:
             stmt = select(Usuario).where(Usuario.id == user_id)
@@ -67,7 +50,7 @@ class UserRepository:
             raise e
         finally:
             self.session.close()
-            
+
     def change_user_role(self, user_id: int, new_role: int):
         try:
             stmt = select(Usuario).where(Usuario.id == user_id)
