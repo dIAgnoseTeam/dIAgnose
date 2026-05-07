@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Send, Plus, ChevronLeft, MessageSquare } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { chatService, historicService } from "../services/api";
+import ReactMarkdown from "react-markdown";
 
 const Chat = () => {
   const { user } = useAuth();
@@ -310,7 +311,32 @@ const Chat = () => {
                       : "bg-gray-100 text-gray-800 rounded-bl-sm"
                   }`}
                 >
-                  {msg.text}
+                  {msg.role === "assistant" ? (
+                    <ReactMarkdown
+                      components={{
+                        // Formato básico para markdown
+                        p: ({ node, ...props }) => (
+                          <p className="mb-2 last:mb-0" {...props} />
+                        ),
+                        ul: ({ node, ...props }) => (
+                          <ul className="list-disc ml-4 mb-2" {...props} />
+                        ),
+                        ol: ({ node, ...props }) => (
+                          <ol className="list-decimal ml-4 mb-2" {...props} />
+                        ),
+                        li: ({ node, ...props }) => (
+                          <li className="mb-1" {...props} />
+                        ),
+                        strong: ({ node, ...props }) => (
+                          <strong className="font-semibold" {...props} />
+                        ),
+                      }}
+                    >
+                      {msg.text}
+                    </ReactMarkdown>
+                  ) : (
+                    msg.text
+                  )}
                 </div>
               </div>
             ))

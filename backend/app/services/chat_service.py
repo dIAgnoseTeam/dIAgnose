@@ -46,6 +46,7 @@ class ChatService:
 
         # 3 - Guardar el nuevo mensaje en la DB
         nuevo_historico = {"id_chat": chat_id, "rol": "user", "mensaje": user_message}
+        self.historic_repository.create_historico(nuevo_historico)
 
         # 4 - Preparar JSON
         payload = {"new_message": {"role": "user", "content": user_message}}
@@ -53,6 +54,17 @@ class ChatService:
         # Añadimos historico solo si existe
         if history_for_api:
             payload["history"] = history_for_api
+
+            # --- AÑADIMOS ESTO PARA DEPURAR (DEBUG) ---
+        import json
+
+        print("\n" + "=" * 50)
+        print("DEBUG - ENVIANDO A LA API DE IA")
+        print(f"Chat ID: {chat_id}")
+        print("Payload exacto:")
+        print(json.dumps(payload, indent=2, ensure_ascii=False))
+        print("=" * 50 + "\n")
+        # ------------------------------------------
 
         # 5 - Enviar a la API
         response = requests.post(self.ai_api_url, json=payload, headers={"Content-Type": "application/json"}, timeout=30)
