@@ -4,8 +4,6 @@ def appsettings_to_dict(appsettings):
         "chat_enabled": appsettings.chat_enabled,
         "reviews_enabled": appsettings.reviews_enabled,
         "max_reviews_per_case": appsettings.max_reviews_per_case,
-        "maintenance_mode": appsettings.maintenance_mode,
-        "allow_new_users": appsettings.allow_new_users,
     }
 
 
@@ -14,5 +12,5 @@ def appsettings_public_to_dict(appsettings):
     return {
         "chat_enabled": appsettings.chat_enabled,
         "reviews_enabled": appsettings.reviews_enabled,
-        "maintenance_mode": appsettings.maintenance_mode,
+        "max_reviews_per_case": appsettings.max_reviews_per_case,
     }

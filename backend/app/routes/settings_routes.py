@@ -13,8 +13,10 @@ settings_bp = Blueprint("settings", __name__)
 
 service = AppSettingsService()
 
+
 def _is_admin(current_user: dict) -> bool:
     return int(current_user.get("id_rol", 0)) == 1
+
 
 @settings_bp.route("/", methods=["GET"])
 @token_required
@@ -27,6 +29,7 @@ def get_settings(current_user):
     except Exception as e:
         logger.error(f"Error obteniendo configuración: {e}")
         return jsonify({"error": "Error al obtener la configuración"}), 500
+
 
 @settings_bp.route("/", methods=["PATCH"])
 @token_required
@@ -63,6 +66,7 @@ def set_chat_enabled(current_user):
         logger.error(f"Error actualizando chat_enabled: {e}")
         return jsonify({"error": "Error al actualizar el chat"}), 500
 
+
 @settings_bp.route("/dashboard", methods=["GET"])
 @token_required
 def get_dashboard(current_user):
@@ -85,13 +89,15 @@ def get_system_status(current_user):
 
     try:
         settings = service.get_or_create()
-        return jsonify({
-            "estado": "mantenimiento" if settings.maintenance_mode else "operativo",
-            "maintenance_mode": settings.maintenance_mode,
-            "configuracion": appsettings_to_dict(settings),
-            "timestamp": datetime.now(timezone.utc).isoformat(),
-        }), 200
+        return (
+            jsonify(
+                {
+                    "configuracion": appsettings_to_dict(settings),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                }
+            ),
+            200,
+        )
     except Exception as e:
         logger.error(f"Error obteniendo estado del sistema: {e}")
         return jsonify({"error": "Error al obtener el estado del sistema"}), 500
-

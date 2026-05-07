@@ -7,14 +7,11 @@ from app.models.review import Valoracion
 from app.models.user import Usuario
 from db.config.session import SessionLocal
 
-
 # Campos permitidos para actualización desde la API
 ALLOWED_SETTINGS_FIELDS = {
     "chat_enabled",
     "reviews_enabled",
     "max_reviews_per_case",
-    "maintenance_mode",
-    "allow_new_users",
 }
 
 
@@ -54,20 +51,21 @@ class AppSettingsRepository:
             total_casos = s.scalar(select(func.count(CasoClinico.id))) or 0
 
             # Casos sin ninguna valoración
-            casos_con_valoracion = s.scalar(
-                select(func.count(func.distinct(Valoracion.id_caso)))
-            ) or 0
+            casos_con_valoracion = s.scalar(select(func.count(func.distinct(Valoracion.id_caso)))) or 0
             casos_sin_valorar = total_casos - casos_con_valoracion
 
             # Casos con valoración completa (>= 3 valoraciones)
-            casos_completos = s.scalar(
-                select(func.count()).select_from(
-                    select(Valoracion.id_caso)
-                    .group_by(Valoracion.id_caso)
-                    .having(func.count(Valoracion.id) >= 3)
-                    .subquery()
+            casos_completos = (
+                s.scalar(
+                    select(func.count()).select_from(
+                        select(Valoracion.id_caso)
+                        .group_by(Valoracion.id_caso)
+                        .having(func.count(Valoracion.id) >= 3)
+                        .subquery()
+                    )
                 )
-            ) or 0
+                or 0
+            )
 
             # Valoraciones
             review_stats = s.execute(
@@ -81,16 +79,13 @@ class AppSettingsRepository:
 
             # Distribución de puntuaciones (1–5)
             distribucion_rows = s.execute(
-                select(Valoracion.puntuacion, func.count(Valoracion.id).label("cnt"))
-                .group_by(Valoracion.puntuacion)
+                select(Valoracion.puntuacion, func.count(Valoracion.id).label("cnt")).group_by(Valoracion.puntuacion)
             ).all()
             distribucion = {str(row.puntuacion): row.cnt for row in distribucion_rows}
 
             # Chats
             total_chats = s.scalar(select(func.count(Chat.id))) or 0
-            chats_activos = s.scalar(
-                select(func.count(Chat.id)).where(Chat.activo == "T")
-            ) or 0
+            chats_activos = s.scalar(select(func.count(Chat.id)).where(Chat.activo == "T")) or 0
 
             return {
                 "usuarios": {

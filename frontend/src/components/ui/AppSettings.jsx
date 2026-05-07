@@ -10,7 +10,6 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-
 const Toggle = ({ checked, onChange, disabled, label }) => (
   <button
     type="button"
@@ -30,7 +29,6 @@ const Toggle = ({ checked, onChange, disabled, label }) => (
   </button>
 );
 
-
 const SettingRow = ({ icon, label, description, badge, control, last }) => (
   <>
     <div className="flex flex-col sm:flex-row sm:items-center justify-between py-3 gap-3">
@@ -39,8 +37,12 @@ const SettingRow = ({ icon, label, description, badge, control, last }) => (
           {icon}
         </div>
         <div className="min-w-0">
-          <p className="text-sm font-medium text-gray-800 leading-tight">{label}</p>
-          <p className="text-xs text-gray-400 leading-tight mt-0.5">{description}</p>
+          <p className="text-sm font-medium text-gray-800 leading-tight">
+            {label}
+          </p>
+          <p className="text-xs text-gray-400 leading-tight mt-0.5">
+            {description}
+          </p>
         </div>
       </div>
       <div className="flex items-center gap-2.5 ml-11 sm:ml-4 shrink-0">
@@ -52,7 +54,6 @@ const SettingRow = ({ icon, label, description, badge, control, last }) => (
   </>
 );
 
-
 const SectionHeader = ({ icon, title, subtitle }) => (
   <>
     <div className="flex items-center gap-2.5 px-4 sm:px-6 py-4">
@@ -60,7 +61,9 @@ const SectionHeader = ({ icon, title, subtitle }) => (
         {icon}
       </div>
       <div className="min-w-0">
-        <p className="text-sm font-semibold text-gray-800 leading-tight">{title}</p>
+        <p className="text-sm font-semibold text-gray-800 leading-tight">
+          {title}
+        </p>
         <p className="text-xs text-gray-400 leading-tight mt-0.5">{subtitle}</p>
       </div>
     </div>
@@ -69,21 +72,24 @@ const SectionHeader = ({ icon, title, subtitle }) => (
 );
 
 // Badge de estado
-const StatusBadge = ({ active, activeLabel = "Activo", inactiveLabel = "Inactivo" }) => (
+const StatusBadge = ({
+  active,
+  activeLabel = "Activo",
+  inactiveLabel = "Inactivo",
+}) => (
   <span
-    className={`text-xs font-medium px-2.5 py-0.5 rounded-full transition-colors ${active ? "bg-teal-50 text-teal-700" : "bg-gray-100 text-gray-400"
-      }`}
+    className={`text-xs font-medium px-2.5 py-0.5 rounded-full transition-colors ${
+      active ? "bg-teal-50 text-teal-700" : "bg-gray-100 text-gray-400"
+    }`}
   >
     {active ? activeLabel : inactiveLabel}
   </span>
 );
 
-
 const AppSettings = () => {
   const {
     chatEnabled,
     reviewsEnabled,
-    maintenanceMode,
     maxReviewsPerCase,
     updateChatEnabled,
     updateSetting,
@@ -92,7 +98,9 @@ const AppSettings = () => {
   } = useFeatureFlags();
 
   const [saving, setSaving] = useState(null); // guarda qué campo se está guardando
-  const [maxReviewsInput, setMaxReviewsInput] = useState(String(maxReviewsPerCase));
+  const [maxReviewsInput, setMaxReviewsInput] = useState(
+    String(maxReviewsPerCase),
+  );
   const [savedMaxReviews, setSavedMaxReviews] = useState(false);
 
   const handleToggle = async (field, currentValue) => {
@@ -131,7 +139,6 @@ const AppSettings = () => {
 
   return (
     <div className="space-y-6">
-
       {/* ── Sección 1: Funcionalidades ── */}
       <section className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
         <SectionHeader
@@ -174,60 +181,7 @@ const AppSettings = () => {
           <p className="px-4 sm:px-6 pb-4 text-xs text-red-500">{flagsError}</p>
         )}
       </section>
-
-      {/* ── Sección 2: Control de acceso ── */}
-      <section className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
-        <SectionHeader
-          icon={<ShieldAlert size={18} />}
-          title="Control de acceso"
-          subtitle="Gestiona quién puede acceder y en qué condiciones"
-        />
-        <div className="px-4 sm:px-6 py-1">
-          <SettingRow
-            icon={<ShieldAlert size={16} />}
-            label="Modo mantenimiento"
-            description="Actívalo para informar a los usuarios de que el sistema está en mantenimiento"
-            badge={
-              <StatusBadge
-                active={maintenanceMode}
-                activeLabel="Activado"
-                inactiveLabel="Desactivado"
-              />
-            }
-            control={
-              <Toggle
-                checked={maintenanceMode}
-                onChange={() => handleToggle("maintenance_mode", maintenanceMode)}
-                disabled={isDisabled("maintenance_mode")}
-                label="Modo mantenimiento"
-              />
-            }
-          />
-          <SettingRow
-            icon={<UserPlus size={16} />}
-            label="Registro de nuevos usuarios"
-            description="Permite el acceso de nuevos usuarios mediante Google OAuth"
-            badge={
-              <StatusBadge
-                active={!maintenanceMode}
-                activeLabel="Permitido"
-                inactiveLabel="Bloqueado"
-              />
-            }
-            control={
-              <Toggle
-                checked={!maintenanceMode}
-                onChange={() => handleToggle("maintenance_mode", maintenanceMode)}
-                disabled={isDisabled("maintenance_mode")}
-                label="Permitir nuevos usuarios"
-              />
-            }
-            last
-          />
-        </div>
-      </section>
-
-      {/* ── Sección 3: Límites ── */}
+      {/* ── Sección 2: Límites ── */}
       <section className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
         <SectionHeader
           icon={<Hash size={18} />}
@@ -245,7 +199,8 @@ const AppSettings = () => {
                   Valoraciones máximas por caso
                 </p>
                 <p className="text-xs text-gray-400 leading-tight mt-0.5">
-                  Número máximo de revisiones que puede recibir cada caso clínico
+                  Número máximo de revisiones que puede recibir cada caso
+                  clínico
                 </p>
               </div>
             </div>
@@ -263,9 +218,10 @@ const AppSettings = () => {
                 onClick={handleSaveMaxReviews}
                 disabled={isDisabled("max_reviews_per_case")}
                 className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition-colors
-                  ${savedMaxReviews
-                    ? "bg-green-100 text-green-700"
-                    : "bg-teal-600 text-white hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  ${
+                    savedMaxReviews
+                      ? "bg-green-100 text-green-700"
+                      : "bg-teal-600 text-white hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   }`}
               >
                 {savedMaxReviews ? (
@@ -283,7 +239,6 @@ const AppSettings = () => {
           </div>
         </div>
       </section>
-
     </div>
   );
 };

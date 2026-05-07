@@ -120,7 +120,7 @@ const CasesManagement = () => {
         </div>
       </div>
       {/* Tabla */}
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+      <div className="hidden md:block bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
         <table className="w-full text-sm text-left">
           <thead>
             <tr className="border-b border-gray-100 bg-gray-50">
@@ -229,7 +229,6 @@ const CasesManagement = () => {
             )}
           </tbody>
         </table>
-
         {/* Paginación */}
         {totalPages > 1 && (
           <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
@@ -242,7 +241,7 @@ const CasesManagement = () => {
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
                 className="px-3 py-1.5 text-xs rounded-lg border border-gray-200 text-gray-600
-                           hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                     hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 Anterior
               </button>
@@ -255,11 +254,114 @@ const CasesManagement = () => {
                 }
                 disabled={currentPage === totalPages}
                 className="px-3 py-1.5 text-xs rounded-lg border border-gray-200 text-gray-600
-                           hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                     hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 Siguiente
               </button>
             </div>
+          </div>
+        )}
+      </div>
+      {/* CARDS — solo móvil */}
+      <div className="md:hidden space-y-3">
+        {loading ? (
+          <div className="flex justify-center py-8">
+            <div className="w-6 h-6 border-2 border-teal-500 border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : cases.length === 0 ? (
+          <div className="text-center py-8">
+            <FileText size={28} className="text-gray-300 mx-auto mb-3" />
+            <p className="text-sm text-gray-400">No se encontraron casos</p>
+          </div>
+        ) : (
+          cases.map((caso) => (
+            <div
+              key={caso.id}
+              className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm"
+            >
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex-1 min-w-0 pr-3">
+                  <p className="font-medium text-gray-900 text-sm line-clamp-2">
+                    {caso.diagnostico_final ?? "—"}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1 line-clamp-1">
+                    {caso.motivo}
+                  </p>
+                </div>
+                <DificultadBadge dificultad={caso.dificultad} />
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 text-xs text-gray-600 mb-3 pb-3 border-b border-gray-100">
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Categoría</span>
+                  {caso.categoria ?? "—"}
+                </div>
+                <div>
+                  <span className="text-gray-400 block mb-0.5">Paciente</span>
+                  {caso.edad} años · {caso.sexo}
+                </div>
+              </div>
+
+              {deletingId === caso.id ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-500 flex-1">
+                    ¿Eliminar este caso?
+                  </span>
+                  <button
+                    onClick={() => handleDelete(caso.id)}
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+                  >
+                    Sí
+                  </button>
+                  <button
+                    onClick={() => setDeletingId(null)}
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+                  >
+                    No
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setSelectedCase(caso)}
+                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium bg-teal-50 text-teal-600 hover:bg-teal-100 transition-colors"
+                  >
+                    <Eye size={13} /> Ver caso
+                  </button>
+                  <button
+                    onClick={() => setDeletingId(caso.id)}
+                    className="px-3 py-2 rounded-lg text-xs font-medium bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+                  >
+                    <Trash2 size={13} />
+                  </button>
+                </div>
+              )}
+            </div>
+          ))
+        )}
+
+        {/* Paginación móvil */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between pt-2">
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="px-3 py-1.5 text-xs rounded-lg border border-gray-200 text-gray-600
+                   hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              Anterior
+            </button>
+            <span className="text-xs text-gray-500">
+              {currentPage} / {totalPages}
+            </span>
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1.5 text-xs rounded-lg border border-gray-200 text-gray-600
+                   hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              Siguiente
+            </button>
           </div>
         )}
       </div>
@@ -274,7 +376,6 @@ const CasesManagement = () => {
             : ""
         }
       />
-      -
     </div>
   );
 };

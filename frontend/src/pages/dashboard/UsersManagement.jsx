@@ -134,7 +134,7 @@ const UsersManagement = () => {
       </div>
 
       {/* Tabla */}
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+      <div className="hidden md:block bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
         <table className="w-full text-sm text-left">
           <thead>
             <tr className="border-b border-gray-100 bg-gray-50">
@@ -254,6 +254,88 @@ const UsersManagement = () => {
             )}
           </tbody>
         </table>
+      </div>
+      {/* CARDS — solo móvil */}
+      <div className="md:hidden space-y-3">
+        {loading ? (
+          <div className="flex justify-center py-8">
+            <div className="w-6 h-6 border-2 border-teal-500 border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="text-center py-8">
+            <Users size={28} className="text-gray-300 mx-auto mb-3" />
+            <p className="text-sm text-gray-400">No se encontraron usuarios</p>
+          </div>
+        ) : (
+          filtered.map((user) => (
+            <div
+              key={user.id}
+              className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm"
+            >
+              <div className="flex items-center gap-3 mb-3 pb-3 border-b border-gray-100">
+                <div className="w-9 h-9 rounded-full bg-teal-50 flex items-center justify-center shrink-0">
+                  <span className="text-teal-700 font-semibold text-sm">
+                    {user.nombre?.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  {editingId === user.id ? (
+                    <div className="flex items-center gap-2">
+                      <input
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
+                        className="border border-gray-200 rounded-lg px-2 py-1 text-xs flex-1
+                             focus:outline-none focus:ring-1 focus:ring-teal-500"
+                        autoFocus
+                      />
+                      <button
+                        onClick={() => handleUpdateName(user.id)}
+                        className="p-1 rounded text-teal-600 hover:bg-teal-50"
+                      >
+                        <Check size={13} />
+                      </button>
+                      <button
+                        onClick={() => setEditingId(null)}
+                        className="p-1 rounded text-gray-400 hover:bg-gray-100"
+                      >
+                        <X size={13} />
+                      </button>
+                    </div>
+                  ) : (
+                    <p className="text-sm font-medium text-gray-800 truncate">
+                      {user.nombre}
+                    </p>
+                  )}
+                  <p className="text-xs text-gray-400 truncate mt-0.5">
+                    {user.correo}
+                  </p>
+                </div>
+                <RoleBadge rol={user.id_rol} />
+              </div>
+
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    setEditingId(user.id);
+                    setEditName(user.nombre);
+                  }}
+                  className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg
+                       text-xs font-medium bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors"
+                >
+                  <Edit2 size={13} /> Editar nombre
+                </button>
+                <button
+                  onClick={() => handleChangeRole(user.id, user.id_rol)}
+                  className="px-3 py-2 rounded-lg text-xs font-medium bg-violet-50 text-violet-600
+                       hover:bg-violet-100 transition-colors"
+                  title="Cambiar rol"
+                >
+                  <Shield size={13} />
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

@@ -15,7 +15,6 @@ export const FeatureFlagProvider = ({ children }) => {
 
   const [chatEnabled, setChatEnabled] = useState(true);
   const [reviewsEnabled, setReviewsEnabled] = useState(true);
-  const [maintenanceMode, setMaintenanceMode] = useState(false);
   const [maxReviewsPerCase, setMaxReviewsPerCase] = useState(3);
 
   const [loading, setLoading] = useState(true);
@@ -31,7 +30,6 @@ export const FeatureFlagProvider = ({ children }) => {
       const { data } = await settingsService.getSettings();
       setChatEnabled(Boolean(data.chat_enabled));
       setReviewsEnabled(Boolean(data.reviews_enabled ?? true));
-      setMaintenanceMode(Boolean(data.maintenance_mode ?? false));
       if (data.max_reviews_per_case !== undefined) {
         setMaxReviewsPerCase(Number(data.max_reviews_per_case));
       }
@@ -52,10 +50,12 @@ export const FeatureFlagProvider = ({ children }) => {
   // Función genérica: actualiza uno o varios flags en una sola llamada
   const updateSetting = async (patch) => {
     const { data } = await settingsService.updateSettings(patch);
-    if (data.chat_enabled !== undefined) setChatEnabled(Boolean(data.chat_enabled));
-    if (data.reviews_enabled !== undefined) setReviewsEnabled(Boolean(data.reviews_enabled));
-    if (data.maintenance_mode !== undefined) setMaintenanceMode(Boolean(data.maintenance_mode));
-    if (data.max_reviews_per_case !== undefined) setMaxReviewsPerCase(Number(data.max_reviews_per_case));
+    if (data.chat_enabled !== undefined)
+      setChatEnabled(Boolean(data.chat_enabled));
+    if (data.reviews_enabled !== undefined)
+      setReviewsEnabled(Boolean(data.reviews_enabled));
+    if (data.max_reviews_per_case !== undefined)
+      setMaxReviewsPerCase(Number(data.max_reviews_per_case));
     return data;
   };
 
@@ -70,7 +70,6 @@ export const FeatureFlagProvider = ({ children }) => {
       value={{
         chatEnabled,
         reviewsEnabled,
-        maintenanceMode,
         maxReviewsPerCase,
         loading,
         error,
