@@ -39,8 +39,12 @@ class UserRepository:
             if not user:
                 return None
 
-            for key, value in data.items():
-                setattr(user, key, value)
+            data = data or {}
+            allowed_fields = {"nombre"}
+
+            for key in allowed_fields:
+                if key in data:
+                    setattr(user, key, data[key])
 
             self.session.commit()
             self.session.refresh(user)

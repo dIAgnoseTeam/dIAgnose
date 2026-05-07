@@ -55,12 +55,15 @@ class AppSettingsRepository:
             casos_sin_valorar = total_casos - casos_con_valoracion
 
             # Casos con valoración completa (>= 3 valoraciones)
+            settings = s.execute(select(AppSettings)).scalar_one_or_none()
+            max_reviews = settings.max_reviews_per_case if settings else 3  # fallback sensato
+
             casos_completos = (
                 s.scalar(
                     select(func.count()).select_from(
                         select(Valoracion.id_caso)
                         .group_by(Valoracion.id_caso)
-                        .having(func.count(Valoracion.id) >= 3)
+                        .having(func.count(Valoracion.id) >= max_reviews)
                         .subquery()
                     )
                 )

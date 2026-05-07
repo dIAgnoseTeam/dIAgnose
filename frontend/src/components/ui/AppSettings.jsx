@@ -4,8 +4,6 @@ import {
   BotMessageSquare,
   ClipboardCheck,
   Settings2,
-  ShieldAlert,
-  UserPlus,
   Hash,
   CheckCircle2,
 } from "lucide-react";
