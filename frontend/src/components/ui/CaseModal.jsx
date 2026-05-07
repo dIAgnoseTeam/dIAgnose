@@ -1,6 +1,4 @@
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
-import { useEffect, useState } from "react";
-import { datasetService } from "../../services/api";
 import { CASE_SECTIONS } from "../../config/caseConfig";
 import { DynamicIcon } from "./DynamicIcon";
 
@@ -89,40 +87,26 @@ const ReviewSummary = ({ review }) => (
   </div>
 );
 
-const CaseModal = ({ review, onClose }) => {
-  const [caseData, setCaseData] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!review) return;
-    setLoading(true);
-    datasetService
-      .getCaseById(review.id_caso)
-      .then(({ data }) => setCaseData(data))
-      .catch((err) => console.error("Error cargando caso:", err))
-      .finally(() => setLoading(false));
-  }, [review]);
-
+const CaseModal = ({ open, onClose, caseData, review, title, subtitle }) => {
   return (
-    <Dialog open={!!review} onClose={onClose} className="relative z-50">
-      {/* Backdrop */}
+    <Dialog open={open} onClose={onClose} className="relative z-50">
       <div
         className="fixed inset-0 bg-black/30 backdrop-blur-sm"
         aria-hidden="true"
       />
-
-      {/* Contenedor centrado */}
       <div className="fixed inset-0 flex items-center justify-center p-2 sm:p-4">
         <DialogPanel className="w-full max-w-4xl max-h-[95dvh] sm:max-h-[90dvh] bg-gray-50 rounded-xl sm:rounded-2xl shadow-xl flex flex-col overflow-hidden border border-gray-200">
           {/* Header */}
           <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-white border-b border-gray-100 shrink-0">
             <div className="min-w-0 flex-1">
               <DialogTitle className="text-sm font-semibold text-gray-800">
-                Detalle de valoración
+                {title ?? "Detalle del caso"}
               </DialogTitle>
-              <p className="text-xs text-gray-400 mt-0.5 truncate">
-                Caso #{review?.id_caso} · {review?.fecha}
-              </p>
+              {subtitle && (
+                <p className="text-xs text-gray-400 mt-0.5 truncate">
+                  {subtitle}
+                </p>
+              )}
             </div>
             <button
               onClick={onClose}
@@ -134,27 +118,30 @@ const CaseModal = ({ review, onClose }) => {
 
           {/* Body */}
           <div className="flex-1 overflow-y-auto p-4 sm:p-6 min-h-0">
-            {loading ? (
+            {!caseData ? (
               <div className="flex justify-center py-16">
                 <div className="w-7 h-7 border-2 border-teal-500 border-t-transparent rounded-full animate-spin" />
               </div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-                {/* Columna izquierda: caso clínico */}
-                <div className="space-y-4 lg:col-span-3 order-2 lg:order-1">
-                  {caseData &&
-                    CASE_SECTIONS.map((section) => (
-                      <CaseSection
-                        key={section.id}
-                        section={section}
-                        data={caseData}
-                      />
-                    ))}
+              <div
+                className={`grid grid-cols-1 gap-4 ${review ? "lg:grid-cols-4" : ""}`}
+              >
+                <div
+                  className={`space-y-4 order-2 lg:order-1 ${review ? "lg:col-span-3" : ""}`}
+                >
+                  {CASE_SECTIONS.map((section) => (
+                    <CaseSection
+                      key={section.id}
+                      section={section}
+                      data={caseData}
+                    />
+                  ))}
                 </div>
-                {/* Columna derecha: métricas de la valoración */}
-                <div className="space-y-4 order-1 lg:order-2">
-                  {review && <ReviewSummary review={review} />}
-                </div>
+                {review && (
+                  <div className="space-y-4 order-1 lg:order-2">
+                    <ReviewSummary review={review} />
+                  </div>
+                )}
               </div>
             )}
           </div>

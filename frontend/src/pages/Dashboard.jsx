@@ -6,8 +6,9 @@ import StatsSection from "../components/ui/StatsSection";
 import AppSettings from "../components/ui/AppSettings";
 import CaseModal from "../components/ui/CaseModal";
 import { useDebounce } from "../hooks/useDebounce";
-
+import { datasetService } from "../services/api";
 const Dashboard = () => {
+  // Datos principales
   const [reviews, setReviews] = useState([]);
   const [users, setUsers] = useState([]);
   const [stats, setStats] = useState({
@@ -16,12 +17,18 @@ const Dashboard = () => {
     minima: 0,
     mas_reciente: null,
   });
+  // Filtros
   const [filterUserInput, setFilterUserInput] = useState("");
   const filterUser = useDebounce(filterUserInput, 500);
   const [filterDate, setFilterDate] = useState("");
   const [filterScore, setFilterScore] = useState(0);
+  // Carga general de datos
   const [dataLoading, setDataLoading] = useState(false);
+  // Para el modal de caso clínico
   const [selectedReview, setSelectedReview] = useState(null);
+  const [selectedCase, setSelectedCase] = useState(null);
+  const [caseLoading, setCaseLoading] = useState(false);
+  // Paginación
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
   const [totalReviews, setTotalReviews] = useState(0);
@@ -94,6 +101,24 @@ const Dashboard = () => {
     setFilterScore(v);
   };
 
+  const handleViewCase = async (review) => {
+    setSelectedReview(review);
+    setCaseLoading(true);
+    try {
+      const { data } = await datasetService.getCaseById(review.id_caso);
+      setSelectedCase(data);
+    } catch (err) {
+      console.error("Error cargando caso:", err);
+    } finally {
+      setCaseLoading(false);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setSelectedReview(null);
+    setSelectedCase(null);
+  };
+
   if (dataLoading) {
     return (
       <div className="flex justify-center p-10">
@@ -104,7 +129,6 @@ const Dashboard = () => {
 
   return (
     <div className="w-full">
-      <AppSettings />
       <StatsSection stats={stats}></StatsSection>
       <FiltersSection
         setFilterUser={setFilterUserInput}
@@ -117,7 +141,7 @@ const Dashboard = () => {
       <DashboardTable
         reviews={reviews}
         userMap={userMap}
-        onViewCase={setSelectedReview}
+        onViewCase={handleViewCase}
         currentPage={currentPage}
         pageSize={pageSize}
         totalReviews={totalReviews}
@@ -126,8 +150,16 @@ const Dashboard = () => {
       ></DashboardTable>
       {selectedReview && (
         <CaseModal
+          open={!!selectedReview}
+          onClose={handleCloseModal}
+          caseData={caseLoading ? null : selectedCase}
           review={selectedReview}
-          onClose={() => setSelectedReview(null)}
+          title="Detalle de valoración"
+          subtitle={
+            selectedReview
+              ? `Caso #${selectedReview.id_caso} · ${selectedReview.fecha}`
+              : ""
+          }
         />
       )}
     </div>

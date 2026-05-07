@@ -5,6 +5,7 @@ import { CaseProvider } from "../contexts/CaseContext";
 import { useNavigate } from "react-router";
 import CaseForm from "../components/ui/CaseForm";
 import CaseViewer from "../components/ui/CaseViewer";
+import { useTour } from "../hooks/useTour";
 
 const Home = () => {
   const { user, loading } = useAuth();
@@ -15,6 +16,9 @@ const Home = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  // Cargar el tour interactivo al montar el componente
+  useTour();
+
   // Cargar el máximo de registros al montar el componente
   useEffect(() => {
     const loadMaxRegisters = async () => {
@@ -24,7 +28,7 @@ const Home = () => {
         loadCase();
       } catch (err) {
         console.error("Error loading max registers:", err);
-        setError("Error al cargar los datos del dataset");
+        setError("Error al cargar los datos del servidor");
       }
     };
     if (!loading && user) {
@@ -41,16 +45,11 @@ const Home = () => {
       setCaseNumber(response.data.id);
     } catch (err) {
       console.error("Error loading case:", err);
-      setError("Error al cargar los datos del dataset");
+      setError("Error al cargar los datos del servidor");
     } finally {
       setDataLoading(false);
     }
   };
-
-  //  const handleLoadRandomCase = () => {
-  //    const randomNum = Math.floor(Math.random() * maxRegisters);
-  //    loadCase(randomNum);
-  //  };
 
   // Callback que el compañero puede llamar desde su formulario
   const handleReviewSubmitted = () => {
@@ -59,9 +58,7 @@ const Home = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-dvh">
-        Cargando...
-      </div>
+      <div className="flex justify-center items-center h-dvh">Cargando...</div>
     );
   }
 
@@ -106,14 +103,17 @@ const Home = () => {
           ) : currentCase ? (
             <div className="flex flex-col xl:flex-row items-start gap-6">
               {/* Case Content Card */}
-              <div className="w-full xl:flex-1 min-w-0">
+              <div id="case-card" className="w-full xl:flex-1 min-w-0">
                 <CaseViewer
                   caseData={currentCase}
                   caseNumber={caseNumber}
                   maxRegisters={maxRegisters}
                 />
               </div>
-              <div className="w-full xl:w-[420px] xl:shrink-0 xl:sticky xl:top-0 xl:self-start xl:max-h-[calc(100dvh-5rem)]">
+              <div
+                id="case-form"
+                className="w-full xl:w-[420px] xl:shrink-0 xl:sticky xl:top-0 xl:self-start xl:max-h-[calc(100dvh-5rem)]"
+              >
                 <CaseForm idCase={caseNumber} />
               </div>
             </div>

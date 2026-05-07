@@ -8,7 +8,32 @@ from db.config.session import SessionLocal
 class CaseRepository:
     def __init__(self):
         self.session = SessionLocal()
-    
+
+    # Obtener todos los casos clínicos
+    def get_all_cases(self, limit: int = 10, offset: int = 0, search: str = None, dificultad: str = None):
+        try:
+            stmt = select(CasoClinico)
+            count_stmt = select(func.count(CasoClinico.id))
+
+            if search:
+                filtro = (
+                    CasoClinico.diagnostico_final.ilike(f"%{search}%")
+                    | CasoClinico.motivo.ilike(f"%{search}%")
+                    | CasoClinico.categoria.ilike(f"%{search}%")
+                )
+                stmt = stmt.where(filtro)
+                count_stmt = count_stmt.where(filtro)
+
+            if dificultad:
+                stmt = stmt.where(CasoClinico.dificultad == dificultad)
+                count_stmt = count_stmt.where(CasoClinico.dificultad == dificultad)
+
+            total = self.session.scalar(count_stmt)
+            casos = self.session.scalars(stmt.order_by(CasoClinico.id).limit(limit).offset(offset)).all()
+            return casos, total
+        finally:
+            self.session.close()
+
     # Obtener cantidad de registros de casos clínicos
     def get_case_count(self):
         try:
@@ -24,7 +49,7 @@ class CaseRepository:
             return self.session.scalar(stmt)
         finally:
             self.session.close()
-            
+
     # Crear un caso clinico nuevo
     def create_case(self, caso_data: dict):
         try:
@@ -38,7 +63,23 @@ class CaseRepository:
             raise e
         finally:
             self.session.close()
-    
+
+    # Eliminar un caso clínico por su ID
+    def delete_case(self, case_id: int):
+        try:
+            stmt = select(CasoClinico).where(CasoClinico.id == case_id)
+            caso = self.session.scalar(stmt)
+            if caso:
+                self.session.delete(caso)
+                self.session.commit()
+                return True
+            return False
+        except Exception as e:
+            self.session.rollback()
+            raise e
+        finally:
+            self.session.close()
+
     # Comprobar que un caso clinico ya existe
     def case_exists(self, motivo: str, diagnostico_final: str, edad: int, sexo: str):
         try:
@@ -46,18 +87,18 @@ class CaseRepository:
                 CasoClinico.motivo == motivo,
                 CasoClinico.diagnostico_final == diagnostico_final,
                 CasoClinico.edad == edad,
-                CasoClinico.sexo == sexo
+                CasoClinico.sexo == sexo,
             )
             result = self.session.scalar(stmt)
             return result is not None
         finally:
             self.session.close()
-    
-    def get_next_case_for_user(self, user_id:int):
+
+    def get_next_case_for_user(self, user_id: int):
         try:
             subq = select(Valoracion.id_caso).where(Valoracion.id_usuario == user_id)
 
-            count_subq = (select(Valoracion.id_caso).group_by(Valoracion.id_caso).having(func.count(Valoracion.id)>=3))
+            count_subq = select(Valoracion.id_caso).group_by(Valoracion.id_caso).having(func.count(Valoracion.id) >= 3)
 
             stmt = (
                 select(CasoClinico)
