@@ -78,6 +78,8 @@ export const chatService = {
   createChat: (data) => api.post("/chats/", data),
   deleteChat: (chatId) => api.delete(`/chats/${chatId}`),
   updateChat: (chatId, data) => api.put(`/chats/${chatId}`, data),
+  sendMessage: (chatId, message) =>
+    api.post(`/chats/${chatId}/message`, { message }),
 };
 
 export const historicService = {
