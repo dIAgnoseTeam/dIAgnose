@@ -76,5 +76,10 @@ export const useTour = () => {
     });
 
     setTimeout(() => driverObj.drive(), 600);
+    const timeoutId = setTimeout(() => driverObj.drive(), 600);
+    return () => {
+      clearTimeout(timeoutId);
+      driverObj.destroy();
+    };
   }, []);
 };
