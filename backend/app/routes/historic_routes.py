@@ -61,10 +61,7 @@ def get_historicos_by_chat_id(current_user, chat_id: int):
         service = HistoricService()
         historicos = service.read_historicos_by_chat_id(chat_id)
 
-        if not historicos:
-            return jsonify({"error": "No se encontraron históricos para este chat"}), 404
-
-        return jsonify([historic_to_dict(h) for h in historicos]), 200
+        return jsonify([historic_to_dict(h) for h in historicos] if historicos else []), 200
     except Exception as e:
         logger.error(f"Error obteniendo los históricos por ID de chat: {str(e)}")
         return jsonify({"error": "Error al obtener los históricos por ID de chat"}), 500
