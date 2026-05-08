@@ -49,6 +49,22 @@ export default {
           900: "#18181b",
         },
       },
+      spacing: {
+        dvh: "100dvh",
+        "half-dvh": "50dvh",
+      },
+      height: {
+        dvh: "100dvh",
+        "screen-dvh": "100dvh",
+      },
+      minHeight: {
+        dvh: "100dvh",
+      },
+      maxHeight: {
+        dvh: "100dvh",
+        "95dvh": "95dvh",
+        "90dvh": "90dvh",
+      },
     },
   },
   plugins: [],

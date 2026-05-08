@@ -94,6 +94,7 @@ const DashboardTable = ({
   pageSize,
   totalReviews,
   onPageChange,
+  pageLoading,
 }) => {
   const totalPages = Math.ceil(totalReviews / pageSize);
 
@@ -128,7 +129,7 @@ const DashboardTable = ({
         {totalPages > 1 && (
           <div className="col-span-full flex justify-center py-4">
             <button
-              disabled={currentPage === 1}
+              disabled={currentPage === 1 || pageLoading}
               onClick={() => onPageChange(currentPage - 1)}
               className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium
                  text-gray-600 hover:bg-teal-50 hover:text-teal-700 transition-colors
@@ -141,7 +142,7 @@ const DashboardTable = ({
               {currentPage} / {totalPages}
             </span>
             <button
-              disabled={currentPage === totalPages}
+              disabled={currentPage === totalPages || pageLoading}
               onClick={() => onPageChange(currentPage + 1)}
               className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium
                  text-gray-600 hover:bg-teal-50 hover:text-teal-700 transition-colors
@@ -275,13 +276,17 @@ const DashboardTable = ({
 
           <div className="flex items-center gap-1">
             <button
-              disabled={currentPage === 1}
+              disabled={currentPage === 1 || pageLoading}
               onClick={() => onPageChange(currentPage - 1)}
               className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium
                  text-gray-600 hover:bg-teal-50 hover:text-teal-700 transition-colors
                  disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              <DynamicIcon name="ChevronLeft" size={13} />
+              {pageLoading ? (
+                <DynamicIcon name="Loader" size={13} />
+              ) : (
+                <DynamicIcon name="ChevronLeft" size={13} />
+              )}
               Anterior
             </button>
 
@@ -290,14 +295,18 @@ const DashboardTable = ({
             </span>
 
             <button
-              disabled={currentPage === totalPages}
+              disabled={currentPage === totalPages || pageLoading}
               onClick={() => onPageChange(currentPage + 1)}
               className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium
                  text-gray-600 hover:bg-teal-50 hover:text-teal-700 transition-colors
                  disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Siguiente
-              <DynamicIcon name="ChevronRight" size={13} />
+              {pageLoading ? (
+                <DynamicIcon name="Loader" size={13} />
+              ) : (
+                <DynamicIcon name="ChevronRight" size={13} />
+              )}
             </button>
           </div>
         </div>

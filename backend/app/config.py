@@ -29,3 +29,5 @@ class Config:
 
     GOOGLE_DESCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
     OAUTH_SCOPES = ["openid", "email", "profile"]
+
+    AI_API_URL = os.getenv("AI_API_URL", "http://cloud.riberadeltajo.es:11200/generate")

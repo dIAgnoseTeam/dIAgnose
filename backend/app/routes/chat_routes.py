@@ -99,3 +99,32 @@ def update_chat(current_user, chat_id: int):
     except Exception as e:
         logger.error(f"Error al actualizar el chat: {str(e)}")
         return jsonify({"error": "Error al actualizar el chat"}), 500
+
+
+@chat_bp.route("/<int:chat_id>/message", methods=["POST"])
+@token_required
+def send_message_to_chat(current_user, chat_id: int):
+    try:
+        data = request.get_json()
+        user_message_text = data.get("message")
+        # Validación básica
+        if not user_message_text:
+            return jsonify({"error": "El campo 'message' es obligatorio"}), 400
+        service = ChatService()
+
+        # Verificar que el chat existe
+        chat = service.get_chat_by_id(chat_id)
+        if not chat:
+            return jsonify({"error": "Chat not found"}), 404
+
+        if chat and chat.id_usuario != current_user.get("user_id"):
+            return jsonify({"error": "No tienes permiso para enviar mensajes a este chat"}), 403
+
+        # Llamamos al orquestador
+        response = service.process_user_message(chat_id, user_message_text)
+
+        # Devolvemos la respuesta de la IA al frontend
+        return jsonify(response), 200
+    except Exception as e:
+        logger.error(f"Error al procesar el mensaje del chat: {str(e)}")
+        return jsonify({"error": "Error al procesar el mensaje del chat"}), 500

@@ -17,10 +17,59 @@ class UserRepository:
         finally:
             self.session.close()
 
+    def get_user_by_email(self, correo: str):
+        try:
+            stmt = select(Usuario).where(Usuario.correo == correo)
+            return self.session.scalar(stmt)
+        finally:
+            self.session.close()
+
     def get_users_count(self):
         try:
             stmt = select(func.count(Usuario.id))
             return self.session.scalar(stmt)
+        finally:
+            self.session.close()
+
+    def update_user(self, user_id: int, data: dict):
+        try:
+            stmt = select(Usuario).where(Usuario.id == user_id)
+            user = self.session.scalar(stmt)
+
+            if not user:
+                return None
+
+            data = data or {}
+            allowed_fields = {"nombre"}
+
+            for key in allowed_fields:
+                if key in data:
+                    setattr(user, key, data[key])
+
+            self.session.commit()
+            self.session.refresh(user)
+            return user
+        except Exception as e:
+            self.session.rollback()
+            raise e
+        finally:
+            self.session.close()
+
+    def change_user_role(self, user_id: int, new_role: int):
+        try:
+            stmt = select(Usuario).where(Usuario.id == user_id)
+            user = self.session.scalar(stmt)
+
+            if not user:
+                return None
+
+            user.id_rol = new_role
+            self.session.commit()
+            self.session.refresh(user)
+            return user
+        except Exception as e:
+            self.session.rollback()
+            raise e
         finally:
             self.session.close()
 
