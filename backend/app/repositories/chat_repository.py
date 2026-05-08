@@ -40,7 +40,8 @@ class ChatRepository:
     # Obtener todos los chats de un usuario a partir de su ID
     def read_chats_by_user_id(self, user_id: int):
         try:
-            stmt = select(Chat).where(Chat.id_usuario == user_id)
+            # Ordenamos por fecha de creación ascendente para mostrar primero los chats más nuevos
+            stmt = select(Chat).where(Chat.id_usuario == user_id).order_by(Chat.fecha_creacion.desc())
             return self.session.scalars(stmt).all()
         finally:
             self.session.close()
