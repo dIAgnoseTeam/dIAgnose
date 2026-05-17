@@ -6,6 +6,8 @@ from app.schemas.review_schema import review_to_dict
 from app.services.app_settings_service import AppSettingsService
 from app.services.review_service import ReviewService
 from app.utils.oauth_decorator import token_required
+from app.utils.admin_decorator import admin_required
+from app.utils.ownership_required import check_ownership_or_admin
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +15,7 @@ review_bp = Blueprint("reviews", __name__)
 
 
 @review_bp.route("/", methods=["GET"])
-@token_required
+@admin_required
 def get_reviews(current_user):
     try:
         limit = request.args.get("limit", default=10, type=int)
@@ -33,7 +35,7 @@ def get_reviews(current_user):
 
 # Rutas para las estadisticas de valoraciones
 @review_bp.route("/stats", methods=["GET"])
-@token_required
+@admin_required
 def get_review_stats(current_user):
     try:
         service = ReviewService()
@@ -64,6 +66,10 @@ def get_review(current_user, valoracion_id):
 @token_required
 def get_user_reviews(current_user, user_id):
     try:
+
+        if not check_ownership_or_admin(current_user, user_id):
+            return jsonify({"error": "Acceso denegado"}), 403
+        
         service = ReviewService()
         valoraciones = service.get_reviews_by_user_id(user_id)
 

@@ -5,6 +5,7 @@ from flask import Blueprint, jsonify, request
 from app.schemas.user_schema import user_to_dict
 from app.services.user_service import UserService
 from app.utils.oauth_decorator import token_required
+from app.utils.admin_decorator import admin_required
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +13,7 @@ user_bp = Blueprint("users", __name__)
 
 
 @user_bp.route("/", methods=["GET"])
-@token_required
+@admin_required
 def get_all_users(current_user):
     try:
         service = UserService()
@@ -24,7 +25,7 @@ def get_all_users(current_user):
 
 
 @user_bp.route("/<int:user_id>", methods=["GET"])
-@token_required
+@admin_required
 def get_user_by_id(current_user, user_id: int):
     try:
         service = UserService()
@@ -40,7 +41,7 @@ def get_user_by_id(current_user, user_id: int):
 
 
 @user_bp.route("/count", methods=["GET"])
-@token_required
+@admin_required
 def get_user_count(current_user):
     try:
         service = UserService()
@@ -54,11 +55,9 @@ def get_user_count(current_user):
 
 # CRUD routes, protegidas para usuarios con rol 1 (Administrador)
 @user_bp.route("/<int:user_id>", methods=["PUT"])
-@token_required
+@admin_required
 def update_user(current_user, user_id: int):
     try:
-        if int(current_user.get("id_rol", 0)) != 1:
-            return jsonify({"error": "Acceso denegado"}), 403
 
         data = request.get_json()
         service = UserService()
@@ -74,12 +73,10 @@ def update_user(current_user, user_id: int):
 
 
 @user_bp.route("/<int:user_id>/role", methods=["PUT"])
-@token_required
+@admin_required
 def change_user_role(current_user, user_id: int):
     try:
-        if int(current_user.get("id_rol", 0)) != 1:
-            return jsonify({"error": "Acceso denegado"}), 403
-
+        
         data = request.get_json()
         new_role = data.get("id_rol")
 

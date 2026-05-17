@@ -6,6 +6,8 @@ from flask import Blueprint, jsonify, request
 from app.schemas.chat_schema import chat_to_dict
 from app.services.chat_service import ChatService
 from app.utils.oauth_decorator import token_required
+from app.utils.admin_decorator import admin_required
+from app.utils.ownership_required import check_ownership_or_admin
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +15,7 @@ chat_bp = Blueprint("chats", __name__)
 
 
 @chat_bp.route("/count", methods=["GET"])
-@token_required
+@admin_required
 def get_chat_count(current_user):
     try:
         service = ChatService()
@@ -34,6 +36,9 @@ def get_chat_by_id(current_user, chat_id: int):
 
         if not chat:
             return jsonify({"error": "Chat not found"}), 404
+        
+        if not check_ownership_or_admin(current_user, chat.id_usuario):
+            return jsonify({"error": "Acceso denegado"}), 403
 
         return jsonify(chat_to_dict(chat)), 200
     except Exception as e:
@@ -45,6 +50,10 @@ def get_chat_by_id(current_user, chat_id: int):
 @token_required
 def get_chats_by_user_id(current_user, user_id: int):
     try:
+
+        if not check_ownership_or_admin(current_user, user_id):
+            return jsonify({"error": "Acceso denegado"}), 403
+        
         service = ChatService()
         chats = service.read_chats_by_user_id(user_id)
 
@@ -73,10 +82,15 @@ def create_chat(current_user):
 def delete_chat(current_user, chat_id: int):
     try:
         service = ChatService()
-        success = service.delete_chat(chat_id)
+        chat = service.get_chat_by_id(chat_id)
 
-        if not success:
+        if not chat:
             return jsonify({"error": "Chat not found"}), 404
+        
+        if not check_ownership_or_admin(current_user, chat.id_usuario):
+            return jsonify({"error": "Acceso denegado"}), 403
+
+        success = service.delete_chat(chat_id)
 
         return jsonify({"message": "Chat deleted successfully"}), 200
     except Exception as e:
@@ -88,12 +102,17 @@ def delete_chat(current_user, chat_id: int):
 @token_required
 def update_chat(current_user, chat_id: int):
     try:
-        data = request.get_json()
         service = ChatService()
-        chat = service.update_chat(chat_id, data)
+        chat = service.get_chat_by_id(chat_id)
 
         if not chat:
             return jsonify({"error": "Chat not found"}), 404
+        
+        if not check_ownership_or_admin(current_user, chat.id_usuario):
+            return jsonify({"error": "Acceso denegado"}), 403
+
+        data = request.get_json()
+        chat = service.update_chat(chat_id, data)
 
         return jsonify(chat_to_dict(chat)), 200
     except Exception as e:
