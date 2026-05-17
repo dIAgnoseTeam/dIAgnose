@@ -6,6 +6,7 @@ from flask import Blueprint, jsonify, request
 from app.schemas.appsettings_schema import appsettings_to_dict, appsettings_public_to_dict
 from app.services.app_settings_service import AppSettingsService
 from app.utils.oauth_decorator import token_required
+from app.utils.admin_decorator import admin_required
 
 logger = logging.getLogger(__name__)
 
@@ -13,18 +14,15 @@ settings_bp = Blueprint("settings", __name__)
 
 service = AppSettingsService()
 
-
-def _is_admin(current_user: dict) -> bool:
-    return int(current_user.get("id_rol", 0)) == 1
-
-
 @settings_bp.route("/", methods=["GET"])
 @token_required
 def get_settings(current_user):
     try:
         settings = service.get_or_create()
-        if _is_admin(current_user):
+
+        if int(current_user.get("id_rol", 0)) == 1:
             return jsonify(appsettings_to_dict(settings)), 200
+        
         return jsonify(appsettings_public_to_dict(settings)), 200
     except Exception as e:
         logger.error(f"Error obteniendo configuración: {e}")
@@ -32,10 +30,8 @@ def get_settings(current_user):
 
 
 @settings_bp.route("/", methods=["PATCH"])
-@token_required
+@admin_required
 def update_settings(current_user):
-    if not _is_admin(current_user):
-        return jsonify({"error": "No autorizado"}), 403
 
     data = request.get_json() or {}
     if not data:
@@ -50,10 +46,8 @@ def update_settings(current_user):
 
 
 @settings_bp.route("/chat", methods=["PATCH"])
-@token_required
+@admin_required
 def set_chat_enabled(current_user):
-    if not _is_admin(current_user):
-        return jsonify({"error": "No autorizado"}), 403
 
     data = request.get_json() or {}
     if "chat_enabled" not in data:
@@ -68,10 +62,8 @@ def set_chat_enabled(current_user):
 
 
 @settings_bp.route("/dashboard", methods=["GET"])
-@token_required
+@admin_required
 def get_dashboard(current_user):
-    if not _is_admin(current_user):
-        return jsonify({"error": "No autorizado"}), 403
 
     try:
         stats = service.get_dashboard_stats()
@@ -82,10 +74,8 @@ def get_dashboard(current_user):
 
 
 @settings_bp.route("/status", methods=["GET"])
-@token_required
+@admin_required
 def get_system_status(current_user):
-    if not _is_admin(current_user):
-        return jsonify({"error": "No autorizado"}), 403
 
     try:
         settings = service.get_or_create()

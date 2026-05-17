@@ -5,6 +5,7 @@ from flask import Blueprint, jsonify, request
 from app.schemas.case_schema import case_to_dict
 from app.services.case_service import CaseService
 from app.utils.oauth_decorator import token_required
+from app.utils.admin_decorator import admin_required
 
 logger = logging.getLogger(__name__)
 
@@ -60,11 +61,9 @@ def get_next_case_for_user(current_user):
 # CRUD routes, protegidas para usuarios con rol 1 (Administrador)
 # Obtener todos los casos, solo para administradores, con paginación opcional
 @case_bp.route("/", methods=["GET"])
-@token_required
+@admin_required
 def get_all_cases(current_user):
     try:
-        if int(current_user.get("id_rol", 0)) != 1:
-            return jsonify({"error": "Acceso denegado"}), 403
 
         limit = request.args.get("limit", default=10, type=int)
         offset = request.args.get("offset", default=0, type=int)
@@ -86,12 +85,10 @@ def get_all_cases(current_user):
 
 
 @case_bp.route("/<int:case_id>", methods=["DELETE"])
-@token_required
+@admin_required
 def delete_case(current_user, case_id: int):
     try:
-        if int(current_user.get("id_rol", 0)) != 1:
-            return jsonify({"error": "Acceso denegado"}), 403
-
+        
         service = CaseService()
         success = service.delete_case(case_id)
 

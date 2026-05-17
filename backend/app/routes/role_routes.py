@@ -5,13 +5,14 @@ from flask import Blueprint, jsonify, request
 from app.schemas.role_schema import role_to_dict
 from app.services.role_service import RoleService
 from app.utils.oauth_decorator import token_required
+from app.utils.admin_decorator import admin_required
 
 logger = logging.getLogger(__name__)
 
 role_bp = Blueprint("roles", __name__)
 
 @role_bp.route("/<int:role_id>", methods=["GET"])
-@token_required
+@admin_required
 def get_role_by_id(current_user, role_id: int):
     try:
         service = RoleService()
@@ -26,7 +27,7 @@ def get_role_by_id(current_user, role_id: int):
         return jsonify({"error": "Error al obtener el rol"}), 500
 
 @role_bp.route("/count", methods=["GET"])
-@token_required
+@admin_required
 def get_roles_count(current_user):
     try:
         service = RoleService()
