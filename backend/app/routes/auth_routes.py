@@ -7,6 +7,7 @@ from app.services.app_settings_service import AppSettingsService
 from app.services.user_service import UserService
 from app.utils.oauth import get_google_oauth_client
 from app.utils.oauth_decorator import create_token, token_required
+from app.extensions import limiter
 
 # Configurar logger
 logger = logging.getLogger(__name__)
@@ -15,6 +16,7 @@ auth_bp = Blueprint("auth", __name__)
 
 
 @auth_bp.route("/google/login")
+@limiter.limit("10 per minute")
 def google_login():
     # Iniciar proceso de login con Google
     google = get_google_oauth_client()
@@ -24,6 +26,7 @@ def google_login():
 
 
 @auth_bp.route("/google/callback")
+@limiter.limit("10 per minute")
 def google_callback():
     # Manejar el callback de Google
     try:
@@ -81,7 +84,8 @@ def google_callback():
 @token_required
 def get_current_user(current_user):
     # Obtener información del usuario actual
-    return jsonify(
+    from app.utils.responses import success_response, error_response
+    return success_response(
         {
             "user": {
                 "id": current_user["user_id"],
@@ -98,6 +102,8 @@ def get_current_user(current_user):
 @token_required
 def logout(current_user):
     # Cerrar sesión
-    response = jsonify({"message": "Logged out successfully"})
+    from app.utils.responses import success_response
+
+    response, status_code = success_response({"message": "Logged out successfully"})
     response.delete_cookie("access_token")
-    return response
+    return response, status_code
