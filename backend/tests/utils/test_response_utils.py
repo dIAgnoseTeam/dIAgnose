@@ -1,4 +1,4 @@
-from app.utils.response import error_response, success_response
+from app.utils.responses import error_response, success_response
 
 
 class TestSuccessResponse:

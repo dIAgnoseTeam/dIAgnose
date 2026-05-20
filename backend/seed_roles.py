@@ -13,7 +13,6 @@ def seed_roles():
             roles = [
                 Rol(id=1, nombre='admin'),
                 Rol(id=2, nombre='usuario'),
-                Rol(id=3, nombre='moderador'),
             ]
             
             db.add_all(roles)
