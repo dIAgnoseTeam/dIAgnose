@@ -1,11 +1,11 @@
 import logging
 
-from flask import Blueprint, jsonify, request
-
-from backend.app.schemas.salida.case_schema import case_to_dict
+from flask import Blueprint, request
+from app.schemas.salida.case_schema import case_to_dict
 from app.services.case_service import CaseService
 from app.utils.oauth_decorator import token_required
 from app.utils.admin_decorator import admin_required
+from app.utils.responses import success_response, error_response
 
 logger = logging.getLogger(__name__)
 
@@ -21,12 +21,12 @@ def get_case_by_id(current_user, case_id: int):
         case = service.get_case_by_id(case_id)
 
         if not case:
-            return jsonify({"error": "Case not found"}), 404
+            return error_response("Case not found", 404)
 
-        return jsonify(case_to_dict(case)), 200
+        return success_response(case_to_dict(case))
     except Exception as e:
         logger.error(f"Error al obtener el caso por ID: {str(e)}")
-        return jsonify({"error": "Error al obtener el caso"}), 500
+        return error_response("Error al obtener el caso", 500)
 
 
 @case_bp.route("/count", methods=["GET"])
@@ -36,10 +36,10 @@ def get_case_count(current_user):
         service = CaseService()
         count = service.get_case_count()
 
-        return jsonify({"cantidad_casos": count}), 200
+        return success_response({"cantidad_casos": count})
     except Exception as e:
         logger.error(f"Error al contar los casos: {str(e)}")
-        return jsonify({"error": "Error al contar los casos"}), 500
+        return error_response("Error al contar los casos", 500)
 
 
 @case_bp.route("/next", methods=["GET"])
@@ -50,12 +50,12 @@ def get_next_case_for_user(current_user):
         case = service.get_next_case_for_user(current_user["user_id"])
 
         if not case:
-            return jsonify({"error": "No hay casos disponibles"}), 404
+            return error_response("No hay casos disponibles", 404)
 
-        return jsonify(case_to_dict(case)), 200
+        return success_response(case_to_dict(case))
     except Exception as e:
         logger.error(f"Error al contar los casos: {str(e)}")
-        return jsonify({"error": "Error al mostrar el siguiente caso"}), 500
+        return error_response("Error al mostrar el siguiente caso", 500)
 
 
 # CRUD routes, protegidas para usuarios con rol 1 (Administrador)
@@ -78,10 +78,10 @@ def get_all_cases(current_user):
             dificultad=dificultad,
         )
 
-        return jsonify({"data": [case_to_dict(c) for c in cases], "count": total}), 200
+        return success_response([case_to_dict(c) for c in cases], count=total)
     except Exception as e:
         logger.error(f"Error al obtener todos los casos: {str(e)}")
-        return jsonify({"error": "Error al obtener los casos"}), 500
+        return error_response("Error al obtener los casos", 500)
 
 
 @case_bp.route("/<int:case_id>", methods=["DELETE"])
@@ -93,9 +93,9 @@ def delete_case(current_user, case_id: int):
         success = service.delete_case(case_id)
 
         if not success:
-            return jsonify({"error": "Case not found"}), 404
+            return error_response("Case not found", 404)
 
-        return jsonify({"message": "Case deleted successfully"}), 200
+        return success_response({"message": "Case deleted successfully"})
     except Exception as e:
         logger.error(f"Error al eliminar el caso: {str(e)}")
-        return jsonify({"error": "Error al eliminar el caso"}), 500
+        return error_response("Error al eliminar el caso", 500)

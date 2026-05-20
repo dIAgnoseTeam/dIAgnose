@@ -7,8 +7,14 @@ class UserRepository:
     def __init__(self):
         self.session = SessionLocal()
 
-    def get_all_users(self):
-        return self.session.query(Usuario).all()
+    def get_all_users(self, limit: int = 10, offset: int = 0):
+        try:
+            query = self.session.query(Usuario)
+            total = query.count()
+            users = query.offset(offset).limit(limit).all()
+            return users, total
+        finally:
+            self.session.close()
 
     def get_user_by_id(self, user_id: int):
         try:

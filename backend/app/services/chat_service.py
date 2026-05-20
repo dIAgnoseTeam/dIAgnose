@@ -4,6 +4,11 @@ from app.repositories.chat_repository import ChatRepository
 from app.repositories.historic_repository import HistoricoRepository
 
 
+import json
+import logging
+
+logger = logging.getLogger(__name__)
+
 class ChatService:
     def __init__(self):
         self.chat_repository = ChatRepository()
@@ -55,19 +60,26 @@ class ChatService:
         if history_for_api:
             payload["history"] = history_for_api
 
-            # --- AÑADIMOS ESTO PARA DEPURAR (DEBUG) ---
-        import json
+        # === Sustituimos los prints que exponían datos de historiales enteros por un logging limpio ===
+        logger.debug("AI API request enviada al chat %s con history_count=%d", chat_id, len(history_for_api))
 
-        print("\n" + "=" * 50)
-        print("DEBUG - ENVIANDO A LA API DE IA")
-        print(f"Chat ID: {chat_id}")
-        print("Payload exacto:")
-        print(json.dumps(payload, indent=2, ensure_ascii=False))
-        print("=" * 50 + "\n")
-        # ------------------------------------------
+        # 5 - Enviar a la API Limitando el tiempo (SEC-08 timeout y limite respuesta)
+        # Timeout=(conexión, lectura) -> Evita bloqueos en workers
+        response = requests.post(
+            self.ai_api_url, 
+            json=payload, 
+            headers={"Content-Type": "application/json"}, 
+            timeout=(5, 30),
+            stream=False # Leer solo hasta el tope
+        )
+        response.raise_for_status() # Lanza excepción nativa si el servidor da HTTP errors
 
-        # 5 - Enviar a la API
-        response = requests.post(self.ai_api_url, json=payload, headers={"Content-Type": "application/json"}, timeout=30)
+        # Limitamos para no comernos la memoria en caso de bucle de la IA (>50KB)
+        MAX_RESPONSE_SIZE = 50 * 1024
+        content = response.content[:MAX_RESPONSE_SIZE]
+        
+        # Leemos el json a partir de contenido seguro truncado si hizo falta
+        ai_data = json.loads(content.decode("utf-8"))
 
         if response.status_code == 200:
             ai_data = response.json()

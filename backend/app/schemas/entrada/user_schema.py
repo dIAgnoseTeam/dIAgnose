@@ -16,11 +16,11 @@ class UpdateUserSchema(Schema):
 
         unknown = "exclude"
 
-    class ChangeUserRoleSchema(Schema):
-        id_rol = fields.Int(
-            required=True,
-            validate=validate.Range(min=1),
-        )
+class UpdateUserRoleSchema(Schema):
+    id_rol = fields.Int(
+        required=True,
+        validate=validate.Range(min=1),
+    )
 
-        class Meta:
-            unknown = "exclude"
+    class Meta:
+        unknown = "exclude"

@@ -74,7 +74,8 @@ def google_callback():
 @token_required
 def get_current_user(current_user):
     # Obtener información del usuario actual
-    return jsonify(
+    from app.utils.responses import success_response, error_response
+    return success_response(
         {
             "user": {
                 "id": current_user["user_id"],
@@ -91,4 +92,5 @@ def get_current_user(current_user):
 @token_required
 def logout(current_user):
     # Cerrar sesión
-    return jsonify({"message": "Logged out successfully"})
+    from app.utils.responses import success_response
+    return success_response({"message": "Logged out successfully"})

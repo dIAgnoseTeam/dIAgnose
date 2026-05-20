@@ -4,6 +4,7 @@ from marshmallow import Schema, fields, validate
 class CreateChatSchema(Schema):
     titulo = fields.String(required=False, validate=validate.Length(max=200))
     id_usuario = fields.Int(required=False)
+    activo = fields.String(required=False, load_default='T')
 
     class Meta:
         unknown = "exclude"
