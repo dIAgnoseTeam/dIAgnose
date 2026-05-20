@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_cors import CORS
 from werkzeug.middleware.proxy_fix import ProxyFix
+from app.extensions import limiter
+from flask_talisman import Talisman
 
 from app.config import Config
 
@@ -9,22 +11,34 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     app.secret_key = Config.SECRET_KEY
-    
+    limiter.init_app(app)
+
     # Evitar encode incorrecto
     app.config['JSON_AS_ASCII'] = False
-    
+
     # No añadir slash automáticamente al final de las rutas
     app.config['APPEND_SLASH'] = False
 
     # Configurar ProxyFix para producción (confiar en headers del proxy)
-    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
+    app.wsgi_app = ProxyFix(
+        app.wsgi_app,
+        x_for=1,
+        x_proto=1,
+        x_host=1,
+        x_prefix=1
+    )
 
     # Configurar orígenes permitidos según entorno
     allowed_origins = [Config.FRONTEND_URL]
 
     # En desarrollo local, añadir variantes de localhost
     if "localhost" in Config.FRONTEND_URL:
-        allowed_origins.extend(["http://localhost", "http://localhost:80", "http://localhost:5173", "http://127.0.0.1:5173"])
+        allowed_origins.extend([
+            "http://localhost",
+            "http://localhost:80",
+            "http://localhost:5173",
+            "http://127.0.0.1:5173"
+        ])
 
     # Inicializamos las extensiones
     # Docker configurations
@@ -67,5 +81,20 @@ def create_app():
     app.register_blueprint(chat_bp, url_prefix="/chats")
     app.register_blueprint(historic_bp, url_prefix="/historics")
     app.register_blueprint(settings_bp, url_prefix="/settings")
+
+    Talisman(
+        app,
+        force_https=False,  # en local; en producción debería ser True
+        strict_transport_security=True,
+        content_security_policy={
+            "default-src": "'self'",
+            "img-src": ["'self'", "data:"],
+            "script-src": "'self'",
+            "style-src": ["'self'", "'unsafe-inline'"],
+        },
+        x_content_type_options=True,
+        x_frame_options="DENY",
+        referrer_policy="strict-origin-when-cross-origin",
+        )
 
     return app

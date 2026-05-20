@@ -2,7 +2,7 @@ import logging
 
 from flask import Blueprint, jsonify, request
 
-from app.schemas.case_schema import case_to_dict
+from backend.app.schemas.salida.case_schema import case_to_dict
 from app.services.case_service import CaseService
 from app.utils.oauth_decorator import token_required
 from app.utils.admin_decorator import admin_required
@@ -88,7 +88,7 @@ def get_all_cases(current_user):
 @admin_required
 def delete_case(current_user, case_id: int):
     try:
-        
+
         service = CaseService()
         success = service.delete_case(case_id)
 
