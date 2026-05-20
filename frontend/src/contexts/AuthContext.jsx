@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext } from "react";
+import { createContext, useState, useEffect, useContext, useCallback } from "react";
 import { authService } from "../services/api";
 import { API_BASE } from "../config/constants";
 
@@ -9,18 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-
+  const checkAuth = useCallback(async () => {
     try {
       const response = await authService.getCurrentUser();
       const rolResponse = await authService.getRolById(response.data.user.id_rol);
@@ -35,7 +24,11 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   const login = () => {
       const apiUrl = API_BASE;
@@ -71,8 +64,7 @@ export const AuthProvider = ({ children }) => {
     if (event.origin !== window.location.origin) return;
 
     if (event.data.type === "AUTH_SUCCESS") {
-      // Guardar el token y redirigir
-      handleCallback(event.data.token);
+      handleCallback();
       window.removeEventListener("message", handleAuthMessage);
 
       if (window.authTimeoutId) {
@@ -87,17 +79,16 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       console.error("Logout failed:", err);
     } finally {
-      localStorage.removeItem("token");
       setUser(null);
 
       window.location.href = "/login";
     }
   };
 
-  const handleCallback = async (token) => {
-    localStorage.setItem("token", token);
-    checkAuth();
-  };
+  const handleCallback = useCallback(async () => {
+    setLoading(true);
+    await checkAuth();
+  }, [checkAuth]);
 
   return (
     <AuthContext.Provider
