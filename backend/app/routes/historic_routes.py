@@ -70,8 +70,29 @@ def create_historico(current_user):
         if not check_ownership_or_admin(current_user, chat.id_usuario):
             return error_response("Acceso denegado", 403)
 
+        mensaje = data.get("mensaje", data.get("contenido"))
+        rol = data.get("rol")
+
+        validation_errors = {}
+        if mensaje in (None, ""):
+            validation_errors["mensaje"] = ["El campo 'mensaje' es requerido."]
+        if rol in (None, ""):
+            validation_errors["rol"] = ["El campo 'rol' es requerido."]
+
+        if validation_errors:
+            return error_response("Datos inválidos", 422, details=validation_errors)
+
+        create_data = {
+            "id_chat": data.get("id_chat"),
+            "mensaje": mensaje,
+            "rol": rol,
+        }
+
+        if "fecha" in data:
+            create_data["fecha"] = data["fecha"]
+
         service = HistoricService()
-        historico = service.create_historico(data)
+        historico = service.create_historico(create_data)
         return success_response(historic_to_dict(historico), status_code=201)
     
     except Exception as e:
