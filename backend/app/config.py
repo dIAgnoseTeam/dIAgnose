@@ -13,7 +13,7 @@ DB_PATH = BASE_DIR / "db" / "db.sqlite"
 class Config:
     # Seguridad
     SECRET_KEY = os.getenv("SECRET_KEY")
-    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY") or SECRET_KEY
 
     # Base de datos
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", f"sqlite:///{DB_PATH}")

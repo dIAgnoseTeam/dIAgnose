@@ -1,30 +1,25 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { PropagateLoader } from "react-spinners";
 
 const AuthCallback = () => {
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { handleCallback } = useAuth();
   const [loading] = useState(true);
   const [color] = useState("#1e3a8a"); // color azul oscuro
 
   useEffect(() => {
-    const token = searchParams.get("token");
-
-    if (token && window.opener) {
+    if (window.opener) {
       window.opener.postMessage(
-        { type: "AUTH_SUCCESS", token },
+        { type: "AUTH_SUCCESS" },
         window.location.origin
       );
-      handleCallback(token);
-      navigate("/");
       window.close();
     } else {
-      navigate("/login?error=no_token");
+      handleCallback().then(() => navigate("/"));
     }
-  }, [handleCallback, navigate, searchParams]);
+  }, [handleCallback, navigate]);
 
   return (
     <div className="flex flex-col justify-center items-center h-dvh">

@@ -29,7 +29,7 @@ class UpdateChatSchema(Schema):
 class SendChatMessageSchema(Schema):
     message = fields.String(
         required=True,
-        validate=validate.Length(min=1, max=4000),
+        validate=validate.Length(min=1, max=20000),
     )
 
     class Meta:

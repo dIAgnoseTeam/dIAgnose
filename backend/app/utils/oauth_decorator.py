@@ -11,13 +11,13 @@ from app.config import Config
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = None
+        token = request.cookies.get("access_token")
 
-        # Obtener token del header
-        if "Authorization" in request.headers:
+        # Mantener compatibilidad con Authorization: Bearer <token>
+        if not token and "Authorization" in request.headers:
             auth_header = request.headers["Authorization"]
             try:
-                token = auth_header.split(" ")[1]  # Bearer <token>
+                token = auth_header.split(" ")[1]
             except IndexError:
                 return jsonify({"message": "Token format invalid"}), 401
 
