@@ -25,7 +25,7 @@ def get_all_users(current_user):
         
         service = UserService()
         users, total = service.get_all_users(limit=limit, offset=offset)
-        return success_response([user_to_dict(u) for u in users], count=total)
+        return success_response([user_to_dict(u) for u in users])
     except Exception as e:
         logger.error(f"Error obteniendo todos los usuarios: {str(e)}")
         return error_response("Error al obtener los usuarios", 500)
