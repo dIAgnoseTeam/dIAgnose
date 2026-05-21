@@ -96,10 +96,9 @@ def create_app():
         app.logger.error("Internal error: %s", e, exc_info=True)
         return error_response("Error interno del servidor", 500)
 
-    # Cabeceras de seguridad HTTP
     Talisman(
         app,
-        force_https=not is_development and not is_behind_proxy,  # Automático: Force=True en Prod (salvo proxy), False en Local
+        force_https=False,
         strict_transport_security=True,
         content_security_policy={
             "default-src": "'self'",
