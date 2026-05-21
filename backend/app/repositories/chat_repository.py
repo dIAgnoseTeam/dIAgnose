@@ -26,6 +26,7 @@ class ChatRepository:
     # Crear un chat nuevo
     def create_chat(self, chat_data: dict):
         try:
+            print("chat_data recibido:", chat_data)
             nuevo_chat = Chat(**chat_data)
             self.session.add(nuevo_chat)
             self.session.commit()

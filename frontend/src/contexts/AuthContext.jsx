@@ -38,19 +38,32 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = () => {
-    const apiUrl = API_BASE;
+      const apiUrl = API_BASE;
     const width = 500;
     const height = 600;
     const left = window.screen.width / 2 - width / 2;
     const top = window.screen.height / 2 - height / 2;
 
-    window.open(
+    const popup = window.open(
       `${apiUrl}/auth/google/login`,
       "Google Login",
       `width=${width},height=${height},top=${top},left=${left}`
     );
 
     window.addEventListener("message", handleAuthMessage);
+
+    // Cleanup automático del listener tras 60 segundos
+    const timeoutId = setTimeout(() => {
+      window.removeEventListener("message", handleAuthMessage);
+
+      if (popup && !popup.closed) {
+        popup.close();
+      }
+
+      console.warn("OAuth timeout: listener eliminado automáticamente");
+    }, 60000);
+
+    window.authTimeoutId = timeoutId;
   };
 
   const handleAuthMessage = (event) => {
@@ -61,6 +74,10 @@ export const AuthProvider = ({ children }) => {
       // Guardar el token y redirigir
       handleCallback(event.data.token);
       window.removeEventListener("message", handleAuthMessage);
+
+      if (window.authTimeoutId) {
+        clearTimeout(window.authTimeoutId);
+      }
     }
   };
 

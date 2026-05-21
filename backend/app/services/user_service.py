@@ -5,8 +5,8 @@ class UserService:
     def __init__(self):
         self.user_repository = UserRepository()
 
-    def get_all_users(self):
-        return self.user_repository.get_all_users()
+    def get_all_users(self, limit: int = 10, offset: int = 0):
+        return self.user_repository.get_all_users(limit, offset)
 
     def get_user_by_id(self, user_id: int):
         return self.user_repository.get_user_by_id(user_id)

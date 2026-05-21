@@ -1,16 +1,22 @@
-from flask import Blueprint, jsonify
-from app.utils.oauth_decorator import token_required
+from flask import Blueprint, request
+from app.utils.responses import success_response, error_response
 
 health_bp = Blueprint("health", __name__)
 
+def is_local_request():
+    return request.remote_addr in ("127.0.0.1", "::1")
 
 @health_bp.route("/hello", methods=["GET"])
-@token_required      
-def hello(current_user):
-    return jsonify(message="Hola mundo!")
+def hello():
+    if not is_local_request():
+        return error_response("Not found", 404)
+        
+    return success_response({"message": "Hola mundo!"})
 
 
 @health_bp.route("/health", methods=["GET"])
-@token_required
-def healt_check(current_user):
-    return jsonify(status="OK", message="El servicio esta operativo.")
+def healt_check():
+    if not is_local_request():
+        return error_response("Not found", 404)
+        
+    return success_response({"status": "OK", "message": "El servicio esta operativo."})
