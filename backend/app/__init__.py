@@ -27,8 +27,8 @@ def create_app():
     # No añadir slash automáticamente al final de las rutas
     app.config['APPEND_SLASH'] = False
 
-    # Configurar ProxyFix solo si estamos detrás de un proxy real en producción
-    if is_behind_proxy:
+    # Sin ProxyFix, Talisman no lee X-Forwarded-Proto y entra en bucle de redirects HTTPS.
+    if not is_development or is_behind_proxy:
         app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
     # Configurar orígenes permitidos según entorno

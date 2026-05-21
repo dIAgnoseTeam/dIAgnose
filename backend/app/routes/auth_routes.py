@@ -1,6 +1,6 @@
 import logging
 
-from flask import Blueprint, jsonify, redirect
+from flask import Blueprint, jsonify, redirect, make_response
 
 from app.config import Config
 from app.services.app_settings_service import AppSettingsService
@@ -62,8 +62,19 @@ def google_callback():
         jwt_token = create_token(user_data)
 
         # Redirigir al frontend con el token
-        redirect_url = f"{Config.FRONTEND_URL}/auth/callback" f"?token={jwt_token}"
-        return redirect(redirect_url)
+        response = make_response(redirect(f"{Config.FRONTEND_URL}/auth/callback"))
+
+        is_https = Config.FRONTEND_URL.startswith("https")
+        response.set_cookie(
+            "access_token",
+            jwt_token,
+            httponly=True,
+            secure=is_https,
+            samesite="Lax",
+            max_age=7 * 24 * 60 * 60,
+        )
+
+        return response
 
     except Exception as e:
         print(f"Error in callback: {str(e)}")
@@ -93,4 +104,7 @@ def get_current_user(current_user):
 def logout(current_user):
     # Cerrar sesión
     from app.utils.responses import success_response
-    return success_response({"message": "Logged out successfully"})
+
+    response, status_code = success_response({"message": "Logged out successfully"})
+    response.delete_cookie("access_token")
+    return response, status_code
