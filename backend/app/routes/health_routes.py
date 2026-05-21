@@ -1,4 +1,3 @@
-import os
 from flask import Blueprint, request
 from app.utils.responses import success_response, error_response
 
