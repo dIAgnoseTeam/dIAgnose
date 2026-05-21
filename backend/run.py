@@ -65,6 +65,10 @@ def initialize_app():
         sys.exit(1)
 
 
+# Validar variables de entorno críticas antes de arrancar
+from app.config import Config as AppConfig
+AppConfig.validate()
+
 # Crear la aplicación Flask
 app = create_app()
 

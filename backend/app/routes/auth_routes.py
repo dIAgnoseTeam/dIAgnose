@@ -64,11 +64,12 @@ def google_callback():
         # Redirigir al frontend con el token
         response = make_response(redirect(f"{Config.FRONTEND_URL}/auth/callback"))
 
+        is_https = Config.FRONTEND_URL.startswith("https")
         response.set_cookie(
             "access_token",
             jwt_token,
             httponly=True,
-            secure=False,  # En producción con HTTPS debe ser True
+            secure=is_https,
             samesite="Lax",
             max_age=7 * 24 * 60 * 60,
         )
