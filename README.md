@@ -25,10 +25,11 @@
 
 ### Funcionalidades principales
 
-- **Gestionar datos de pacientes**: visualizar, actualizar y consultar historiales con rapidez.
+- **Valoraciones de casos médicos**: visualización por capas junto a un pequeño seleccionador de valoraciones del caso.
+- **Chatbot con integración de Inteligencia Artifical Especializada** : integración de LLM especializado en medicina y en valoraciones de casos médicos.
 - **Acceso seguro**: autenticacion con JWT y control de permisos segun el rol.
-- **Historial medico**: registro completo de datos clinicos y tratamientos.
 - **Interfaz responsive**: funciona en ordenadores, tablets y moviles.
+- **Dashboard Administrativo**: Dashboard con múltiples funcionalidades para todos los administradores.
 
 ---
 
@@ -163,7 +164,6 @@ sequenceDiagram
 - **Python 3.11.+** con **Flask 2.0+**.
 - **SQLAlchemy** como ORM para SQLite.
 - **PyJWT** para generar y validar tokens.
-- **Bcrypt** para almacenar contraseñas.
 
 ### Bases de Datos
 - **SQLite 3.43.+** para datos estructurados.
@@ -186,7 +186,7 @@ sequenceDiagram
 
 ## Equipo
 
-Proyecto desarrollado por dos equipos de estudiantes de 2o DAM en el IES Ribera del Tajo.
+Proyecto desarrollado por dos equipos de estudiantes de 2º DAW/DAM en el IES Ribera del Tajo.
 
 <div align="center">
 

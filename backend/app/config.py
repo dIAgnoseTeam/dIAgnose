@@ -39,7 +39,7 @@ class Config:
 
     # IA externa
     AI_API_URL = os.getenv(
-        "AI_API_URL", "http://cloud.riberadeltajo.es:11200/generate"
+        "AI_API_URL", "http://nube.riberadeltajo.es:11200/generate/"
     )
 
     @classmethod
