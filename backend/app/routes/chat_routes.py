@@ -160,6 +160,9 @@ def send_message_to_chat(current_user, chat_id: int):
         # Llamamos al orquestador
         response = service.process_user_message(chat_id, user_message_text)
 
+        if isinstance(response, dict) and response.get("error"):
+            return error_response(response["error"], response.get("status_code", 502))
+
         # Devolvemos la respuesta de la IA al frontend
         return success_response(response)
     except Exception as e:
